@@ -1,47 +1,138 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>로그인</title>
+    <title>멘토링 시스템 로그인</title>
     <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
     <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script>
         $(document).ready(() => {
-            mdc.ripple.MDCRipple.attachTo(document.querySelector('.foo-button'));
-            mdc.ripple.MDCRipple.attachTo(document.querySelector('.mdc-text-field'))
-            //import {MDCTextField} from '@material/textfield';
-            //const textField = new MDCTextField();
-            const textField = new mdc.textField.MDCTextField(document.querySelector('.mdc-text-field'));
-            const buttonRipple = new MDCRipple(document.querySelector('.mdc-button'));
-            const iconButtonRipple = new MDCRipple(document.querySelector('.mdc-icon-button'));
-            iconButtonRipple.unbounded = true;
+            mdc.ripple.MDCRipple.attachTo(document.querySelector('.mdc-text-field'));
+
+            document.querySelectorAll('.mdc-text-field').forEach(value => {
+                new mdc.textField.MDCTextField(value)
+            })
+
         })
 
-    </script>
-</head>
-<body>
-<button class="mdc-button foo-button">
-    <div class="mdc-button__ripple"></div>
-    <span class="mdc-button__label">Button</span>
 
-</button>
-<label class="mdc-text-field mdc-text-field--filled">
-    <span class="mdc-text-field__ripple"></span>
-    <span class="mdc-floating-label" id="my-label-id">Hint text</span>
-    <input class="mdc-text-field__input" type="text" aria-labelledby="my-label-id">
-    <span class="mdc-line-ripple"></span>
-</label>
-<button class="mdc-button mdc-button--raised">
-    <span class="mdc-button__label">Contained Button</span>
-</button>
-<button id="add-to-favorites"
-        class="mdc-icon-button"
-        aria-label="Add to favorites"
-        aria-pressed="false">
-    <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">favorite</i>
-    <i class="material-icons mdc-icon-button__icon">favorite_border</i>
-</button>
+    </script>
+    <style>
+        .header {
+            text-align: center;
+        }
+        .box-form{
+            background-color: #315270;
+            width: 380px;
+            height: 480px;
+            position: relative;
+            margin: 6% auto;
+            padding: 5px;
+        }
+        .button-wrap {
+            width: 230px;
+            margin: 35px auto;
+            position: relative;
+            border-radius: 30px;
+        }
+        .togglebtn {
+            padding: 10px 30px;
+            cursor: pointer;
+            background: transparent;
+            border: 0;
+            outline: none;
+            position: relative;
+        }
+        #btn {
+            top: 0;
+            left: 0;
+            position: absolute;
+            width: 110px;
+            height: 100%;
+            background: #6200EE;
+            border-radius: 30px;
+            transition: .5s;
+        }
+
+        #userid-label,
+        #password-label {
+            display: flex;
+            margin: 20px auto;
+            width: 300px;
+        }
+
+        .button-container {
+            min-width: 300px;
+            margin: auto;
+        }
+
+        .button-container button {
+            margin: 3px;
+        }
+    </style>
+</head>
+
+<body>
+<section class="header">
+
+<div class="box-form">
+    <div class="button-wrap">
+        <div id="btn"></div>
+        <button type="button" class="togglebtn" onclick="login()">로그인</button>      <!--onclick로 login(), register()-->
+        <button type="button" class="togglebtn" onclick="register()">회원가입</button> <!--javascript 구현해주삼!-->
+    </div>
+
+<p>
+    <label class="mdc-text-field mdc-text-field--outlined" id="userid-label">
+  <span class="mdc-notched-outline">
+    <span class="mdc-notched-outline__leading"></span>
+    <span class="mdc-notched-outline__notch">
+      <span class="mdc-floating-label" >Id</span>
+    </span>
+    <span class="mdc-notched-outline__trailing"></span>
+  </span>
+        <input type="text" class="mdc-text-field__input" aria-labelledby="userid-label" id="userid" required>
+    </label>
+
+</p>
+<p>
+    <label class="mdc-text-field mdc-text-field--outlined" id="password-label">
+  <span class="mdc-notched-outline">
+    <span class="mdc-notched-outline__leading"></span>
+    <span class="mdc-notched-outline__notch">
+      <span class="mdc-floating-label" >Password</span>
+    </span>
+    <span class="mdc-notched-outline__trailing"></span>
+  </span>
+        <input type="password" class="mdc-text-field__input" aria-labelledby="password-label" id="password" required minlength="8">
+    </label>
+</p>
+<div class="button-container">
+        <button class="mdc-button mdc-button--raised login">
+            <div class="mdc-button__ripple"></div>
+            <span class="mdc-button__label">
+      로그인
+    </span>
+        </button>
+</div>
+    <div class="button-container">
+        <button type="button" class="mdc-button id">
+            <div class="mdc-button__ripple"></div>
+            <span class="mdc-button__label">
+      아이디 찾기
+    </span>
+        </button>
+        <button type="button" class="mdc-button password">
+            <div class="mdc-button__ripple"></div>
+            <span class="mdc-button__label">
+      비밀번호 찾기
+    </span>
+        </button>
+    </div>
+
+</div>
+</section>
 </body>
 
 </html>
