@@ -6,14 +6,11 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "@material/textfield": "^7.0.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "ejs": "~2.6.1",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
-    "morgan": "~1.9.1",
-    "react": "^17.0.0",
-    "react-dom": "^17.0.0"
+    "morgan": "~1.9.1"
   }
 }
