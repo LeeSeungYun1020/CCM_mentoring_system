@@ -7,15 +7,58 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script>
+        // 컴포넌트 초기화 수행
         $(document).ready(() => {
-            mdc.ripple.MDCRipple.attachTo(document.querySelector('.mdc-text-field'));
+            initLogin()
 
+            $('#login_type_login_button').click(() => {
+                if (loginStatus !== "login"){
+                    loginStatus = "login"
+                    setTypeLogin()
+                }
+            })
+            $('#login_type_signin_button').click(() => {
+                if (loginStatus !== "signin"){
+                    loginStatus = "signin"
+                    setTypeSignin()
+                }
+            })
+            $('#login_send_button').click(() => {
+                if (loginStatus === "login"){
+                    alert("로그인 시도")
+                } else if (loginStatus === "signin"){
+                    alert("회원가입 시도")
+                }
+            })
+
+            // default 행동 login으로 설정
+            $('#login_type_login_button').trigger("click")
+        })
+
+        function initLogin() {
             document.querySelectorAll('.mdc-text-field').forEach(value => {
                 new mdc.textField.MDCTextField(value)
             })
+            document.querySelectorAll('.mdc-button').forEach(value => {
+                new mdc.ripple.MDCRipple(value)
+            })
 
-        })
+            if (loginStatus == "login"){
+                setTypeLogin()
+            } else if (loginStatus == "signin"){
+                setTypeSignin()
+            }
+        }
 
+        function setTypeLogin(){
+            $('#login_input_email_label').hide()
+            $('#login_send_button_label').text("로그인")
+        }
+
+        function setTypeSignin(){
+            $('#login_input_email_label').show()
+            $('#login_send_button_label').text("회원가입")
+        }
 
     </script>
     <style>
@@ -34,29 +77,13 @@
             width: 230px;
             margin: 35px auto;
             position: relative;
-            border-radius: 30px;
         }
-        .togglebtn {
-            padding: 10px 30px;
-            cursor: pointer;
-            background: transparent;
-            border: 0;
-            outline: none;
-            position: relative;
-        }
-        #btn {
-            top: 0;
-            left: 0;
-            position: absolute;
-            width: 110px;
-            height: 100%;
-            background: #6200EE;
-            border-radius: 30px;
-            transition: .5s;
+        .login_type{
+            width: 100px;
         }
 
-        #userid-label,
-        #password-label {
+
+        .login_labels {
             display: flex;
             margin: 20px auto;
             width: 300px;
@@ -70,34 +97,57 @@
         .button-container button {
             margin: 3px;
         }
+
+        .mdc-button,
+        .mdc-button--unelevated {
+            --mdc-theme-primary: #FEDBD0;
+            --mdc-theme-on-primary: #442C2E;
+
+        @include button.ink-color(#84565E);
+        }
     </style>
 </head>
-
 <body>
 <section class="header">
 
 <div class="box-form">
     <div class="button-wrap">
         <div id="btn"></div>
-        <button type="button" class="togglebtn" onclick="login()">로그인</button>      <!--onclick로 login(), register()-->
-        <button type="button" class="togglebtn" onclick="register()">회원가입</button> <!--javascript 구현해주삼!-->
+        <button type="button" class="mdc-button mdc-button--unelevated login_type" id="login_type_login_button">
+            <span class="mdc-button__ripple"></span>
+            로그인</button>
+        <button type="button" class="mdc-button mdc-button--unelevated login_type" id="login_type_signin_button">
+            <span class="mdc-button__ripple"></span>
+            회원가입</button>
     </div>
-
-<p>
-    <label class="mdc-text-field mdc-text-field--outlined" id="userid-label">
+    <p>
+        <label class="mdc-text-field mdc-text-field--outlined login_labels" id="login_input_email_label">
   <span class="mdc-notched-outline">
     <span class="mdc-notched-outline__leading"></span>
     <span class="mdc-notched-outline__notch">
-      <span class="mdc-floating-label" >Id</span>
+      <span class="mdc-floating-label" >E-mail</span>
     </span>
     <span class="mdc-notched-outline__trailing"></span>
   </span>
-        <input type="text" class="mdc-text-field__input" aria-labelledby="userid-label" id="userid" required>
+            <input type="email" class="mdc-text-field__input" aria-labelledby="login_input_email_label" id="login_input_email_text" required>
+        </label>
+
+    </p>
+<p>
+    <label class="mdc-text-field mdc-text-field--outlined login_labels" id="login_input_id_label">
+  <span class="mdc-notched-outline">
+    <span class="mdc-notched-outline__leading"></span>
+    <span class="mdc-notched-outline__notch">
+      <span class="mdc-floating-label" >ID</span>
+    </span>
+    <span class="mdc-notched-outline__trailing"></span>
+  </span>
+        <input type="text" class="mdc-text-field__input" aria-labelledby="login_input_id_label" id="login_input_id_text" required>
     </label>
 
 </p>
 <p>
-    <label class="mdc-text-field mdc-text-field--outlined" id="password-label">
+    <label class="mdc-text-field mdc-text-field--outlined login_labels" id="login_input_pw_label">
   <span class="mdc-notched-outline">
     <span class="mdc-notched-outline__leading"></span>
     <span class="mdc-notched-outline__notch">
@@ -105,25 +155,25 @@
     </span>
     <span class="mdc-notched-outline__trailing"></span>
   </span>
-        <input type="password" class="mdc-text-field__input" aria-labelledby="password-label" id="password" required minlength="8">
+        <input type="password" class="mdc-text-field__input" aria-labelledby="login_input_pw_label" id="login_input_pw_text" required minlength="8">
     </label>
 </p>
 <div class="button-container">
-        <button class="mdc-button mdc-button--raised login">
+        <button class="mdc-button mdc-button--raised" id="login_send_button">
             <div class="mdc-button__ripple"></div>
-            <span class="mdc-button__label">
+            <span class="mdc-button__label" id="login_send_button_label">
       로그인
     </span>
         </button>
 </div>
     <div class="button-container">
-        <button type="button" class="mdc-button id">
+        <button type="button" class="mdc-button">
             <div class="mdc-button__ripple"></div>
             <span class="mdc-button__label">
       아이디 찾기
     </span>
         </button>
-        <button type="button" class="mdc-button password">
+        <button type="button" class="mdc-button">
             <div class="mdc-button__ripple"></div>
             <span class="mdc-button__label">
       비밀번호 찾기

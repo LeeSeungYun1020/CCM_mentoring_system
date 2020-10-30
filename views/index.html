@@ -27,9 +27,31 @@
             width: 100%;
             padding: 5px;
         }
+        .leftMargin{
+            margin-left: 4px;
+        }
+        .rightMargin{
+            margin-right: 4px;
+        }
+        #main_logo {
+            font-size: x-large;
+        }
+        #search_box {
+            min-width: 180px;
+            width: 25%;
+            padding-top: 1%;
+            padding-bottom: 1%;
+            color: white;
+        }
+        #search_box_input {
+            color: white;
+        }
+        #search_box label {
+            color: lightslategray;
+        }
+
         #login_info, #notification {
             margin-top: 10px;
-            margin-right: 10px;
             float: right;
         }
         #main_contents{
@@ -42,13 +64,26 @@
     </style>
 
     <script>
+        // TODO("전역변수 별도 js 파일로 옮기기")
+        let contents = "home"
+        let loginStatus = "login"
+
         $(document).ready(() => {
             initAll()
 
             $("#login_login_icon").click(() => {
                 // 로그인 화면 가져오기
-                //$("#main_contents").load("users/loginPage")
-                $("#main_contents").load("login.html")
+                if (contents !== "login"){
+                    contents = "login"
+                    $("#main_contents").load("login.html")
+                }
+            })
+
+            $("#main_logo").click(() => {
+                if (contents !== "home"){
+                    contents = "home"
+                    $("#main_contents").text('TODO("홈 화면 구축")')// .load("home.html")
+                }
             })
 
             function initAll() {
@@ -63,6 +98,10 @@
                     $("#login_logout_icon").hide()
                     $("#notification").hide()
                 }
+                // 텍스트 박스 초기화
+                initTextField()
+                // 작은 화면에서 검색창 숨김
+                setSearchBox()
             }
 
             function isLogin() {
@@ -84,40 +123,54 @@
                 // 알림 확인
                 return true
             }
+        })
 
-            function showLoginBox() {
+        function initTextField() {
+            document.querySelectorAll('.mdc-text-field').forEach(value => {
+                new mdc.textField.MDCTextField(value)
+            })
+            mdc.ripple.MDCRipple.attachTo(document.querySelector('.mdc-text-field'))
+            document.querySelectorAll('.mdc-button').forEach(value => {
+                new mdc.ripple.MDCRipple(value)
+            })
+        }
 
+        function setSearchBox() {
+            if ($(window).width() < 600){
+                $('#search_box').hide()
             }
+            else
+                $('#search_box').show()
+        }
+
+        $(window).resize(() => {
+            setSearchBox()
         })
     </script>
 </head>
 <body>
 <header>
     <!--        네비게이션 메뉴 / 구성: 질문, 멘토 -->
-    <nav class="oneLine">
+    <nav class="oneLine leftMargin">
         <i class="material-icons">menu</i>
     </nav>
     <!--        메인 로고 -->
-    <p class="oneLine" id="main_logo">CCM 멘토링 시스템</p>
+    <p class="oneLine leftMargin" id="main_logo">CCM 멘토링 시스템</p>
     <!--        검색 창 -->
-    <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon">
-        <span class="mdc-text-field__ripple"></span>
-        <input class="mdc-text-field__input"
-               type="text"
-               style="color: white"
-               placeholder="Search"
-               aria-label="Search">
-        <span class="material-icons">search</span>
-        <span class="mdc-line-ripple"></span>
-    </label>
+    <div class="mdc-text-field mdc-text-field--with-trailing-icon leftMargin" id="search_box">
+        <input class="mdc-text-field__input" id="search_box_input">
+        <div class="mdc-line-ripple"></div>
+        <label for="search_box_input" class="mdc-floating-label">Search</label>
+        <i class="material-icons mdc-text-field__icon">search</i>
+    </div>
     <!--        로그인 정보 -->
-    <div class="oneLine" id="login_info">
+    <div class="oneLine rightMargin" id="login_info">
         <span class="material-icons" id="login_login_icon">login</span>
         <span class="material-icons" id="login_logout_icon">face</span>
     </div>
 
     <!--        알림 팝업 -->
-    <div class="oneLine" id="notification">
+    <div class="oneLine rightMargin" id="notification">
         <span class="material-icons" id="notification_none_icon">notifications_none</span>
         <span class="material-icons" id="notification_exist_icon">notifications</span>
     </div>
