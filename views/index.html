@@ -18,14 +18,27 @@
             margin: 0;
         }
         .oneLine{
-            display: inline;
+            display: inline-flex;
         }
-        header, footer{
+        #main_header, footer{
             box-sizing: border-box;
             background-color: #315270;
             color: white;
             width: 100%;
             padding: 5px;
+        }
+        #main_header, #main_search_box_header{
+            width: 100%;
+            height: 50px;
+            margin: auto;
+        }
+        #main_search_box{
+            width: 100%;
+        }
+        #main_header{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
         .leftMargin{
             margin-left: 4px;
@@ -36,26 +49,11 @@
         #main_logo {
             font-size: x-large;
         }
-        #search_box {
-            min-width: 180px;
-            width: 25%;
-            padding-top: 1%;
-            padding-bottom: 1%;
-            color: white;
-        }
-        #search_box_input {
-            color: white;
-        }
-        #search_box label {
-            color: lightslategray;
-        }
-
-        #login_info, #notification {
+        #login_info, #notification, #main_search_icon {
             margin-top: 10px;
-            float: right;
         }
         #main_contents{
-
+            box-sizing: border-box;
         }
         footer{
             position: fixed;
@@ -82,8 +80,19 @@
             $("#main_logo").click(() => {
                 if (contents !== "home"){
                     contents = "home"
-                    $("#main_contents").text('TODO("홈 화면 구축")')// .load("home.html")
+                    $("#main_contents").load("home.html")
                 }
+            })
+
+            $("#main_search_icon").click(() => {
+                $("#main_header").hide()
+                $("#main_search_box_header").show()
+            })
+
+            $("#main_search_close_icon").click(() => {
+                console.log("close!!")
+                $("#main_header").show()
+                $("#main_search_box_header").hide()
             })
 
             function initAll() {
@@ -100,8 +109,10 @@
                 }
                 // 텍스트 박스 초기화
                 initTextField()
-                // 작은 화면에서 검색창 숨김
-                setSearchBox()
+                // 검색창 숨김
+                $('#main_search_box_header').hide()
+                // main contents 표시
+                $("#main_contents").load("home.html")
             }
 
             function isLogin() {
@@ -133,48 +144,51 @@
             document.querySelectorAll('.mdc-button').forEach(value => {
                 new mdc.ripple.MDCRipple(value)
             })
+            document.querySelectorAll('.mdc-icon-button').forEach(value => {
+                let br = new mdc.ripple.MDCRipple(value)
+                br.unbounded = true;
+            })
         }
-
-        function setSearchBox() {
-            if ($(window).width() < 600){
-                $('#search_box').hide()
-            }
-            else
-                $('#search_box').show()
-        }
-
-        $(window).resize(() => {
-            setSearchBox()
-        })
     </script>
 </head>
 <body>
-<header>
-    <!--        네비게이션 메뉴 / 구성: 질문, 멘토 -->
-    <nav class="oneLine leftMargin">
-        <i class="material-icons">menu</i>
-    </nav>
-    <!--        메인 로고 -->
-    <p class="oneLine leftMargin" id="main_logo">CCM 멘토링 시스템</p>
+<header class="mdc-elevation--z4" id="main_header">
+    <section id="main_header_left_part">
+        <!--        네비게이션 메뉴 / 구성: 질문, 멘토 -->
+        <nav class="oneLine leftMargin">
+            <i class="material-icons">menu</i>
+        </nav>
+        <!--        메인 로고 -->
+        <p class="oneLine leftMargin" id="main_logo">CCM 멘토링 시스템</p>
+    </section>
+    <section id="main_header_right_part">
+        <!--        로그인 정보 -->
+        <div class="oneLine rightMargin" id="login_info">
+            <span class="material-icons" id="login_login_icon">login</span>
+            <span class="material-icons" id="login_logout_icon">face</span>
+        </div>
+
+        <!--        알림 팝업 -->
+        <div class="oneLine rightMargin" id="notification">
+            <span class="material-icons" id="notification_none_icon">notifications_none</span>
+            <span class="material-icons" id="notification_exist_icon">notifications</span>
+        </div>
+
+        <!--        검색 -->
+        <button class="oneLine mdc-icon-button material-icons" id="main_search_icon">search</button>
+    </section>
+</header>
+
+<header id="main_search_box_header">
     <!--        검색 창 -->
-    <div class="mdc-text-field mdc-text-field--with-trailing-icon leftMargin" id="search_box">
-        <input class="mdc-text-field__input" id="search_box_input">
+    <div class="mdc-text-field mdc-text-field--with-trailing-icon
+     mdc-text-field--filled mdc-elevation--z4" id="main_search_box">
+        <input class="mdc-text-field__input" id="main_search_box_input">
         <div class="mdc-line-ripple"></div>
-        <label for="search_box_input" class="mdc-floating-label">Search</label>
-        <i class="material-icons mdc-text-field__icon">search</i>
+        <label for="main_search_box_input" class="mdc-floating-label">사이트내 검색</label>
+        <button class="material-icons mdc-text-field__icon mdc-text-field__icon--trailing mdc-icon-button"
+        id="main_search_close_icon" tabindex="0" role="button">close</button>
     </div>
-    <!--        로그인 정보 -->
-    <div class="oneLine rightMargin" id="login_info">
-        <span class="material-icons" id="login_login_icon">login</span>
-        <span class="material-icons" id="login_logout_icon">face</span>
-    </div>
-
-    <!--        알림 팝업 -->
-    <div class="oneLine rightMargin" id="notification">
-        <span class="material-icons" id="notification_none_icon">notifications_none</span>
-        <span class="material-icons" id="notification_exist_icon">notifications</span>
-    </div>
-
 </header>
 
 <section id="main_contents">

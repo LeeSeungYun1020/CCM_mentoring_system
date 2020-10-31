@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>멘토링 시스템 로그인</title>
+    <title>Login</title>
     <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
     <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -53,20 +53,23 @@
         function setTypeLogin(){
             $('#login_input_email_label').hide()
             $('#login_send_button_label').text("로그인")
+            $('#login_type_login_button').addClass('mdc-button--unelevated')
+            $('#login_type_signin_button').removeClass('mdc-button--unelevated')
         }
 
         function setTypeSignin(){
             $('#login_input_email_label').show()
             $('#login_send_button_label').text("회원가입")
+            $('#login_type_login_button').removeClass('mdc-button--unelevated')
+            $('#login_type_signin_button').addClass('mdc-button--unelevated')
         }
 
     </script>
     <style>
-        .header {
+        #login_contents_box {
             text-align: center;
         }
         .box-form{
-            background-color: #315270;
             width: 380px;
             height: 480px;
             position: relative;
@@ -74,12 +77,14 @@
             padding: 5px;
         }
         .button-wrap {
-            width: 230px;
+            border-radius: 30px;
+            width: 220px;
             margin: 35px auto;
-            position: relative;
+            padding: 5px 5px;
         }
         .login_type{
             width: 100px;
+            border-radius: 30px;
         }
 
 
@@ -87,6 +92,11 @@
             display: flex;
             margin: 20px auto;
             width: 300px;
+            --mdc-theme-primary: #315270;
+        }
+
+        .login_floating_labels{
+            color: #315270;
         }
 
         .button-container {
@@ -100,19 +110,16 @@
 
         .mdc-button,
         .mdc-button--unelevated {
-            --mdc-theme-primary: #FEDBD0;
-            --mdc-theme-on-primary: #442C2E;
-
-        @include button.ink-color(#84565E);
+            --mdc-theme-primary: #315270;
+            --mdc-theme-on-primary: #FFFFFF;
         }
     </style>
 </head>
 <body>
-<section class="header">
+<section id="login_contents_box">
 
-<div class="box-form">
-    <div class="button-wrap">
-        <div id="btn"></div>
+<div class="box-form mdc-elevation--z8">
+    <div class="button-wrap mdc-elevation--z4">
         <button type="button" class="mdc-button mdc-button--unelevated login_type" id="login_type_login_button">
             <span class="mdc-button__ripple"></span>
             로그인</button>
@@ -151,7 +158,7 @@
   <span class="mdc-notched-outline">
     <span class="mdc-notched-outline__leading"></span>
     <span class="mdc-notched-outline__notch">
-      <span class="mdc-floating-label" >Password</span>
+      <span class="mdc-floating-label login_floating_labels" >Password</span>
     </span>
     <span class="mdc-notched-outline__trailing"></span>
   </span>
