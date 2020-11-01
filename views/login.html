@@ -43,23 +43,25 @@
                 new mdc.ripple.MDCRipple(value)
             })
 
-            if (loginStatus == "login"){
+            if (loginStatus === "login"){
                 setTypeLogin()
-            } else if (loginStatus == "signin"){
+            } else if (loginStatus === "signin"){
                 setTypeSignin()
             }
         }
 
         function setTypeLogin(){
             $('#login_input_email_label').hide()
-            $('#login_send_button_label').text("로그인")
+            $('#login_input_email_text').removeAttr('required')
+            $('#login_send_button').val("로그인")
             $('#login_type_login_button').addClass('mdc-button--unelevated')
             $('#login_type_signin_button').removeClass('mdc-button--unelevated')
         }
 
         function setTypeSignin(){
             $('#login_input_email_label').show()
-            $('#login_send_button_label').text("회원가입")
+            $('#login_input_email_text').attr('required', 'true')
+            $('#login_send_button').val("회원가입")
             $('#login_type_login_button').removeClass('mdc-button--unelevated')
             $('#login_type_signin_button').addClass('mdc-button--unelevated')
         }
@@ -127,7 +129,8 @@
             <span class="mdc-button__ripple"></span>
             회원가입</button>
     </div>
-    <p>
+    <form action="users/login" method="post">
+    <div>
         <label class="mdc-text-field mdc-text-field--outlined login_labels" id="login_input_email_label">
   <span class="mdc-notched-outline">
     <span class="mdc-notched-outline__leading"></span>
@@ -136,11 +139,11 @@
     </span>
     <span class="mdc-notched-outline__trailing"></span>
   </span>
-            <input type="email" class="mdc-text-field__input" aria-labelledby="login_input_email_label" id="login_input_email_text" required>
+            <input type="email" class="mdc-text-field__input" aria-labelledby="login_input_email_label" id="login_input_email_text" name="email">
         </label>
 
-    </p>
-<p>
+    </div>
+<div>
     <label class="mdc-text-field mdc-text-field--outlined login_labels" id="login_input_id_label">
   <span class="mdc-notched-outline">
     <span class="mdc-notched-outline__leading"></span>
@@ -149,11 +152,11 @@
     </span>
     <span class="mdc-notched-outline__trailing"></span>
   </span>
-        <input type="text" class="mdc-text-field__input" aria-labelledby="login_input_id_label" id="login_input_id_text" required>
+        <input type="text" class="mdc-text-field__input" aria-labelledby="login_input_id_label" id="login_input_id_text" name="id" required>
     </label>
 
-</p>
-<p>
+</div>
+<div>
     <label class="mdc-text-field mdc-text-field--outlined login_labels" id="login_input_pw_label">
   <span class="mdc-notched-outline">
     <span class="mdc-notched-outline__leading"></span>
@@ -162,17 +165,15 @@
     </span>
     <span class="mdc-notched-outline__trailing"></span>
   </span>
-        <input type="password" class="mdc-text-field__input" aria-labelledby="login_input_pw_label" id="login_input_pw_text" required minlength="8">
+        <input type="password" class="mdc-text-field__input" aria-labelledby="login_input_pw_label" id="login_input_pw_text" name="pw" required minlength="8">
     </label>
-</p>
-<div class="button-container">
-        <button class="mdc-button mdc-button--raised" id="login_send_button">
-            <div class="mdc-button__ripple"></div>
-            <span class="mdc-button__label" id="login_send_button_label">
-      로그인
-    </span>
-        </button>
 </div>
+<div class="button-container">
+        <input type="submit" class="mdc-button mdc-button--raised" id="login_send_button" value="로그인">
+            <div class="mdc-button__ripple"></div>
+        </input>
+</div>
+    </form>
     <div class="button-container">
         <button type="button" class="mdc-button">
             <div class="mdc-button__ripple"></div>

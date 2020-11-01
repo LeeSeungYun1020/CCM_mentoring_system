@@ -1,13 +1,32 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const session = require('express-session');
+const sessionMySQLStore = require('express-mysql-session')(session);
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const logger = require('morgan');
+const helmet = require('helmet');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
 
-var app = express();
+const app = express();
+const sessionStore = new sessionMySQLStore({
+  host: 'localhost',
+  port: 3306,
+  user: 'root',
+  password: 'lsy1020',
+  database: 'session'
+});
+
+app.use(session({
+  key: 'session_cookie_name',
+  secret: 'S)e(s*s&i^o%n$P#a@s!s`w~o-r=d',
+  store: sessionStore,
+  resave: false,
+  saveUninitialized: false
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -16,9 +35,12 @@ app.engine('html', require('ejs').renderFile);
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
+//app.use(helmet());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
