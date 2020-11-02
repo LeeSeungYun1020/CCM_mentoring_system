@@ -1,13 +1,21 @@
 #login_contents_box {
+    min-height: 500px;
     text-align: center;
+    background-image: url("../images/test_background.jpg");
+    background-position: center;
+    background-size: cover;
 }
 
 .box-form {
     width: 380px;
     height: 480px;
-    position: relative;
+    position: absolute;
     margin: 6% auto;
     padding: 5px;
+    background-color: white;
+    left: 50%;
+    top: 20%;
+    transform: translate(-50%, -20%);
 }
 
 .button-wrap {

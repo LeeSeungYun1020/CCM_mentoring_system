@@ -38,6 +38,8 @@ function initLogin() {
     } else if (loginStatus === LoginStatus.SIGNIN) {
         setTypeSignin()
     }
+
+    $("#login_contents_box").height($(window).height() - 60)
 }
 
 function setTypeLogin() {
@@ -55,3 +57,7 @@ function setTypeSignin() {
     $('#login_type_login_button').removeClass('mdc-button--unelevated')
     $('#login_type_signin_button').addClass('mdc-button--unelevated')
 }
+
+$(window).resize(() => {
+    $("#login_contents_box").height($(window).height() - 60)
+})
