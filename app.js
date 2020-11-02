@@ -25,6 +25,7 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 //app.use(helmet());
 const sessionStore = new sessionMySQLStore({
   host: 'localhost',
