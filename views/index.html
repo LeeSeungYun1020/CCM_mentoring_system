@@ -13,157 +13,17 @@
     <link href="node_modules/material-components-web/dist/material-components-web.min.css" rel="stylesheet">
     <script src="node_modules/material-components-web/dist/material-components-web.min.js"></script>
 
-    <style>
-        * {
-            margin: 0;
-        }
-
-        .oneLine {
-            display: inline-flex;
-        }
-
-        #main_header, footer {
-            box-sizing: border-box;
-            background-color: #315270;
-            color: white;
-            width: 100%;
-            padding: 5px;
-        }
-        #main_header, #main_search_box_header{
-            width: 100%;
-            height: 50px;
-            margin: auto;
-        }
-        #main_search_box{
-            width: 100%;
-            --mdc-theme-primary: #315270;
-        }
-
-        .text_floating_labels_main_color{
-            color: #315270 !important;
-        }
-
-        #main_header{
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .leftMargin{
-            margin-left: 4px;
-        }
-        .rightMargin{
-            margin-right: 4px;
-        }
-        #main_logo {
-            font-size: x-large;
-        }
-        #login_info, #notification, #main_search_icon {
-            margin-top: 10px;
-        }
-        #main_contents{
-            box-sizing: border-box;
-        }
-        footer{
-            position: fixed;
-            bottom: 0;
-        }
-    </style>
-
-    <script>
-        let contents = "home"
-        let loginStatus = "login"
-
-        $(document).ready(() => {
-            initAll()
-
-            $("#login_login_icon").click(() => {
-                // 로그인 화면 가져오기
-                if (contents !== "login"){
-                    contents = "login"
-                    $("#main_contents").load("login.html")
-                }
-            })
-
-            $("#main_logo").click(() => {
-                if (contents !== "home"){
-                    contents = "home"
-                    $("#main_contents").load("home.html")
-                }
-            })
-
-            $("#main_search_icon").click(() => {
-                $("#main_header").hide()
-                $("#main_search_box_header").show()
-            })
-
-            $("#main_search_close_icon").click(() => {
-                console.log("close!!")
-                $("#main_header").show()
-                $("#main_search_box_header").hide()
-            })
-
-            function initAll() {
-                // 로그인 확인
-                if (isLogin()){
-                    $("#login_login_icon").hide()
-                    $("#login_logout_icon").show()
-                    $("#notification").show()
-                    checkNotification()
-                } else {
-                    $("#login_login_icon").show()
-                    $("#login_logout_icon").hide()
-                    $("#notification").hide()
-                }
-                // 텍스트 박스 초기화
-                initTextField()
-                // 검색창 숨김
-                $('#main_search_box_header').hide()
-                // main contents 표시
-                $("#main_contents").load("home.html")
-            }
-
-            function isLogin() {
-                // 로그인 로직
-                return false
-            }
-
-            function checkNotification() {
-                if (hasNotify()){
-                    $("#notification_exist_icon").show()
-                    $("#notification_none_icon").hide()
-                } else {
-                    $("#notification_exist_icon").hide()
-                    $("#notification_none_icon").show()
-                }
-            }
-
-            function hasNotify() {
-                // 알림 확인
-                return true
-            }
-        })
-
-        function initTextField() {
-            document.querySelectorAll('.mdc-text-field').forEach(value => {
-                new mdc.textField.MDCTextField(value)
-            })
-            mdc.ripple.MDCRipple.attachTo(document.querySelector('.mdc-text-field'))
-            document.querySelectorAll('.mdc-button').forEach(value => {
-                new mdc.ripple.MDCRipple(value)
-            })
-            document.querySelectorAll('.mdc-icon-button').forEach(value => {
-                let br = new mdc.ripple.MDCRipple(value)
-                br.unbounded = true;
-            })
-        }
-    </script>
+    <link href="stylesheets/main.css" rel="stylesheet">
+    <script src="javascripts/main.js"></script>
 </head>
 <body>
 <header class="mdc-elevation--z4" id="main_header">
     <section id="main_header_left_part">
         <!--        네비게이션 메뉴 / 구성: 질문, 멘토 -->
         <nav class="oneLine leftMargin">
-            <i class="material-icons">menu</i>
+            <button class="material-icons mdc-icon-button"
+                    id="main_navigation_menu_icon" role="button" tabindex="0">menu
+            </button>
         </nav>
         <!--        메인 로고 -->
         <p class="oneLine leftMargin" id="main_logo">CCM 멘토링 시스템</p>
@@ -171,14 +31,22 @@
     <section id="main_header_right_part">
         <!--        로그인 정보 -->
         <div class="oneLine rightMargin" id="login_info">
-            <span class="material-icons" id="login_login_icon">login</span>
-            <span class="material-icons" id="login_logout_icon">face</span>
+            <button class="material-icons mdc-icon-button" id="login_login_icon"
+                    role="button" tabindex="0">login
+            </button>
+            <button class="material-icons mdc-icon-button" id="login_logout_icon"
+                    role="button" tabindex="0">face
+            </button>
         </div>
 
         <!--        알림 팝업 -->
         <div class="oneLine rightMargin" id="notification">
-            <span class="material-icons" id="notification_none_icon">notifications_none</span>
-            <span class="material-icons" id="notification_exist_icon">notifications</span>
+            <button class="material-icons mdc-icon-button" id="notification_none_icon"
+                    role="button" tabindex="0">notifications_none
+            </button>
+            <button class="material-icons mdc-icon-button" id="notification_exist_icon"
+                    role="button" tabindex="0">notifications
+            </button>
         </div>
 
         <!--        검색 -->

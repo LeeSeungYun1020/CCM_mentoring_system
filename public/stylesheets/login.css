@@ -1,0 +1,45 @@
+#login_contents_box {
+    text-align: center;
+}
+
+.box-form {
+    width: 380px;
+    height: 480px;
+    position: relative;
+    margin: 6% auto;
+    padding: 5px;
+}
+
+.button-wrap {
+    border-radius: 30px;
+    width: 220px;
+    margin: 35px auto;
+    padding: 5px 5px;
+}
+
+.login_type {
+    width: 100px;
+    border-radius: 30px;
+}
+
+
+.login_labels {
+    display: flex;
+    margin: 20px auto;
+    width: 300px;
+    --mdc-theme-primary: #315270;
+}
+
+.button-container {
+    min-width: 300px;
+    margin: auto;
+}
+
+.button-container button {
+    margin: 3px;
+}
+
+.login_buttons {
+    --mdc-theme-primary: #315270;
+    --mdc-theme-on-primary: #FFFFFF;
+}
