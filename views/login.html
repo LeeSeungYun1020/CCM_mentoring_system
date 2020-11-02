@@ -2,124 +2,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
-    <script>
-        // 컴포넌트 초기화 수행
-        $(document).ready(() => {
-            initLogin()
-
-            $('#login_type_login_button').click(() => {
-                if (loginStatus !== "login"){
-                    loginStatus = "login"
-                    setTypeLogin()
-                }
-            })
-            $('#login_type_signin_button').click(() => {
-                if (loginStatus !== "signin"){
-                    loginStatus = "signin"
-                    setTypeSignin()
-                }
-            })
-            $('#login_send_button').click(() => {
-                if (loginStatus === "login"){
-                    alert("로그인 시도")
-                } else if (loginStatus === "signin"){
-                    alert("회원가입 시도")
-                }
-            })
-
-            // default 행동 login으로 설정
-            $('#login_type_login_button').trigger("click")
-        })
-
-        function initLogin() {
-            document.querySelectorAll('.mdc-text-field').forEach(value => {
-                new mdc.textField.MDCTextField(value)
-            })
-            document.querySelectorAll('.mdc-button').forEach(value => {
-                new mdc.ripple.MDCRipple(value)
-            })
-
-            if (loginStatus === "login"){
-                setTypeLogin()
-            } else if (loginStatus === "signin"){
-                setTypeSignin()
-            }
-        }
-
-        function setTypeLogin(){
-            $('#login_input_email_label').hide()
-            $('#login_input_email_text').removeAttr('required')
-            $('#login_send_button').val("로그인")
-            $('#login_type_login_button').addClass('mdc-button--unelevated')
-            $('#login_type_signin_button').removeClass('mdc-button--unelevated')
-        }
-
-        function setTypeSignin(){
-            $('#login_input_email_label').show()
-            $('#login_input_email_text').attr('required', 'true')
-            $('#login_send_button').val("회원가입")
-            $('#login_type_login_button').removeClass('mdc-button--unelevated')
-            $('#login_type_signin_button').addClass('mdc-button--unelevated')
-        }
-
-    </script>
-    <style>
-        #login_contents_box {
-            text-align: center;
-        }
-        .box-form{
-            width: 380px;
-            height: 480px;
-            position: relative;
-            margin: 6% auto;
-            padding: 5px;
-        }
-        .button-wrap {
-            border-radius: 30px;
-            width: 220px;
-            margin: 35px auto;
-            padding: 5px 5px;
-        }
-        .login_type{
-            width: 100px;
-            border-radius: 30px;
-        }
-
-
-        .login_labels {
-            display: flex;
-            margin: 20px auto;
-            width: 300px;
-            --mdc-theme-primary: #315270;
-        }
-
-        .button-container {
-            min-width: 300px;
-            margin: auto;
-        }
-
-        .button-container button {
-            margin: 3px;
-        }
-
-        .mdc-button,
-        .mdc-button--unelevated {
-            --mdc-theme-primary: #315270;
-            --mdc-theme-on-primary: #FFFFFF;
-        }
-    </style>
+    <script src="javascripts/login.js"></script>
+    <link href="stylesheets/login.css" rel="stylesheet">
 </head>
 <body>
 <section id="login_contents_box">
 
 <div class="box-form mdc-elevation--z8">
     <div class="button-wrap mdc-elevation--z4">
-        <button type="button" class="mdc-button mdc-button--unelevated login_type" id="login_type_login_button">
+        <button class="mdc-button mdc-button--unelevated login_type login_buttons" id="login_type_login_button"
+                type="button">
             <span class="mdc-button__ripple"></span>
-            로그인</button>
-        <button type="button" class="mdc-button mdc-button--unelevated login_type" id="login_type_signin_button">
+            로그인
+        </button>
+        <button class="mdc-button mdc-button--unelevated login_type login_buttons" id="login_type_signin_button"
+                type="button">
             <span class="mdc-button__ripple"></span>
-            회원가입</button>
+            회원가입
+        </button>
     </div>
     <form action="users/login" method="post">
     <div>
@@ -161,19 +61,19 @@
     </label>
 </div>
 <div class="button-container">
-        <input type="submit" class="mdc-button mdc-button--raised" id="login_send_button" value="로그인">
+    <input class="mdc-button mdc-button--raised login_buttons" id="login_send_button" type="submit" value="로그인">
             <div class="mdc-button__ripple"></div>
         </input>
 </div>
     </form>
     <div class="button-container">
-        <button type="button" class="mdc-button">
+        <button class="mdc-button login_buttons" type="button">
             <div class="mdc-button__ripple"></div>
             <span class="mdc-button__label">
       아이디 찾기
     </span>
         </button>
-        <button type="button" class="mdc-button">
+        <button class="mdc-button login_buttons" type="button">
             <div class="mdc-button__ripple"></div>
             <span class="mdc-button__label">
       비밀번호 찾기

@@ -1,0 +1,19 @@
+#home_contents_box, .home_contents {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    box-sizing: border-box;
+}
+
+#home_contents_box {
+    width: 90%;
+    margin: auto 5%;
+    padding-top: 100px;
+}
+
+.home_contents {
+    width: 100%;
+    margin: 1%;
+    min-height: 100px;
+    font-size: xx-large;
+}
