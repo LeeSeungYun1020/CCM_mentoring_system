@@ -5,22 +5,24 @@
     <!--    title -->
     <title>CCM 멘토링 시스템</title>
     <!--    jquery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="node_modules/jquery/dist/jquery.min.js" type="text/javascript"></script>
     <!--    material icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
     <!--    material components-->
-    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
-    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    <link href="node_modules/material-components-web/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="node_modules/material-components-web/dist/material-components-web.min.js"></script>
 
     <style>
-        *{
+        * {
             margin: 0;
         }
-        .oneLine{
+
+        .oneLine {
             display: inline-flex;
         }
-        #main_header, footer{
+
+        #main_header, footer {
             box-sizing: border-box;
             background-color: #315270;
             color: white;
@@ -68,7 +70,6 @@
     </style>
 
     <script>
-        // TODO("전역변수 별도 js 파일로 옮기기")
         let contents = "home"
         let loginStatus = "login"
 
