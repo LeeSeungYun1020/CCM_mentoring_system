@@ -12,6 +12,20 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
 const app = express();
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+app.engine('html', require('ejs').renderFile);
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'public')));
+//app.use(helmet());
 const sessionStore = new sessionMySQLStore({
   host: 'localhost',
   port: 3306,
@@ -28,20 +42,6 @@ app.use(session({
   saveUninitialized: false
 }));
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-app.engine('html', require('ejs').renderFile);
-
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'public')));
-//app.use(helmet());
-
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.get('/*.html', (req, res) => {
@@ -49,7 +49,7 @@ app.get('/*.html', (req, res) => {
 })
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
