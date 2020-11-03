@@ -1,44 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>질문창</title>
+    <!--    title -->
+    <title>CCM 멘토링 시스템 - 질문</title>
+    <!--    jquery -->
+    <script src="/node_modules/jquery/dist/jquery.min.js" type="text/javascript"></script>
+    <!--    material icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--    material components-->
+    <link href="/node_modules/material-components-web/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="/node_modules/material-components-web/dist/material-components-web.min.js"></script>
+
     <!-- Core build with no theme, formatting, non-essential modules -->
-    <link href="node_modules/quill/dist/quill.core.css" rel="stylesheet">
-    <script src="node_modules/quill/dist/quill.core.js"></script>
+    <link href="/node_modules/quill/dist/quill.core.css" rel="stylesheet">
+    <script src="/node_modules/quill/dist/quill.core.js"></script>
 
     <!-- Main Quill library -->
-    <script src="node_modules/quill/dist/quill.js"></script>
+    <script src="/node_modules/quill/dist/quill.js"></script>
 
     <!-- Theme included stylesheets -->
-    <link href="node_modules/quill/dist/quill.snow.css" rel="stylesheet">
-    <link href="node_modules/quill/dist/quill.bubble.css" rel="stylesheet">
+    <link href="/node_modules/quill/dist/quill.snow.css" rel="stylesheet">
+    <link href="/node_modules/quill/dist/quill.bubble.css" rel="stylesheet">
+
+    <link href="/stylesheets/main.css" rel="stylesheet">
+    <script src="/javascripts/main.js"></script>
 
     <script>
-        const quill = new Quill('#editor-container', {
-            modules: {
-                toolbar: [
-                    ['bold', 'italic'],
-                    ['link', 'blockquote', 'code-block', 'image'],
-                    [{list: 'ordered'}, {list: 'bullet'}]
-                ]
-            },
-            placeholder: 'Compose an epic...',
-            theme: 'snow'
-        });
+        console.log($(document))
+        $(document).ready(function () {
+            const quill = new Quill('#editor-container', {
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic'],
+                        ['link', 'blockquote', 'code-block', 'image'],
+                        [{list: 'ordered'}, {list: 'bullet'}]
+                    ]
+                },
+                placeholder: 'Compose an epic...',
+                theme: 'snow'
+            });
 
-        const form = document.querySelector('form');
-        form.onsubmit = function () {
-            // Populate hidden form on submit
-            const about = document.querySelector('input[id=about]');
-            about.value = JSON.stringify(quill.getContents());
+            const form = document.querySelector('form');
+            form.onsubmit = function () {
+                // Populate hidden form on submit
+                const about = document.querySelector('input[id=about]');
+                about.value = JSON.stringify(quill.getContents());
 
-            console.log("Submitted", $(form).serialize(), $(form).serializeArray());
+                console.log("Submitted", $(form).serialize(), $(form).serializeArray());
 
-            // No back end to actually submit to!
-            alert('Open the console to see the submit data!')
-            return false;
-        };
+                // No back end to actually submit to!
+                alert('Open the console to see the submit data!')
+                return false;
+            };
+        })
+
 
     </script>
 
@@ -64,12 +80,9 @@
             height: 130px;
         }
     </style>
-
-    <!--    <link href="stylesheets/question.css" rel="stylesheet">-->
-    <!--    <script src="javascripts/question.js"></script>-->
-    <!--    TODO("질문 게시판 구현 - 질문 등록 파트")-->
 </head>
 <body>
+<header></header>
 <div class="container" id="form-container">
     <form>
         <div class="row">
@@ -94,5 +107,6 @@
         </div>
     </form>
 </div>
+<footer></footer>
 </body>
 </html>

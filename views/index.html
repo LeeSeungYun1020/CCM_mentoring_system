@@ -7,71 +7,24 @@
     <!--    jquery -->
     <script src="node_modules/jquery/dist/jquery.min.js" type="text/javascript"></script>
     <!--    material icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--    material components-->
     <link href="node_modules/material-components-web/dist/material-components-web.min.css" rel="stylesheet">
     <script src="node_modules/material-components-web/dist/material-components-web.min.js"></script>
 
     <link href="stylesheets/main.css" rel="stylesheet">
     <script src="javascripts/main.js"></script>
+
+    <link href="stylesheets/home.css" rel="stylesheet">
+    <script src="javascripts/home.js"></script>
 </head>
 <body>
-<header class="mdc-elevation--z4" id="main_header">
-    <section id="main_header_left_part">
-        <!--        네비게이션 메뉴 / 구성: 질문, 멘토 -->
-        <nav class="oneLine leftMargin">
-            <button class="material-icons mdc-icon-button"
-                    id="main_navigation_menu_icon" role="button" tabindex="0">menu
-            </button>
-        </nav>
-        <!--        메인 로고 -->
-        <p class="oneLine leftMargin" id="main_logo">CCM 멘토링 시스템</p>
-    </section>
-    <section id="main_header_right_part">
-        <!--        로그인 정보 -->
-        <div class="oneLine rightMargin" id="login_info">
-            <button class="material-icons mdc-icon-button" id="login_login_icon"
-                    role="button" tabindex="0">login
-            </button>
-            <button class="material-icons mdc-icon-button" id="login_logout_icon"
-                    role="button" tabindex="0">face
-            </button>
-        </div>
-
-        <!--        알림 팝업 -->
-        <div class="oneLine rightMargin" id="notification">
-            <button class="material-icons mdc-icon-button" id="notification_none_icon"
-                    role="button" tabindex="0">notifications_none
-            </button>
-            <button class="material-icons mdc-icon-button" id="notification_exist_icon"
-                    role="button" tabindex="0">notifications
-            </button>
-        </div>
-
-        <!--        검색 -->
-        <button class="oneLine mdc-icon-button material-icons" id="main_search_icon">search</button>
-    </section>
-</header>
-
-<header id="main_search_box_header">
-    <!--        검색 창 -->
-    <div class="mdc-text-field mdc-text-field--with-trailing-icon
-     mdc-text-field--filled mdc-elevation--z4" id="main_search_box">
-        <input class="mdc-text-field__input" id="main_search_box_input">
-        <div class="mdc-line-ripple"></div>
-        <label for="main_search_box_input" class="mdc-floating-label text_floating_labels_main_color">사이트내 검색</label>
-        <button class="material-icons mdc-text-field__icon mdc-text-field__icon--trailing mdc-icon-button"
-        id="main_search_close_icon" tabindex="0" role="button">close</button>
-    </div>
-</header>
-
-<section id="main_contents">
-    <!--        메인 컨텐츠 삽입-->
-</section>
-
-<footer>
-    Copyright 2020. 심재영, 이승윤. all rights reserved.
-</footer>
+<header></header>
+<div id="home_contents_box">
+    <section class="mdc-elevation--z4 home_contents" id="home_question">질문</section>
+    <section class="mdc-elevation--z4 home_contents" id="home_answer">답변</section>
+    <section class="mdc-elevation--z4 home_contents" id="home_mentor">멘토</section>
+</div>
+<footer></footer>
 </body>
 </html>

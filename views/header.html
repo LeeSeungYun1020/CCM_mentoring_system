@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="javascripts/header.js"></script>
+</head>
+<body>
+<header class="mdc-elevation--z4" id="main_header">
+    <section id="main_header_left_part">
+        <!--        네비게이션 메뉴 / 구성: 질문, 멘토 -->
+        <nav class="oneLine leftMargin">
+            <button class="material-icons mdc-icon-button"
+                    id="main_navigation_menu_icon" role="button" tabindex="0">menu
+            </button>
+        </nav>
+        <!--        메인 로고 -->
+        <p class="oneLine leftMargin" id="main_logo">CCM 멘토링 시스템</p>
+    </section>
+    <section id="main_header_right_part">
+        <!--        로그인 정보 -->
+        <div class="oneLine rightMargin" id="login_info">
+            <button class="material-icons mdc-icon-button" id="login_login_icon"
+                    role="button" tabindex="0">login
+            </button>
+            <button class="material-icons mdc-icon-button" id="login_logout_icon"
+                    role="button" tabindex="0">face
+            </button>
+        </div>
+
+        <!--        알림 팝업 -->
+        <div class="oneLine rightMargin" id="notification">
+            <button class="material-icons mdc-icon-button" id="notification_none_icon"
+                    role="button" tabindex="0">notifications_none
+            </button>
+            <button class="material-icons mdc-icon-button" id="notification_exist_icon"
+                    role="button" tabindex="0">notifications
+            </button>
+        </div>
+
+        <!--        검색 -->
+        <button class="oneLine mdc-icon-button material-icons" id="main_search_icon">search</button>
+    </section>
+</header>
+
+<header id="main_search_box_header">
+    <!--        검색 창 -->
+    <div class="mdc-text-field mdc-text-field--with-trailing-icon
+     mdc-text-field--filled mdc-elevation--z4" id="main_search_box">
+        <input class="mdc-text-field__input" id="main_search_box_input">
+        <div class="mdc-line-ripple"></div>
+        <label class="mdc-floating-label text_floating_labels_main_color" for="main_search_box_input">사이트내 검색</label>
+        <button class="material-icons mdc-text-field__icon mdc-text-field__icon--trailing mdc-icon-button"
+                id="main_search_close_icon" role="button" tabindex="0">close
+        </button>
+    </div>
+</header>
+</body>
+
+</html>
