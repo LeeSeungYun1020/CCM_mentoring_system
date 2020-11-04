@@ -56,53 +56,54 @@
     </script>
 
     <style>
-        .question_box {
-
+        body {
+            background-color: #EFF0F1;
         }
 
-        /*#question-form {*/
-        /*    width: 500px;*/
-        /*}*/
+        h1 {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            color: #315270;
+        }
 
-        /*.row {*/
-        /*    margin-top: 15px;*/
-        /*}*/
+        .container {
+            grid-template-areas:
+                    "   a   main    b   ";
+            display: grid;
+        }
 
-        .row.form-group {
-            padding: 15px 20px 30px 20px; /*위, 오른쪽, 아래, 왼쪽*/
+        .form-group {
+            padding: 5px 20px; /*위, 오른쪽, 아래, 왼쪽*/
         }
 
         #editor-container {
-            height: 130px;
+            height: 150px;
+        }
+
+        .grid_form {
+            grid-area: main;
+            display: grid;
+        }
+
+        .label_style {
+            font-size: x-large;
+            font-weight: bold;
+            color: #315270;
+        }
+
+        .question_box {
+            background-color: white;
         }
 
         .title_form {
-            margin-top: 15px;
-            padding: 15px 20px 30px 20px;
+            margin-top: 10px;
+            /*padding: 15px 20px 30px 20px;*/
         }
 
-        .writing_form {
-            padding: 15px 20px 30px 20px;
-        }
-
-        .title_input_set {
-            min-width: 500px;
-            min-height: 20px;
-            maxlength: "300";
-            tabindex: "100";
-            data-min-length: "15";
-            data-max-length: "150";
-            autocomplete: "off";
-
-        }
-
-        .tag_input_set {
-            min-height: 20px;
-            padding: 0px 9px;
-            box-sizing: border-box;
-            margin-top: 0px;
-            margin-bottom: 0px;
+        .input_set {
             width: 100%;
+            min-height: 40px;
+            box-sizing: border-box;
         }
 
         .explain_form {
@@ -115,10 +116,10 @@
         .button-container {
             min-width: 100px;
             padding-left: 20px;
-        }
-
-        .button-container button {
-            margin: 3px;
+            padding-right: 20px;
+            float: right;
+            margin-top: 15px;
+            margin-bottom: 15px;
         }
 
         .question_buttons {
@@ -135,45 +136,52 @@
 <header></header>
 <aside class="navigation"></aside>
 <div class="main_contents">
-    <div class="container">
-        <div class="title_form">
-            <div class="writing_form"></div>
-            <!--                    <div class = "form-group">-->
-            <label for="title">Title
-                <p class="explain_form">다른 사람에게 질문을 한다고 생각하고 구체적으로 작성하시오.</p>
-            </label>
-            <input class="title_input_set" id="title" name="title"
-                   placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
-                   type="text">
-            <!--                    </div>-->
+    <form>
+        <div class="container">
+            <div class="grid_form">
+                <h1>질문</h1>
+                <div class="question_box mdc-elevation--z8">
+                    <div class="title_form">
+                        <div class="form-group">
+                            <!--                    <div class = "form-group">-->
+                            <label class="label_style" for="title">Title
+                                <p class="explain_form">다른 사람에게 질문을 한다고 생각하고 구체적으로 작성하시오.</p>
+                            </label>
+                            <input autocomplete="off" class="input_set" data-max-length="150"
+                                   data-min-length="15"
+                                   id="title" maxlength="300" name="title"
+                                   placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
+                                   tabindex="100" type="text">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label_style" for="body">Body
+                            <p class="explain_form">질문에 답변하는 데 필요한 모든 정보를 포함시키시오.</p>
+                        </label>
+                        <input id="body" type="hidden">
+                        <div id="editor-container"></div>
+                    </div>
+                    <div class="form-group">
+                        <!--                    <div class = "form-group">-->
+                        <label class="label_style" for="tag">Tag
+                            <p class="explain_form">최대 5개의 질문에 대한 태그를 추가하시오.</p>
+                        </label>
+                        <input class="input_set" id="tag" name="tag" placeholder="e.g. (sql ajax iphone)"
+                               type="text">
+                    </div>
+
+                    <div class="button-container form_group">
+                        <input class="mdc-button mdc-button--raised question_buttons" id="question_send_button"
+                               type="submit"
+                               value="Save your question">
+                        <div class="mdc-button__ripple"></div>
+                        </input>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <div class="row form-group">
-        <label for="body">Body
-            <p class="explain_form">질문에 답변하는 데 필요한 모든 정보를 포함시키시오.</p>
-        </label>
-        <input id="body" type="hidden">
-        <div id="editor-container"></div>
-    </div>
-
-    <div class="writing_form">
-        <!--                    <div class = "form-group">-->
-        <label for="tag">Tag
-            <p class="explain_form">최대 5개의 질문에 대한 태그를 추가하시오.</p>
-        </label>
-        <input class="tag_input_set" id="tag" name="tag" placeholder="e.g. (sql ajax iphone)"
-               type="text">
-
-        <!--                    </div>-->
-    </div>
-
-    <div class="button-container">
-        <input class="mdc-button mdc-button--raised question_buttons" id="question_send_button" type="submit"
-               value="Save your question">
-        <div class="mdc-button__ripple"></div>
-        </input>
-    </div>
+    </form>
 </div>
 <footer></footer>
 </body>
