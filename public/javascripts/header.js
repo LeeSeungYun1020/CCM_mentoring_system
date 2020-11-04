@@ -49,22 +49,6 @@ $(document).ready(() => {
         console.log("dialog open")
     })
 
-    const drawer = mdc.drawer.MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
-    const listEl = document.querySelector('.mdc-drawer .mdc-list');
-    const mainContentEl = document.querySelector('#header_main_contents');
-
-    listEl.addEventListener('click', (event) => {
-        drawer.open = false;
-    });
-
-    document.body.addEventListener('MDCDrawer:closed', () => {
-        mainContentEl.querySelector('input, button').focus();
-    })
-
-    $("#main_navigation_menu_icon").click(() => {
-        drawer.open = !drawer.open
-    })
-
     function initHeader() {
         // 로그인 확인
         $.post('/users/', (data) => {

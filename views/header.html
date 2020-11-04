@@ -5,31 +5,9 @@
 </head>
 <body>
 <header class="mdc-elevation--z4" id="main_header">
-    <aside class="mdc-drawer mdc-drawer--modal">
-        <div class="mdc-drawer__content">
-            <nav class="mdc-list">
-                <a aria-current="page" class="mdc-list-item mdc-list-item--activated" href="#" tabindex="0">
-                    <span class="mdc-list-item__ripple"></span>
-                    <i aria-hidden="true" class="material-icons mdc-list-item__graphic">inbox</i>
-                    <span class="mdc-list-item__text">Inbox</span>
-                </a>
-                <a class="mdc-list-item" href="#">
-                    <span class="mdc-list-item__ripple"></span>
-                    <i aria-hidden="true" class="material-icons mdc-list-item__graphic">send</i>
-                    <span class="mdc-list-item__text">Outgoing</span>
-                </a>
-                <a class="mdc-list-item" href="#">
-                    <span class="mdc-list-item__ripple"></span>
-                    <i aria-hidden="true" class="material-icons mdc-list-item__graphic">drafts</i>
-                    <span class="mdc-list-item__text">Drafts</span>
-                </a>
-            </nav>
-        </div>
-    </aside>
-
     <div class="mdc-drawer-scrim"></div>
-    <section id="main_header_left_part">
-        <!--        네비게이션 메뉴 / 구성: 질문, 멘토 -->
+    <section class="main_header_general" id="main_header_left_part">
+        <!--        네비게이션 메뉴 -->
         <nav class="oneLine leftMargin">
             <button class="material-icons mdc-icon-button"
                     id="main_navigation_menu_icon" role="button" tabindex="0">menu
@@ -38,7 +16,7 @@
         <!--        메인 로고 -->
         <p class="oneLine leftMargin" id="main_logo">CCM 멘토링 시스템</p>
     </section>
-    <section id="main_header_right_part">
+    <section class="main_header_general" id="main_header_right_part">
         <!--        로그인 관련 아이콘 -->
         <div class="oneLine rightMargin" id="login_info">
             <button class="material-icons mdc-icon-button" id="login_login_icon"

@@ -1,19 +1,10 @@
-#home_contents_box, .home_contents {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    box-sizing: border-box;
+.home-cell-box {
+    /*height: 900px;*/
 }
 
-#home_contents_box {
-    width: 90%;
-    margin: auto 5%;
-    padding-top: 100px;
-}
-
-.home_contents {
-    width: 100%;
-    margin: 1%;
-    min-height: 100px;
+.home-cell {
     font-size: xx-large;
+    min-height: 200px;
+    text-align: center;
+    line-height: 200px;
 }

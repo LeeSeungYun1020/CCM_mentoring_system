@@ -133,45 +133,47 @@
 </head>
 <body>
 <header></header>
-<div class="container">
-    <div class="title_form">
-        <div class="writing_form"></div>
-        <!--                    <div class = "form-group">-->
-        <label for="title">Title
-            <p class="explain_form">다른 사람에게 질문을 한다고 생각하고 구체적으로 작성하시오.</p>
+<aside class="navigation"></aside>
+<div class="main_contents">
+    <div class="container">
+        <div class="title_form">
+            <div class="writing_form"></div>
+            <!--                    <div class = "form-group">-->
+            <label for="title">Title
+                <p class="explain_form">다른 사람에게 질문을 한다고 생각하고 구체적으로 작성하시오.</p>
+            </label>
+            <input class="title_input_set" id="title" name="title"
+                   placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
+                   type="text">
+            <!--                    </div>-->
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <label for="body">Body
+            <p class="explain_form">질문에 답변하는 데 필요한 모든 정보를 포함시키시오.</p>
         </label>
-        <input class="title_input_set" id="title" name="title"
-               placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
+        <input id="body" type="hidden">
+        <div id="editor-container"></div>
+    </div>
+
+    <div class="writing_form">
+        <!--                    <div class = "form-group">-->
+        <label for="tag">Tag
+            <p class="explain_form">최대 5개의 질문에 대한 태그를 추가하시오.</p>
+        </label>
+        <input class="tag_input_set" id="tag" name="tag" placeholder="e.g. (sql ajax iphone)"
                type="text">
+
         <!--                    </div>-->
     </div>
-</div>
 
-<div class="row form-group">
-    <label for="body">Body
-        <p class="explain_form">질문에 답변하는 데 필요한 모든 정보를 포함시키시오.</p>
-    </label>
-    <input id="body" type="hidden">
-    <div id="editor-container"></div>
-</div>
-</div>
-
-<div class="writing_form">
-    <!--                    <div class = "form-group">-->
-    <label for="tag">Tag
-        <p class="explain_form">최대 5개의 질문에 대한 태그를 추가하시오.</p>
-    </label>
-    <input class="tag_input_set" id="tag" name="tag" placeholder="e.g. (sql ajax iphone)"
-           type="text">
-
-    <!--                    </div>-->
-</div>
-
-<div class="button-container">
-    <input class="mdc-button mdc-button--raised question_buttons" id="question_send_button" type="submit"
-           value="Save your question">
-    <div class="mdc-button__ripple"></div>
-    </input>
+    <div class="button-container">
+        <input class="mdc-button mdc-button--raised question_buttons" id="question_send_button" type="submit"
+               value="Save your question">
+        <div class="mdc-button__ripple"></div>
+        </input>
+    </div>
 </div>
 <footer></footer>
 </body>

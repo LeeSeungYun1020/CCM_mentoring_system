@@ -4,5 +4,6 @@ $(document).ready(() => {
         isReady = true
         $('header').load('header.html')
         $('footer').load('footer.html')
+        $('.navigation').load('navigation.html')
     }
 })
