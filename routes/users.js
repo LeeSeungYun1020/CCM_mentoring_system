@@ -1,14 +1,58 @@
 const express = require('express')
 const router = express.Router()
+const mysql = require('../lib/mysql.js')
 
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+module.exports = function (passport) {
+    router.get('/', function (req, res, next) {
+        res.render("login.html")
+    });
 
-router.post('/login', function(req, res, next) {
-  const body = req.body
-  // email, id, pw
-  res.send('TODO("로그인 기능 구현") \n' + body);
-});
+    router.route('/login')
+        .get((req, res) => {
+            res.redirect('/users')
+        })
+        .post(passport.authenticate('local', {
+            successRedirect: '/',
+            failureRedirect: '/users',
+            failureFlash: "아이디와 비밀번호를 다시 확인하십시오."
+        }))
 
-module.exports = router;
+    router.route('/signin')
+        .get((req, res) => {
+            res.redirect('/users')
+        })
+        .post((req, res) => {
+            const data = req.body
+            mysql.query(
+                "INSERT INTO user (id, pw, name, email, phone, type) VALUES (?, ?, ?, ?, ?, ?)",
+                [data.username, data.password, data.name, data.email, data.phone, data.type],
+                function (error, results) {
+                    if (error) {
+                        res.redirect('/users')
+                    } else {
+                        res.redirect('/')
+                    }
+                })
+        })
+    router.get('/pw', ((req, res) => {
+        req.body.type = 'find'
+        res.redirect('/users')
+    }))
+    router.post('/checkID', ((req, res) => {
+        // 데이터베이스에 해당 ID 있는지 조회
+        mysql.query(
+            "SELECT id from `User` WHERE `id`=?",
+            [req.body.id],
+            function (error, results, fields) {
+                if (error) {
+                    res.send({step: false, error: true})
+                }
+                if (results[0]) {// ID 있는 경우
+                    res.send({step: false, error: false})
+                } else // ID 없는 경우
+                    res.send({step: true, error: false})
+            })
+
+    }))
+    return router
+}

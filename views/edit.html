@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!--    title -->
+    <title>CCM 멘토링 시스템 - 질문</title>
+    <!--    jquery -->
+    <script src="/node_modules/jquery/dist/jquery.min.js" type="text/javascript"></script>
+    <!--    material icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--    material components-->
+    <link href="/node_modules/material-components-web/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="/node_modules/material-components-web/dist/material-components-web.min.js"></script>
+
+    <!-- Core build with no theme, formatting, non-essential modules -->
+    <link href="node_modules/quill/dist/quill.core.css" rel="stylesheet">
+    <script src="node_modules/quill/dist/quill.core.js"></script>
+
+    <!-- Main Quill library -->
+    <script src="node_modules/quill/dist/quill.js"></script>
+
+    <!-- Theme included stylesheets -->
+    <link href="node_modules/quill/dist/quill.snow.css" rel="stylesheet">
+    <link href="node_modules/quill/dist/quill.bubble.css" rel="stylesheet">
+
+    <link href="stylesheets/main.css" rel="stylesheet">
+    <script src="javascripts/main.js"></script>
+
+    <script>
+        $(document).ready(() => {
+            const quill = new Quill('#editor-container', {
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic'],
+                        ['link', 'blockquote', 'code-block', 'image'],
+                        [{list: 'ordered'}, {list: 'bullet'}]
+                    ]
+                },
+                placeholder: '질문을 작성하시오...',
+                theme: 'snow'
+            });
+
+            const form = document.querySelector('form');
+            form.onsubmit = function () {
+                // Populate hidden form on submit
+                const body = document.querySelector('input[id=body]');
+                body.value = JSON.stringify(quill.getContents());
+
+                console.log("Submitted", $(form).serialize(), $(form).serializeArray());
+
+                // No back end to actually submit to!
+                alert('Open the console to see the submit data!')
+                return false;
+            };
+        })
+    </script>
+
+    <style>
+        .question_box {
+
+        }
+
+        /*#question-form {*/
+        /*    width: 500px;*/
+        /*}*/
+
+        /*.row {*/
+        /*    margin-top: 15px;*/
+        /*}*/
+
+        .row.form-group {
+            padding: 15px 20px 30px 20px; /*위, 오른쪽, 아래, 왼쪽*/
+        }
+
+        #editor-container {
+            height: 130px;
+        }
+
+        .title_form {
+            margin-top: 15px;
+            padding: 15px 20px 30px 20px;
+        }
+
+        .writing_form {
+            padding: 15px 20px 30px 20px;
+        }
+
+        .title_input_set {
+            min-width: 500px;
+            min-height: 20px;
+            maxlength: "300";
+            tabindex: "100";
+            data-min-length: "15";
+            data-max-length: "150";
+            autocomplete: "off";
+
+        }
+
+        .tag_input_set {
+            min-height: 20px;
+            padding: 0px 9px;
+            box-sizing: border-box;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            width: 100%;
+        }
+
+        .explain_form {
+            font-size: 12px;
+            color: #315270;
+            font-family: Arial;
+            padding: 4px 0px 3px 0px;
+        }
+
+        .button-container {
+            min-width: 100px;
+            padding-left: 20px;
+        }
+
+        .button-container button {
+            margin: 3px;
+        }
+
+        .question_buttons {
+            --mdc-theme-primary: #315270;
+            --mdc-theme-on-primary: #FFFFFF;
+        }
+    </style>
+
+    <!--    <link href="stylesheets/question.css" rel="stylesheet">-->
+    <!--    <script src="javascripts/question.js"></script>-->
+    <!--    TODO("질문 게시판 구현 - 질문 등록 파트")-->
+</head>
+<body>
+<header></header>
+<div class="container">
+    <div class="title_form">
+        <div class="writing_form"></div>
+        <!--                    <div class = "form-group">-->
+        <label for="title">Title
+            <p class="explain_form">다른 사람에게 질문을 한다고 생각하고 구체적으로 작성하시오.</p>
+        </label>
+        <input class="title_input_set" id="title" name="title"
+               placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
+               type="text">
+        <!--                    </div>-->
+    </div>
+</div>
+
+<div class="row form-group">
+    <label for="body">Body
+        <p class="explain_form">질문에 답변하는 데 필요한 모든 정보를 포함시키시오.</p>
+    </label>
+    <input id="body" type="hidden">
+    <div id="editor-container"></div>
+</div>
+</div>
+
+<div class="writing_form">
+    <!--                    <div class = "form-group">-->
+    <label for="tag">Tag
+        <p class="explain_form">최대 5개의 질문에 대한 태그를 추가하시오.</p>
+    </label>
+    <input class="tag_input_set" id="tag" name="tag" placeholder="e.g. (sql ajax iphone)"
+           type="text">
+
+    <!--                    </div>-->
+</div>
+
+<div class="button-container">
+    <input class="mdc-button mdc-button--raised question_buttons" id="question_send_button" type="submit"
+           value="Save your question">
+    <div class="mdc-button__ripple"></div>
+    </input>
+</div>
+<footer></footer>
+</body>
+</html>

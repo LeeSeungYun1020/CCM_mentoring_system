@@ -38,6 +38,11 @@
     --mdc-theme-primary: #315270;
 }
 
+.login_signin_type_text {
+    margin-top: 10px;
+    alignment-baseline: bottom;
+}
+
 .button-container {
     min-width: 300px;
     margin: auto;

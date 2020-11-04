@@ -47,10 +47,6 @@
     font-size: x-large;
 }
 
-#login_info, #notification, #main_search_icon {
-    /*margin-top: 10px;*/
-}
-
 #main_contents {
     box-sizing: border-box;
 }

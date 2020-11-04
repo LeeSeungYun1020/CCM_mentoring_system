@@ -1,88 +1,180 @@
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <!--    title -->
+    <title>CCM 멘토링 시스템 - 로그인</title>
+    <!--    jquery -->
+    <script src="node_modules/jquery/dist/jquery.min.js" type="text/javascript"></script>
+    <!--    material icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--    material components-->
+    <link href="node_modules/material-components-web/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="node_modules/material-components-web/dist/material-components-web.min.js"></script>
+
+    <link href="stylesheets/main.css" rel="stylesheet">
+    <script src="javascripts/main.js"></script>
 
     <script src="javascripts/login.js"></script>
     <link href="stylesheets/login.css" rel="stylesheet">
 </head>
 <body>
+<header></header>
 <section id="login_contents_box">
 
-<div class="box-form mdc-elevation--z8">
-    <div class="button-wrap mdc-elevation--z4">
-        <button class="mdc-button mdc-button--unelevated login_type login_buttons" id="login_type_login_button"
-                type="button">
-            <span class="mdc-button__ripple"></span>
-            로그인
-        </button>
-        <button class="mdc-button mdc-button--unelevated login_type login_buttons" id="login_type_signin_button"
-                type="button">
-            <span class="mdc-button__ripple"></span>
-            회원가입
-        </button>
-    </div>
-    <form action="users/login" method="post">
-    <div>
-        <label class="mdc-text-field mdc-text-field--outlined login_labels" id="login_input_email_label">
-  <span class="mdc-notched-outline">
-    <span class="mdc-notched-outline__leading"></span>
-    <span class="mdc-notched-outline__notch">
-      <span class="mdc-floating-label text_floating_labels_main_color" >E-mail</span>
-    </span>
-    <span class="mdc-notched-outline__trailing"></span>
-  </span>
-            <input type="email" class="mdc-text-field__input" aria-labelledby="login_input_email_label" id="login_input_email_text" name="email">
-        </label>
+    <div class="box-form mdc-elevation--z8">
+        <div class="button-wrap mdc-elevation--z4">
+            <button class="mdc-button mdc-button--unelevated login_type login_buttons" id="login_type_login_button"
+                    type="button">
+                <span class="mdc-button__ripple"></span>
+                로그인
+            </button>
+            <button class="mdc-button mdc-button--unelevated login_type login_buttons" id="login_type_signin_button"
+                    type="button">
+                <span class="mdc-button__ripple"></span>
+                회원가입
+            </button>
+        </div>
+        <form action="users/login" id="login_form" method="post">
+            <div>
+                <label class="mdc-text-field mdc-text-field--outlined login_labels" id="login_input_id_label">
+                    <span class="mdc-notched-outline">
+                        <span class="mdc-notched-outline__leading"></span>
+                        <span class="mdc-notched-outline__notch">
+                            <span class="mdc-floating-label text_floating_labels_main_color">ID</span>
+                        </span>
+                        <span class="mdc-notched-outline__trailing"></span>
+                    </span>
+                    <input aria-labelledby="login_input_id_label" class="mdc-text-field__input" id="login_input_id_text"
+                           autocomplete="username" maxlength="10" name="username" required type="number">
+                </label>
+            </div>
+            <div>
+                <label class="mdc-text-field mdc-text-field--outlined login_labels" id="login_input_pw_label">
+                    <span class="mdc-notched-outline">
+                        <span class="mdc-notched-outline__leading"></span>
+                        <span class="mdc-notched-outline__notch">
+                        <span class="mdc-floating-label text_floating_labels_main_color">Password</span>
+                    </span>
+                    <span class="mdc-notched-outline__trailing"></span>
+                    </span>
+                    <input aria-labelledby="login_input_pw_label" class="mdc-text-field__input" id="login_input_pw_text"
+                           autocomplete="current-password" maxlength="32" minlength="8" name="password" required
+                           type="password">
+                </label>
+            </div>
+            <div>
+                <label class="mdc-text-field mdc-text-field--outlined login_labels" id="login_input_email_label">
+                    <span class="mdc-notched-outline">
+                        <span class="mdc-notched-outline__leading"></span>
+                        <span class="mdc-notched-outline__notch">
+                            <span class="mdc-floating-label text_floating_labels_main_color">E-mail</span>
+                        </span>
+                        <span class="mdc-notched-outline__trailing"></span>
+                    </span>
+                    <input aria-labelledby="login_input_email_label" class="mdc-text-field__input"
+                           id="login_input_email_text"
+                           maxlength="32" name="email" type="email">
+                </label>
+                <!--                회원가입 추가 정보 -->
+                <label class="mdc-text-field mdc-text-field--outlined login_labels" id="login_input_name_label">
+                    <span class="mdc-notched-outline">
+                        <span class="mdc-notched-outline__leading"></span>
+                        <span class="mdc-notched-outline__notch">
+                            <span class="mdc-floating-label text_floating_labels_main_color">Name</span>
+                        </span>
+                        <span class="mdc-notched-outline__trailing"></span>
+                    </span>
+                    <input aria-labelledby="login_input_name_label" class="mdc-text-field__input"
+                           id="login_input_name_text"
+                           maxlength="16" minlength="2" name="name" required type="text">
+                </label>
+                <label class="mdc-text-field mdc-text-field--outlined login_labels" id="login_input_phone_label">
+                    <span class="mdc-notched-outline">
+                        <span class="mdc-notched-outline__leading"></span>
+                        <span class="mdc-notched-outline__notch">
+                            <span class="mdc-floating-label text_floating_labels_main_color">Phone Number</span>
+                        </span>
+                        <span class="mdc-notched-outline__trailing"></span>
+                    </span>
+                    <input aria-labelledby="login_input_phone_label" class="mdc-text-field__input"
+                           id="login_input_phone_text"
+                           name="phone" required type="tel">
+                </label>
+            </div>
+            <div class="mdc-select mdc-select--outlined mdc-select--required login_labels"
+                 id="login_input_type_dropdown">
+                <input id="login_input_type_text" name="type" type="hidden">
+                <div aria-labelledby="outlined-select-label" aria-required="true" class="mdc-select__anchor">
+                <span class="mdc-notched-outline">
+                    <span class="mdc-notched-outline__leading"></span>
+                    <span class="mdc-notched-outline__notch">
+                        <span class="mdc-floating-label text_floating_labels_main_color"
+                              id="outlined-select-label">Type</span>
+                    </span>
+                    <span class="mdc-notched-outline__trailing"></span>
+                </span>
+                    <span class="mdc-select__selected-text-container login_signin_type_text">
+                        <span class="mdc-select__selected-text" id="demo-selected-text">일반</span>
+                    </span>
+                    <span class="mdc-select__dropdown-icon">
+                <svg
+                        class="mdc-select__dropdown-icon-graphic"
+                        focusable="false" viewBox="7 10 10 5">
+                <polygon
+                        class="mdc-select__dropdown-icon-inactive"
+                        fill-rule="evenodd"
+                        points="7 10 12 15 17 10"
+                        stroke="none">
+                </polygon>
+                <polygon
+                        class="mdc-select__dropdown-icon-active"
+                        fill-rule="evenodd"
+                        points="7 15 12 10 17 15"
+                        stroke="none">
+                </polygon>
+                </svg>
+                </span>
+                </div>
 
+                <div class="mdc-select__menu mdc-menu mdc-menu-surface mdc-menu-surface--fullwidth">
+                    <ul aria-label="Type(Role) picker listbox" class="mdc-list" role="listbox">
+                        <li class="mdc-list-item mdc-list-item--selected" data-value="일반" role="option">
+                            <span class="mdc-list-item__ripple"></span>
+                            <span class="mdc-list-item__text">일반</span>
+                        </li>
+                        <li aria-selected="false" class="mdc-list-item" data-value="멘토" role="option">
+                            <span class="mdc-list-item__ripple"></span>
+                            <span class="mdc-list-item__text">멘토</span>
+                        </li>
+                        <li aria-selected="false" class="mdc-list-item" data-value="멘티" role="option">
+                            <span class="mdc-list-item__ripple"></span>
+                            <span class="mdc-list-item__text">멘티</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="button-container">
+                <input class="mdc-button mdc-button--raised login_buttons" id="login_send_button" type="submit"
+                       value="로그인">
+                <div class="mdc-button__ripple"></div>
+                </input>
+                <button class="mdc-button mdc-button--raised login_buttons" id="login_next_button" type="button">계속하기
+                </button>
+            </div>
+        </form>
+        <div class="button-container">
+            <button class="mdc-button login_buttons" id="login_find_id_button" type="button">
+                <div class="mdc-button__ripple"></div>
+                <span class="mdc-button__label">아이디 찾기</span>
+            </button>
+            <button class="mdc-button login_buttons" id="login_find_pw_button" type="button">
+                <div class="mdc-button__ripple"></div>
+                <span class="mdc-button__label">비밀번호 찾기</span>
+            </button>
+        </div>
     </div>
-<div>
-    <label class="mdc-text-field mdc-text-field--outlined login_labels" id="login_input_id_label">
-  <span class="mdc-notched-outline">
-    <span class="mdc-notched-outline__leading"></span>
-    <span class="mdc-notched-outline__notch">
-      <span class="mdc-floating-label text_floating_labels_main_color" >ID</span>
-    </span>
-    <span class="mdc-notched-outline__trailing"></span>
-  </span>
-        <input type="text" class="mdc-text-field__input" aria-labelledby="login_input_id_label" id="login_input_id_text" name="id" required>
-    </label>
-
-</div>
-<div>
-    <label class="mdc-text-field mdc-text-field--outlined login_labels" id="login_input_pw_label">
-  <span class="mdc-notched-outline">
-    <span class="mdc-notched-outline__leading"></span>
-    <span class="mdc-notched-outline__notch">
-      <span class="mdc-floating-label text_floating_labels_main_color" >Password</span>
-    </span>
-    <span class="mdc-notched-outline__trailing"></span>
-  </span>
-        <input type="password" class="mdc-text-field__input" aria-labelledby="login_input_pw_label" id="login_input_pw_text" name="pw" required minlength="8">
-    </label>
-</div>
-<div class="button-container">
-    <input class="mdc-button mdc-button--raised login_buttons" id="login_send_button" type="submit" value="로그인">
-            <div class="mdc-button__ripple"></div>
-        </input>
-</div>
-    </form>
-    <div class="button-container">
-        <button class="mdc-button login_buttons" type="button">
-            <div class="mdc-button__ripple"></div>
-            <span class="mdc-button__label">
-      아이디 찾기
-    </span>
-        </button>
-        <button class="mdc-button login_buttons" type="button">
-            <div class="mdc-button__ripple"></div>
-            <span class="mdc-button__label">
-      비밀번호 찾기
-    </span>
-        </button>
-    </div>
-</div>
 </section>
+<footer></footer>
 </body>
-
 </html>
