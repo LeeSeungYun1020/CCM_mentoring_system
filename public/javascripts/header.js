@@ -10,6 +10,8 @@
 // }
 // let contents = MainContents.HOME
 // let loginStatus = LoginStatus.LOGIN
+let user
+let dialog
 
 $(document).ready(() => {
     initHeader()
@@ -42,25 +44,49 @@ $(document).ready(() => {
         }
     })
 
+    // 사용자 및 알림 다이얼로그
+    dialog.listen('MDCDialog:opened', () => {
+        console.log("dialog open")
+    })
+
+    const drawer = mdc.drawer.MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
+    const listEl = document.querySelector('.mdc-drawer .mdc-list');
+    const mainContentEl = document.querySelector('#header_main_contents');
+
+    listEl.addEventListener('click', (event) => {
+        drawer.open = false;
+    });
+
+    document.body.addEventListener('MDCDrawer:closed', () => {
+        mainContentEl.querySelector('input, button').focus();
+    })
+
+    $("#main_navigation_menu_icon").click(() => {
+        drawer.open = !drawer.open
+    })
+
     function initHeader() {
         // 로그인 확인
-        if (isLogin()) {
-            $("#login_login_icon").hide()
-            $("#login_logout_icon").show()
-            $("#notification").show()
-            checkNotification()
-        } else {
-            $("#login_login_icon").show()
-            $("#login_logout_icon").hide()
-            $("#notification").hide()
-        }
-        // 텍스트 박스 초기화
-        initTextField()
+        $.post('/users/', (data) => {
+            user = data
+            if (user) {
+                $("#login_login_icon").hide()
+                $("#login_logout_icon").show()
+                $("#notification").show()
+                checkNotification()
+            } else {
+                $("#login_login_icon").show()
+                $("#login_logout_icon").hide()
+                $("#notification").hide()
+            }
+        })
+        // 컴포넌트 초기화
+        initComponents()
         // 검색창 숨김
         $('#main_search_box_header').hide()
     }
 
-    function initTextField() {
+    function initComponents() {
         document.querySelectorAll('.mdc-text-field').forEach(value => {
             new mdc.textField.MDCTextField(value)
         })
@@ -71,10 +97,13 @@ $(document).ready(() => {
             let br = new mdc.ripple.MDCRipple(value)
             br.unbounded = true;
         })
+        document.querySelectorAll('.mdc-dialog').forEach(value => {
+            dialog = new mdc.dialog.MDCDialog(value)
+        })
     }
 
     function checkNotification() {
-        if (hasNotify()) {
+        if (user.notice) {
             $("#notification_exist_icon").show()
             $("#notification_none_icon").hide()
         } else {
@@ -84,12 +113,9 @@ $(document).ready(() => {
     }
 })
 
-function isLogin() {
-    // 로그인 로직
-    return false
-}
+function updateUserData() {
+    $.post('/users/', (data) => {
+        user = data
 
-function hasNotify() {
-    // 알림 확인
-    return true
+    })
 }
