@@ -5,6 +5,29 @@
 </head>
 <body>
 <header class="mdc-elevation--z4" id="main_header">
+    <aside class="mdc-drawer mdc-drawer--modal">
+        <div class="mdc-drawer__content">
+            <nav class="mdc-list">
+                <a aria-current="page" class="mdc-list-item mdc-list-item--activated" href="#" tabindex="0">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i aria-hidden="true" class="material-icons mdc-list-item__graphic">inbox</i>
+                    <span class="mdc-list-item__text">Inbox</span>
+                </a>
+                <a class="mdc-list-item" href="#">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i aria-hidden="true" class="material-icons mdc-list-item__graphic">send</i>
+                    <span class="mdc-list-item__text">Outgoing</span>
+                </a>
+                <a class="mdc-list-item" href="#">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i aria-hidden="true" class="material-icons mdc-list-item__graphic">drafts</i>
+                    <span class="mdc-list-item__text">Drafts</span>
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <div class="mdc-drawer-scrim"></div>
     <section id="main_header_left_part">
         <!--        네비게이션 메뉴 / 구성: 질문, 멘토 -->
         <nav class="oneLine leftMargin">
@@ -16,7 +39,7 @@
         <p class="oneLine leftMargin" id="main_logo">CCM 멘토링 시스템</p>
     </section>
     <section id="main_header_right_part">
-        <!--        로그인 정보 -->
+        <!--        로그인 관련 아이콘 -->
         <div class="oneLine rightMargin" id="login_info">
             <button class="material-icons mdc-icon-button" id="login_login_icon"
                     role="button" tabindex="0">login
@@ -26,7 +49,7 @@
             </button>
         </div>
 
-        <!--        알림 팝업 -->
+        <!--        알림 관련 아이콘 -->
         <div class="oneLine rightMargin" id="notification">
             <button class="material-icons mdc-icon-button" id="notification_none_icon"
                     role="button" tabindex="0">notifications_none
@@ -34,6 +57,32 @@
             <button class="material-icons mdc-icon-button" id="notification_exist_icon"
                     role="button" tabindex="0">notifications
             </button>
+        </div>
+
+        <!--        로그인 정보 다이얼로그 -->
+        <div class="mdc-dialog">
+            <div class="mdc-dialog__container">
+                <div aria-describedby="my-dialog-content"
+                     aria-labelledby="my-dialog-title"
+                     aria-modal="true"
+                     class="mdc-dialog__surface"
+                     role="alertdialog">
+                    <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+                    <h2 class="mdc-dialog__title" id="my-dialog-title"><!---->Choose a Ringtone<!----></h2>
+                    <div class="mdc-dialog__content" id="my-dialog-content">
+                        <ul class="mdc-list mdc-list--avatar-list">
+                            <li class="mdc-list-item" data-mdc-dialog-action="none" tabindex="0">
+                                <span class="mdc-list-item__text">None</span>
+                            </li>
+                            <li class="mdc-list-item" data-mdc-dialog-action="callisto">
+                                <span class="mdc-list-item__text">Callisto</span>
+                            </li>
+                            <!-- ... -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="mdc-dialog__scrim"></div>
         </div>
 
         <!--        검색 -->

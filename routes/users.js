@@ -3,9 +3,16 @@ const router = express.Router()
 const mysql = require('../lib/mysql.js')
 
 module.exports = function (passport) {
-    router.get('/', function (req, res, next) {
-        res.render("login.html")
-    });
+    router.route('/')
+        .get(function (req, res, next) {
+            if (req.user) {
+                res.redirect("/users/info")
+            } else
+                res.render("login.html")
+        })
+        .post(((req, res) => {
+            res.send(req.user)
+        }))
 
     router.route('/login')
         .get((req, res) => {
@@ -21,7 +28,7 @@ module.exports = function (passport) {
         .get((req, res) => {
             res.redirect('/users')
         })
-        .post((req, res) => {
+        .post((req, res, next) => {
             const data = req.body
             mysql.query(
                 "INSERT INTO user (id, pw, name, email, phone, type) VALUES (?, ?, ?, ?, ?, ?)",
@@ -30,7 +37,10 @@ module.exports = function (passport) {
                     if (error) {
                         res.redirect('/users')
                     } else {
-                        res.redirect('/')
+                        req.login(user, (err) => {
+                            if (err) return next(err)
+                            return res.redirect('/')
+                        })
                     }
                 })
         })
@@ -53,6 +63,11 @@ module.exports = function (passport) {
                     res.send({step: true, error: false})
             })
 
+    }))
+
+    router.get('/info', ((req, res) => {
+        // 사용자 정보 제공 페이지
+        res.redirect('/')
     }))
     return router
 }
