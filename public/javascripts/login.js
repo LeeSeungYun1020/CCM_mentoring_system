@@ -27,11 +27,22 @@ $(document).ready(() => {
     })
 
     $('#login_next_button').click(() => {
-        console.log()
         if (document.getElementById('login_input_id_text').validity.valid &&
             document.getElementById('login_input_pw_text').validity.valid &&
             document.getElementById('login_input_email_text').validity.valid) {
-            showSignInAddition()
+            $.post('/users/checkID', {id: $("#login_input_id_text").val()}, (data) => {
+                if (data.error) {
+                    alert("서버 오류로 회원 가입에 실패하였습니다.")
+                } else if (data.step) {
+                    showSignInAddition()
+                } else {
+                    const move = confirm("이미 해당 ID로 가입된 사용자가 있습니다.\n로그인하시겠습니까?")
+                    if (move) {
+                        $('#login_type_login_button').trigger("click")
+                    }
+                }
+
+            })
         }
     })
     $('#login_find_id_button').click(() => {
@@ -54,8 +65,6 @@ function initLogin() {
     document.querySelectorAll('.mdc-button').forEach(value => {
         new mdc.ripple.MDCRipple(value)
     })
-
-    console.log(sessionStorage.getItem('loginStatus'))
 
     if (loginStatus === LoginStatus.LOGIN) {
         setTypeLogin()

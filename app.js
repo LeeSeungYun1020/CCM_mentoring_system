@@ -6,6 +6,7 @@ const path = require('path')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const logger = require('morgan')
+const flash = require('connect-flash')
 const app = express()
 
 // view engine setup
@@ -37,16 +38,20 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }))
+app.use(flash())
+const mysql = require('./lib/mysql.js')
 
-const passport = require('./lib/passport.js')(app/*, db*/)
+const passport = require('./lib/passport.js')(app, mysql)
 
 const indexRouter = require('./routes/index')
 const usersRouter = require('./routes/users')(passport)
 const boardRouter = require('./routes/board')(passport)
+const editRouter = require('./routes/edit')(passport)
 
 app.use('/', indexRouter)
 app.use('/users', usersRouter)
 app.use('/board', boardRouter)
+app.use('/edit', editRouter)
 app.get('/*.html', (req, res) => {
   res.render(req.params[0] + '.html')
 })
