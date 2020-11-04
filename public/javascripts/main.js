@@ -22,6 +22,7 @@ $(document).ready(() => {
         changeMainContents(MainContents.HOME)
     })
 
+
     $("#main_search_icon").click(() => {
         $("#main_header").hide()
         $("#main_search_box_header").show()

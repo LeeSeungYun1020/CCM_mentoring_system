@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>질문창</title>
     <!-- Core build with no theme, formatting, non-essential modules -->
     <link href="node_modules/quill/dist/quill.core.css" rel="stylesheet">
     <script src="node_modules/quill/dist/quill.core.js"></script>
@@ -23,15 +22,15 @@
                     [{list: 'ordered'}, {list: 'bullet'}]
                 ]
             },
-            placeholder: 'Compose an epic...',
+            placeholder: '질문을 작성하시오...',
             theme: 'snow'
         });
 
         const form = document.querySelector('form');
         form.onsubmit = function () {
             // Populate hidden form on submit
-            const about = document.querySelector('input[id=about]');
-            about.value = JSON.stringify(quill.getContents());
+            const body = document.querySelector('input[id=body]');
+            body.value = JSON.stringify(quill.getContents());
 
             console.log("Submitted", $(form).serialize(), $(form).serializeArray());
 
@@ -43,25 +42,74 @@
     </script>
 
     <style>
-        #form-container {
-            width: 500px;
+        .question_box {
+
         }
 
-        .row {
-            margin-top: 15px;
-        }
+        /*#question-form {*/
+        /*    width: 500px;*/
+        /*}*/
+
+        /*.row {*/
+        /*    margin-top: 15px;*/
+        /*}*/
 
         .row.form-group {
-            padding-left: 15px;
-            padding-right: 15px;
-        }
-
-        .btn {
-            margin-left: 15px;
+            padding: 15px 20px 30px 20px; /*위, 오른쪽, 아래, 왼쪽*/
         }
 
         #editor-container {
             height: 130px;
+        }
+
+        .title_form {
+            margin-top: 15px;
+            padding: 15px 20px 30px 20px;
+        }
+
+        .writing_form {
+            padding: 15px 20px 30px 20px;
+        }
+
+        .title_input_set {
+            min-width: 500px;
+            min-height: 20px;
+            maxlength: "300";
+            tabindex: "100";
+            data-min-length: "15";
+            data-max-length: "150";
+            autocomplete: "off";
+
+        }
+
+        .tag_input_set {
+            min-height: 20px;
+            padding: 0px 9px;
+            box-sizing: border-box;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            width: 100%;
+        }
+
+        .explain_form {
+            font-size: 12px;
+            color: #315270;
+            font-family: Arial;
+            padding: 4px 0px 3px 0px;
+        }
+
+        .button-container {
+            min-width: 100px;
+            padding-left: 20px;
+        }
+
+        .button-container button {
+            margin: 3px;
+        }
+
+        .question_buttons {
+            --mdc-theme-primary: #315270;
+            --mdc-theme-on-primary: #FFFFFF;
         }
     </style>
 
@@ -70,29 +118,46 @@
     <!--    TODO("질문 게시판 구현 - 질문 등록 파트")-->
 </head>
 <body>
-<div class="container" id="form-container">
-    <form>
-        <div class="row">
-            <div class="col-xs-8">
-                <div class="form-group">
-                    <label for="question">Title</label>
-                    <input class="form-control" id="question" type="text">
-
-                </div>
-            </div>
-        </div>
-        <div class="row form-group">
-            <label for="about">About me</label>
-            <input id="about" type="hidden">
-            <div id="editor-container">
-                <p>A robot who has developed sentience, and is the only robot of his kind shown to be still functioning
-                    on Earth.</p>
-            </div>
-        </div>
-        <div class="row">
-            <button class="btn btn-primary" type="submit">Save Profile</button>
-        </div>
-    </form>
+<div class="container">
+    <div class="title_form">
+        <div class="writing_form"></div>
+        <!--                    <div class = "form-group">-->
+        <label for="title">Title
+            <p class="explain_form">다른 사람에게 질문을 한다고 생각하고 구체적으로 작성하시오.</p>
+        </label>
+        <input class="title_input_set" id="title" name="title"
+               placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
+               type="text">
+        <!--                    </div>-->
+    </div>
 </div>
+
+<div class="row form-group">
+    <label for="body">Body
+        <p class="explain_form">질문에 답변하는 데 필요한 모든 정보를 포함시키시오.</p>
+    </label>
+    <input id="body" type="hidden">
+    <div id="editor-container"></div>
+</div>
+</div>
+
+<div class="writing_form">
+    <!--                    <div class = "form-group">-->
+    <label for="tag">Tag
+        <p class="explain_form">최대 5개의 질문에 대한 태그를 추가하시오.</p>
+    </label>
+    <input class="tag_input_set" id="tag" name="tag" placeholder="e.g. (sql ajax iphone)"
+           type="text">
+
+    <!--                    </div>-->
+</div>
+
+<div class="button-container">
+    <input class="mdc-button mdc-button--raised question_buttons" id="question_send_button" type="submit"
+           value="Save your question">
+    <div class="mdc-button__ripple"></div>
+    </input>
+</div>
+
 </body>
 </html>
