@@ -37,7 +37,14 @@ module.exports = function (passport) {
                     if (error) {
                         res.redirect('/users')
                     } else {
-                        req.login(user, (err) => {
+                        req.login({
+                            id: data.username,
+                            pw: data.password,
+                            name: data.name,
+                            email: data.email,
+                            phone: data.phone,
+                            type: data.type
+                        }, (err) => {
                             if (err) return next(err)
                             return res.redirect('/')
                         })
