@@ -48,6 +48,7 @@
     - 질문 수정 - 예정
     - 질문 삭제 - 예정
     - 질문 조회 - 예정
+    - 질문 목록 - 완료
 1. 멘토 찾기 - 예정
     - 멘토 조회 - 예정
     - 팀 생성 - 예정
@@ -75,7 +76,7 @@ root password: lsy1020
 create database mentoring;
 create database session;
 use mentoring;
-create table Team (
+create table team (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name NVARCHAR(32) unique NOT NULL ,
     mentorID VARCHAR(16) NOT NULL
@@ -89,32 +90,49 @@ create table user (
     phone VARCHAR(16),
     type INT NOT NULL DEFAULT 0,
     teamID INT,
-    answerCount INT NOT NULL DEFAULT 0,
+    point INT NOT NULL DEFAULT 0,
     FOREIGN KEY (teamID) REFERENCES Team(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
-create table Question(
+create table question(
     id INT PRIMARY KEY AUTO_INCREMENT,
     title NVARCHAR(32) NOT NULL ,
-    writer INT NOT NULL ,
+    userID VARCHAR(16) NOT NULL ,
     contents NVARCHAR(2048) NOT NULL ,
     date datetime DEFAULT current_timestamp,
     modifyDate datetime DEFAULT current_timestamp ON UPDATE current_timestamp,
     viewRange INT NOT NULL DEFAULT 0,
-    viewID INT NOT NULL ,
-    tag NVARCHAR(64)
+    viewID INT,
+    tag NVARCHAR(64),
+    point INT NOT NULL DEFAULT 0,
+    FOREIGN KEY (userID) REFERENCES user(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-ALTER TABLE Team
+create table answer(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    title NVARCHAR(32) NOT NULL ,
+    userID VARCHAR(16) NOT NULL ,
+    contents NVARCHAR(2048) NOT NULL ,
+    date datetime DEFAULT current_timestamp,
+    modifyDate datetime DEFAULT current_timestamp ON UPDATE current_timestamp,
+    point INT NOT NULL DEFAULT 0,
+    questionID INT,
+    FOREIGN KEY (questionID) REFERENCES question(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+ALTER TABLE team
 ADD
 FOREIGN KEY (mentorID)
-REFERENCES User(id) ON UPDATE CASCADE ON DELETE CASCADE;
+REFERENCES user(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ```
 
 ### 4. 서버 실행
 ```text
 node ./bin/www
 ```
+
+### 5. 서버 접속
+http://localhost:3000/
 
 ## 참여인원
 
