@@ -17,8 +17,8 @@
     <script>
         $(window).ready(() => {
             let page = 0
-            let count = 1//0
-            let maxPage = 1
+            let count = 10
+            let maxPage = 0
             calcMaxPage(count, 0).then((result) => {
                 maxPage = result
             })
@@ -27,29 +27,38 @@
             update(page, count)
             const select = new mdc.select.MDCSelect(document.querySelector('.mdc-select'))
             select.listen('MDCSelect:change', () => {
-                count = 1//select.value
-                update(page, count)
+                page = 0
+                count = select.value
+                calcMaxPage(count, 0).then((result) => {
+                    maxPage = result
+                    console.log(maxPage)
+                    if (page > maxPage)
+                        page = maxPage
+                    update(page, count)
+                    firstPage(page === 0)
+                    lastPage(page === maxPage)
+                })
             })
             $("#board_first_button").click(() => {
                 page = 0
                 firstPage(true)
-                lastPage(false)
+                lastPage(page === maxPage)
                 update(page, count)
             })
             $("#board_minus_button").click(() => {
                 if (page > 0) {
                     page--
+                } else {
+                    alert("첫번째 페이지입니다.")
                 }
-                if (page == 0) {
-                    firstPage(true)
-                }
-                lastPage(false)
+                firstPage(page === 0)
+                lastPage(page === maxPage)
                 update(page, count)
             })
             $("#board_last_button").click(() => {
                 page = maxPage
                 lastPage(true)
-                firstPage(false)
+                firstPage(page === 0)
                 update(page, count)
             })
             $("#board_plus_button").click(() => {
@@ -59,6 +68,8 @@
                     if (result === false)
                         page--
                 })
+                firstPage(page === 0)
+                lastPage(page === maxPage)
             })
         })
 
@@ -80,16 +91,34 @@
                                 <tr class="mdc-data-table__row">
                                 <th class="mdc-data-table__cell" scope="row">${data.title}</th>
                                 <td class="mdc-data-table__cell">${data.name}</td>
-                                <td class="mdc-data-table__cell">${data.date}</td>
+                                <td class="mdc-data-table__cell">${convertTime(data.date)}</td>
                                 <td class="mdc-data-table__cell">${data.tag}</td>
                                 </tr>
                                 `.trim()
+                            convertTime(data.date)
                         }
                         $('#board_data_table_contents').html(contents)
+                        $('#board_page_text').text(`${page + 1} 페이지`)
                         resolve(true)
                     }
                 })
             })
+        }
+
+        function convertTime(stringTime) {
+            const date = new Date()
+            date.setTime(Date.parse(stringTime))
+            const delay = Date.now() - date.getTime()
+            if (delay < 1000 * 60) // 1분 이하
+                return `${Math.round(delay / 1000)} 초 전`
+            if (delay < 1000 * 60 * 60) // 1시간 이하
+                return `${Math.round(delay / 1000 / 60)} 분 전`
+            if (delay < 1000 * 60 * 60 * 24) // 1일 이하
+                return `${Math.round(delay / 1000 / 60 / 60)} 시간 전`
+            if (delay < 1000 * 60 * 60 * 24 * 100) // 100일 이하
+                return `${Math.round(delay / 1000 / 60 / 60 / 24)} 일 전`
+            else
+                return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDay()}`
         }
 
         function calcMaxPage(count, range) {
@@ -98,7 +127,7 @@
                     if (body.error) reject(error)
                     else {
                         const data = parseInt(body.data, 10)
-                        resolve(data / count - 1)
+                        resolve(Math.ceil(data / count) - 1)
                     }
                 })
             })
@@ -126,6 +155,12 @@
         .mdc-data-table {
             width: 100%;
             margin-top: 10px;
+        }
+
+        footer {
+            position: relative;
+            top: 174px;
+            bottom: 0;
         }
     </style>
     <!--    custom js and stylesheet -->
@@ -208,8 +243,8 @@
                 </div>
 
                 <div class="mdc-data-table__pagination-navigation">
-                    <div class="mdc-data-table__pagination-total">
-                        1‑10 of 100
+                    <div class="mdc-data-table__pagination-total" id="board_page_text">
+                        1 페이지
                     </div>
                     <button class="mdc-icon-button material-icons mdc-data-table__pagination-button"
                             id="board_first_button" data-first-page="true" disabled>
