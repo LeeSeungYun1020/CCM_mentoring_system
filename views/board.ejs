@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!--    title -->
+    <title>질문 목록</title>
+    <!--    jquery -->
+    <script src="node_modules/jquery/dist/jquery.min.js" type="text/javascript"></script>
+    <!--    material icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--    material components -->
+    <link href="node_modules/material-components-web/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="node_modules/material-components-web/dist/material-components-web.min.js"></script>
+    <!--    header and footer -->
+    <link href="stylesheets/main.css" rel="stylesheet">
+    <script src="javascripts/main.js"></script>
+    <script>
+        $(window).ready(() => {
+            let page = 0
+            let count = 1//0
+            let maxPage = 1
+            calcMaxPage(count, 0).then((result) => {
+                maxPage = result
+            })
+
+            new mdc.dataTable.MDCDataTable(document.querySelector('.mdc-data-table'))
+            update(page, count)
+            const select = new mdc.select.MDCSelect(document.querySelector('.mdc-select'))
+            select.listen('MDCSelect:change', () => {
+                count = 1//select.value
+                update(page, count)
+            })
+            $("#board_first_button").click(() => {
+                page = 0
+                firstPage(true)
+                lastPage(false)
+                update(page, count)
+            })
+            $("#board_minus_button").click(() => {
+                if (page > 0) {
+                    page--
+                }
+                if (page == 0) {
+                    firstPage(true)
+                }
+                lastPage(false)
+                update(page, count)
+            })
+            $("#board_last_button").click(() => {
+                page = maxPage
+                lastPage(true)
+                firstPage(false)
+                update(page, count)
+            })
+            $("#board_plus_button").click(() => {
+                page++
+                firstPage(false)
+                update(page, count).then((result) => {
+                    if (result === false)
+                        page--
+                })
+            })
+        })
+
+        function update(page, count) {
+            return new Promise(function (resolve, reject) {
+                $.post(`/board/data/list/${page}/${count}`, (body) => {
+                    const err = body.error
+                    const list = body.list
+                    if (err)
+                        reject(err)
+                    if (list.length === 0) {
+                        alert("마지막 페이지 입니다.")
+                        lastPage(true)
+                        resolve(false)
+                    } else {
+                        let contents = ""
+                        for (const data of list) {
+                            contents += `
+                                <tr class="mdc-data-table__row">
+                                <th class="mdc-data-table__cell" scope="row">${data.title}</th>
+                                <td class="mdc-data-table__cell">${data.name}</td>
+                                <td class="mdc-data-table__cell">${data.date}</td>
+                                <td class="mdc-data-table__cell">${data.tag}</td>
+                                </tr>
+                                `.trim()
+                        }
+                        $('#board_data_table_contents').html(contents)
+                        resolve(true)
+                    }
+                })
+            })
+        }
+
+        function calcMaxPage(count, range) {
+            return new Promise(function (resolve, reject) {
+                $.post(`board/data/count/${range}`, (body) => {
+                    if (body.error) reject(error)
+                    else {
+                        const data = parseInt(body.data, 10)
+                        resolve(data / count - 1)
+                    }
+                })
+            })
+        }
+
+        function lastPage(state) {
+            $("#board_last_button").attr('disabled', state)
+            $("#board_plus_button").attr('disabled', state)
+        }
+
+        function firstPage(state) {
+            $("#board_first_button").attr('disabled', state)
+            $("#board_minus_button").attr('disabled', state)
+        }
+    </script>
+    <style>
+        .main_contents {
+            position: relative;
+            display: block;
+            width: 90%;
+            top: 15px;
+            left: 5%;
+        }
+
+        .mdc-data-table {
+            width: 100%;
+            margin-top: 10px;
+        }
+    </style>
+    <!--    custom js and stylesheet -->
+    <!--    <link href="stylesheets/.css" rel="stylesheet">-->
+    <!--    <script src="javascripts/.js"></script>-->
+</head>
+<body>
+<header></header>
+<aside class="navigation"></aside>
+<div class="main_contents">
+    <h1>질문 목록</h1>
+    <div class="mdc-data-table">
+        <div class="mdc-data-table__table-container">
+            <table class="mdc-data-table__table" aria-label="question-board">
+                <thead>
+                <tr class="mdc-data-table__header-row">
+                    <th class="mdc-data-table__header-cell" role="columnheader" scope="col">제목</th>
+                    <th class="mdc-data-table__header-cell" role="columnheader" scope="col">글쓴이</th>
+                    <th class="mdc-data-table__header-cell" role="columnheader" scope="col">날짜</th>
+                    <th class="mdc-data-table__header-cell" role="columnheader" scope="col">태그</th>
+                </tr>
+                </thead>
+                <tbody class="mdc-data-table__content" id="board_data_table_contents">
+                <!--                여기에 표 데이터 삽입 -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mdc-data-table__pagination">
+            <div class="mdc-data-table__pagination-trailing">
+                <div class="mdc-data-table__pagination-rows-per-page">
+                    <div class="mdc-data-table__pagination-rows-per-page-label">
+                        페이지당 표시할 질문 갯수
+                    </div>
+
+                    <div class="mdc-select mdc-select--outlined mdc-select--no-label mdc-data-table__pagination-rows-per-page-select">
+                        <div class="mdc-select__anchor" role="button" aria-haspopup="listbox"
+                             aria-labelledby="demo-pagination-select" tabindex="0">
+                            <span id="demo-pagination-select" class="mdc-select__selected-text">10</span>
+                            <span class="mdc-select__dropdown-icon">
+              <svg
+                      class="mdc-select__dropdown-icon-graphic"
+                      viewBox="7 10 10 5">
+                <polygon
+                        class="mdc-select__dropdown-icon-inactive"
+                        stroke="none"
+                        fill-rule="evenodd"
+                        points="7 10 12 15 17 10">
+                </polygon>
+                <polygon
+                        class="mdc-select__dropdown-icon-active"
+                        stroke="none"
+                        fill-rule="evenodd"
+                        points="7 15 12 10 17 15">
+                </polygon>
+              </svg>
+            </span>
+                            <span class="mdc-notched-outline mdc-notched-outline--notched">
+              <span class="mdc-notched-outline__leading"></span>
+              <span class="mdc-notched-outline__trailing"></span>
+            </span>
+                        </div>
+
+                        <div class="mdc-select__menu mdc-menu mdc-menu-surface mdc-menu-surface--fullwidth"
+                             role="listbox">
+                            <ul class="mdc-list">
+                                <li class="mdc-list-item mdc-list-item--selected" aria-selected="true" role="option"
+                                    data-value="10">
+                                    <span class="mdc-list-item__text">10</span>
+                                </li>
+                                <li class="mdc-list-item" role="option" data-value="20">
+                                    <span class="mdc-list-item__text">20</span>
+                                </li>
+                                <li class="mdc-list-item" role="option" data-value="30">
+                                    <span class="mdc-list-item__text">30</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mdc-data-table__pagination-navigation">
+                    <div class="mdc-data-table__pagination-total">
+                        1‑10 of 100
+                    </div>
+                    <button class="mdc-icon-button material-icons mdc-data-table__pagination-button"
+                            id="board_first_button" data-first-page="true" disabled>
+                        <div class="mdc-button__icon">first_page</div>
+                    </button>
+                    <button class="mdc-icon-button material-icons mdc-data-table__pagination-button"
+                            id="board_minus_button" data-prev-page="true" disabled>
+                        <div class="mdc-button__icon">chevron_left</div>
+                    </button>
+                    <button class="mdc-icon-button material-icons mdc-data-table__pagination-button"
+                            id="board_plus_button" data-next-page="true">
+                        <div class="mdc-button__icon">chevron_right</div>
+                    </button>
+                    <button class="mdc-icon-button material-icons mdc-data-table__pagination-button"
+                            id="board_last_button" data-last-page="true">
+                        <div class="mdc-button__icon">last_page</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer></footer>
+</body>
+</html>

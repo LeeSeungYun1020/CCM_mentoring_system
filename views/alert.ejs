@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>알림</title>
+    <script>
+        try {
+            show("<%= message %>", "<%= redirectPage %>")
+        } catch (e) {
+            show("메인화면으로 이동합니다.", '/')
+        }
+
+        function show(msg, page) {
+            alert(msg)
+            location.href = page
+        }
+    </script>
+</head>
+<body></body>
+</html>

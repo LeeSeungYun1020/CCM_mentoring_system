@@ -20,7 +20,7 @@ module.exports = function (passport) {
         })
         .post(passport.authenticate('local', {
             successRedirect: '/',
-            failureRedirect: '/users',
+            failureRedirect: '/users/error',
             failureFlash: "아이디와 비밀번호를 다시 확인하십시오."
         }))
 
@@ -70,6 +70,10 @@ module.exports = function (passport) {
                     res.send({step: true, error: false})
             })
 
+    }))
+
+    router.get('/error', ((req, res) => {
+        res.render('alert.ejs', {message: "아이디 또는 비밀번호를 잘못 입력하셨습니다.", redirectPage: '/users'})
     }))
 
     router.get('/info', ((req, res) => {
