@@ -19,31 +19,62 @@
             let page = 0
             let count = 10
             let maxPage = 0
-            calcMaxPage(count, 0).then((result) => {
+            let type = "list"
+            calcMaxPage(count, type).then((result) => {
                 maxPage = result
             })
-
             new mdc.dataTable.MDCDataTable(document.querySelector('.mdc-data-table'))
-            update(page, count)
+            update(page, count, type)
             const select = new mdc.select.MDCSelect(document.querySelector('.mdc-select'))
             select.listen('MDCSelect:change', () => {
                 page = 0
                 count = select.value
-                calcMaxPage(count, 0).then((result) => {
+                calcMaxPage(count, type).then((result) => {
                     maxPage = result
                     console.log(maxPage)
                     if (page > maxPage)
                         page = maxPage
-                    update(page, count)
+                    update(page, count, type)
                     firstPage(page === 0)
                     lastPage(page === maxPage)
                 })
+            })
+            $('#board_type_team_button').removeClass('mdc-button--unelevated')
+            $('#board_type_team_button').click(() => {
+                if (type !== "team") {
+                    type = "team"
+                    $('#board_type_team_button').addClass('mdc-button--unelevated')
+                    $('#board_type_general_button').removeClass('mdc-button--unelevated')
+                    update(page, count, type).catch(reason => {
+                        if (reason === "login") {
+                            alert("로그인하셔야 팀 게시판을 조회할 수 있습니다.")
+                            let result = confirm("로그인하시겠습니까?")
+                            if (result) {
+                                location.href = '/users'
+                                return
+                            }
+                        } else if (reason === "team") {
+                            alert("아직 참가하고 있는 팀이 없습니다.")
+                        } else if (reason === "data") {
+                            alert("데이터가 존재하지 않습니다.")
+                        }
+                        $('#board_type_general_button').trigger("click")
+                    })
+                }
+            })
+            $('#board_type_general_button').click(() => {
+                if (type !== "list") {
+                    type = "list"
+                    $('#board_type_general_button').addClass('mdc-button--unelevated')
+                    $('#board_type_team_button').removeClass('mdc-button--unelevated')
+                    update(page, count, type)
+                }
             })
             $("#board_first_button").click(() => {
                 page = 0
                 firstPage(true)
                 lastPage(page === maxPage)
-                update(page, count)
+                update(page, count, type)
             })
             $("#board_minus_button").click(() => {
                 if (page > 0) {
@@ -53,18 +84,18 @@
                 }
                 firstPage(page === 0)
                 lastPage(page === maxPage)
-                update(page, count)
+                update(page, count, type)
             })
             $("#board_last_button").click(() => {
                 page = maxPage
                 lastPage(true)
                 firstPage(page === 0)
-                update(page, count)
+                update(page, count, type)
             })
             $("#board_plus_button").click(() => {
                 page++
                 firstPage(false)
-                update(page, count).then((result) => {
+                update(page, count, type).then((result) => {
                     if (result === false)
                         page--
                 })
@@ -73,17 +104,27 @@
             })
         })
 
-        function update(page, count) {
+        function update(page, count, type) {
             return new Promise(function (resolve, reject) {
-                $.post(`/board/data/list/${page}/${count}`, (body) => {
+                $.post(`/board/data/${type}/${page}/${count}`, (body) => {
                     const err = body.error
                     const list = body.list
-                    if (err)
+                    if (err) {
+                        console.log(err)
                         reject(err)
+                        return
+                    }
                     if (list.length === 0) {
-                        alert("마지막 페이지 입니다.")
-                        lastPage(true)
-                        resolve(false)
+                        if (page !== 0) {
+                            alert("마지막 페이지 입니다.")
+                            lastPage(true)
+                            resolve(false)
+                        } else {
+                            $('#board_data_table_contents').html(`
+                                <tr class="mdc-data-table__row">
+                                <th class='mdc-data-table__cell'>저장된 데이터가 없습니다.</th>
+                                </tr>`.trim())
+                        }
                     } else {
                         let contents = ""
                         for (const data of list) {
@@ -121,9 +162,9 @@
                 return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDay()}`
         }
 
-        function calcMaxPage(count, range) {
+        function calcMaxPage(count, type) {
             return new Promise(function (resolve, reject) {
-                $.post(`board/data/count/${range}`, (body) => {
+                $.post(`board/data/count/${type}`, (body) => {
                     if (body.error) reject(error)
                     else {
                         const data = parseInt(body.data, 10)
@@ -148,19 +189,35 @@
             position: relative;
             display: block;
             width: 90%;
-            top: 15px;
             left: 5%;
         }
 
         .mdc-data-table {
             width: 100%;
-            margin-top: 10px;
+            margin-bottom: 50px;
         }
 
-        footer {
+        h1 {
+            display: inline-flex;
             position: relative;
-            top: 174px;
-            bottom: 0;
+            top: 20px;
+        }
+
+        .button-wrap {
+            border-radius: 30px;
+            width: 220px;
+            padding: 5px 5px;
+            margin-left: auto;
+            position: relative;
+            bottom: 25px;
+        }
+
+        .list_type_buttons {
+            --mdc-theme-primary: #315270;
+            --mdc-theme-on-primary: #FFFFFF;
+            width: 100px;
+            border-radius: 30px;
+            margin: 3px;
         }
     </style>
     <!--    custom js and stylesheet -->
@@ -172,6 +229,18 @@
 <aside class="navigation"></aside>
 <div class="main_contents">
     <h1>질문 목록</h1>
+    <div class="button-wrap mdc-elevation--z4">
+        <button class="mdc-button mdc-button--unelevated list_type_buttons" id="board_type_general_button"
+                type="button">
+            <span class="mdc-button__ripple"></span>
+            일반
+        </button>
+        <button class="mdc-button mdc-button--unelevated list_type_buttons" id="board_type_team_button"
+                type="button">
+            <span class="mdc-button__ripple"></span>
+            팀
+        </button>
+    </div>
     <div class="mdc-data-table">
         <div class="mdc-data-table__table-container">
             <table class="mdc-data-table__table" aria-label="question-board">
