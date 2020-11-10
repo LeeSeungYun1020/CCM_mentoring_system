@@ -17,14 +17,51 @@ module.exports = function (passport) {
             max = 10
         const questionIndex = page * max
         mysql.query(
-                `
+            `
             SELECT question.id, title, name, date, tag 
             from question left join user 
             on userID = user.id 
             where viewRange = 0 
-            order by question.id desc limit ?,? `,
+            order by question.id desc limit ?,? `.trim(),
             [questionIndex, max],
             function (error, results, fields) {
+                res.send({error: error, list: results})
+            })
+    });
+    // 게시판 팀 목록 전송
+    router.post('/data/team/:page/:count', function (req, res, next) {
+        if (req.user == undefined) {
+            res.send({error: "login"})
+            return
+        }
+        if (req.user.teamID == null) {
+            res.send({error: "team"})
+            return
+        }
+        let page
+        if (req.params.page != null)
+            page = parseInt(req.params.page, 10)
+        else
+            page = 0
+        let max
+        if (req.params.count != null)
+            max = parseInt(req.params.count, 10)
+        else
+            max = 10
+        const questionIndex = page * max
+        mysql.query(
+            `
+            SELECT question.id, title, name, date, tag 
+            from question left join user 
+            on userID = user.id 
+            where viewRange = 1 and viewID = ? 
+            order by question.id desc limit ?,? `.trim(),
+            [req.user.teamID, questionIndex, max],
+            function (error, results, fields) {
+                if (error) {
+                    console.log(error)
+                    error = "data"
+                }
                 res.send({error: error, list: results})
             })
     });
@@ -52,6 +89,7 @@ module.exports = function (passport) {
     });
     // 게시물 데이터 표시
     router.get('/:id', function (req, res, next) {
+        // TODO("게시물 데이터 출력")
         res.render("question.html")
     });
     return router
