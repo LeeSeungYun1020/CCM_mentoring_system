@@ -39,6 +39,9 @@
                     lastPage(page === maxPage)
                 })
             })
+
+            $(window).resize(moveFooter())
+
             $('#board_type_team_button').removeClass('mdc-button--unelevated')
             $('#board_type_team_button').click(() => {
                 if (type !== "team") {
@@ -129,7 +132,7 @@
                         let contents = ""
                         for (const data of list) {
                             contents += `
-                                <tr class="mdc-data-table__row">
+                                <tr class="mdc-data-table__row" onClick = "location.href='/board/${data.id}'">
                                 <th class="mdc-data-table__cell" scope="row">${data.title}</th>
                                 <td class="mdc-data-table__cell">${data.name}</td>
                                 <td class="mdc-data-table__cell">${convertTime(data.date)}</td>
@@ -140,6 +143,7 @@
                         }
                         $('#board_data_table_contents').html(contents)
                         $('#board_page_text').text(`${page + 1} 페이지`)
+                        moveFooter()
                         resolve(true)
                     }
                 })
@@ -156,7 +160,7 @@
                 return `${Math.round(delay / 1000 / 60)} 분 전`
             if (delay < 1000 * 60 * 60 * 24) // 1일 이하
                 return `${Math.round(delay / 1000 / 60 / 60)} 시간 전`
-            if (delay < 1000 * 60 * 60 * 24 * 100) // 100일 이하
+            if (delay < 1000 * 60 * 60 * 24 * 365) // 1년 이하
                 return `${Math.round(delay / 1000 / 60 / 60 / 24)} 일 전`
             else
                 return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDay()}`
@@ -182,6 +186,14 @@
         function firstPage(state) {
             $("#board_first_button").attr('disabled', state)
             $("#board_minus_button").attr('disabled', state)
+        }
+
+        function moveFooter() {
+            if ($(window).height() < $(document).height()) {
+                $("footer").css("position", "static")
+            } else {
+                $("footer").css("position", "fixed")
+            }
         }
     </script>
     <style>

@@ -1,30 +1,272 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <!--    title -->
     <title>CCM 멘토링 시스템 - 질문</title>
     <!--    jquery -->
-    <script src="node_modules/jquery/dist/jquery.min.js" type="text/javascript"></script>
+    <script src="/node_modules/jquery/dist/jquery.min.js" type="text/javascript"></script>
     <!--    material icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
     <!--    material components -->
-    <link href="node_modules/material-components-web/dist/material-components-web.min.css" rel="stylesheet">
-    <script src="node_modules/material-components-web/dist/material-components-web.min.js"></script>
+    <link href="/node_modules/material-components-web/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="/node_modules/material-components-web/dist/material-components-web.min.js"></script>
+    <!-- Core build with no theme, formatting, non-essential modules -->
+    <link href="/node_modules/quill/dist/quill.core.css" rel="stylesheet">
+    <script src="/node_modules/quill/dist/quill.core.js"></script>
+    <!-- Main Quill library -->
+    <script src="/node_modules/quill/dist/quill.js"></script>
+    <!-- Theme included stylesheets -->
+    <link href="/node_modules/quill/dist/quill.snow.css" rel="stylesheet">
+    <link href="/node_modules/quill/dist/quill.bubble.css" rel="stylesheet">
     <!--    header and footer -->
-    <link href="stylesheets/main.css" rel="stylesheet">
-    <script src="javascripts/main.js"></script>
+    <link href="/stylesheets/main.css" rel="stylesheet">
+    <script src="/javascripts/main.js" type="text/javascript"></script>
 
-    <!--    custom js and stylesheet -->
-    <!--    <link href="stylesheets/.css" rel="stylesheet">-->
-    <!--    <script src="javascripts/.js"></script>-->
+    <style>
+        .main_contents {
+            position: relative;
+            display: block;
+            width: 70%;
+            left: 15%;
+        }
+
+        h1 {
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+
+        #question_question_box {
+            display: inline-flex;
+            margin-top: 10px;
+        }
+
+        #question_recommend_box {
+            width: inherit;
+        }
+
+        #question_count {
+            text-align: center;
+            margin: auto;
+        }
+
+        #question_contents {
+            height: auto;
+            min-height: 100%;
+            padding: 0 50px 50px 0;
+        }
+
+        #question_contents .ql-editor {
+            font-size: 18px;
+            overflow-y: visible;
+        }
+
+        #question_contents_box {
+            height: 100%;
+            min-height: 100%;
+            overflow-y: auto;
+        }
+
+        #question_tag {
+            padding-left: 10px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        h3 {
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        #question_answer_edit_box {
+            padding-top: 20px;
+            padding-bottom: 50px;
+        }
+
+        #question_answer_edit {
+            height: 180px;
+        }
+
+        #question_post_answer_button {
+            margin-top: 15px;
+        }
+
+        .mdc-button--unelevated {
+            --mdc-theme-primary: #315270;
+            --mdc-theme-on-primary: #FFFFFF;
+        }
+    </style>
+    <script>
+        $(document).ready(() => {
+            setField()
+            initQuestion()
+        })
+
+        function initQuestion() {
+            document.querySelectorAll('.mdc-icon-button').forEach(value => {
+                new mdc.iconButton.MDCIconButtonToggle(value)
+            })
+            moveFooter()
+            $(window).resize(moveFooter())
+        }
+
+        function setField() {
+            setQuestionField()
+            setAnswerField()
+            setAnswerEditField()
+        }
+
+        function setQuestionField() {
+            const questionField = new Quill('#question_contents', {
+                modules: {
+                    toolbar: [
+                        [{header: [1, 2, false]}],
+                        ['bold', 'italic', 'underline'],
+                        ['image', 'code-block']
+                    ]
+                },
+                scrollingContainer: '#question-contents_box',
+                placeholder: '질문 내용이 표시됩니다.',
+                theme: 'bubble'
+            })
+            questionField.enable(false)
+            $.post(`/board/data/q/<%= id %>`, (body) => {
+                if (body.error) {
+                    alert("해당 게시물을 열람할 수 없습니다.")
+                    location.href = '/board'
+                } else {
+                    const data = body.data
+                    $("#question_title").text(data.title)
+                    $("#question_subtitle").text(
+                        `${data.name}, 작성: ${convertTime(data.date)}, 수정: ${convertTime(data.modifyDate)}`
+                    )
+                    $("#question_count").text(data.point)
+                    $("#question_tag").html(`<p>${data.tag}</p>`)
+                    questionField.setContents(JSON.parse(data.contents).ops)
+                }
+                //
+            })
+
+        }
+
+        function setAnswerField() {
+            $.post(`/board/data/a/<%= id %>`, (body) => {
+                console.log(body)
+                if (body.error) {
+                    alert("해당 게시물을 열람할 수 없습니다.")
+                    location.href = '/board'
+                } else if (body.data.length === 0) {
+                    $("#question_answer_view_box").html(`
+                        <h3>아직 답변이 없습니다.</h3>
+                        <p>지금 바로 답변해보세요.</p>
+                    `.trim())
+                } else {
+                    for (const answer of body.data) {
+                        $("#question_answer_view_box").html(`
+                        <h3>답변이 존재합니다.</h3>
+                        <p>곧 답변 조회 기능이 활성화됩니다. 잠시만 기다려 주세요.</p>
+                    `.trim())
+                    }
+                }
+                //
+            })
+        }
+
+        function setAnswerEditField() {
+            const editField = new Quill('#question_answer_edit', {
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline'],
+                        ['link', 'blockquote', 'code-block', 'image'],
+                        [{list: 'ordered'}, {list: 'bullet'}]
+                    ]
+                },
+                placeholder: '내 의견을 입력해보세요.',
+                theme: 'snow'
+            })
+            $("#answer_form").submit((event) => {
+                if (editField.getLength() <= 0)
+                    return false
+                const contents = document.querySelector('input[name=contents]');
+                contents.value = JSON.stringify(editField.getContents());
+
+                console.log("Submitted", $(form).serialize(), $(form).serializeArray());
+                return true
+            })
+        }
+
+        function moveFooter() {
+            if ($(window).height() < $(document).height()) {
+                $("footer").css("position", "static")
+            } else {
+                $("footer").css("position", "fixed")
+            }
+        }
+
+        function convertTime(stringTime) {
+            const date = new Date()
+            date.setTime(Date.parse(stringTime))
+            const delay = Date.now() - date.getTime()
+            if (delay < 1000 * 60) // 1분 이하
+                return `${Math.round(delay / 1000)} 초 전`
+            if (delay < 1000 * 60 * 60) // 1시간 이하
+                return `${Math.round(delay / 1000 / 60)} 분 전`
+            if (delay < 1000 * 60 * 60 * 24) // 1일 이하
+                return `${Math.round(delay / 1000 / 60 / 60)} 시간 전`
+            if (delay < 1000 * 60 * 60 * 24 * 365) // 1년 이하
+                return `${Math.round(delay / 1000 / 60 / 60 / 24)} 일 전`
+            else
+                return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDay()}`
+        }
+    </script>
 </head>
 <body>
 <header></header>
 <aside class="navigation"></aside>
+<!--    여기에 내용을 추가  -->
 <div class="main_contents">
-    <h1>질문 상세 내용 표시</h1>
-    <h2>기존 내용은 edit.html로 이동</h2>
+    <h1 id="question_title">제목<%= id %></h1>
+    <p id="question_subtitle">작성자, 작성 시간, 수정 시간</p>
+    <hr>
+    <div id="question_question_box">
+        <div id="question_recommend_box">
+            <button aria-label="추천"
+                    aria-pressed="false"
+                    class="mdc-icon-button"
+                    id="question_recommend_up">
+                <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">thumb_up</i>
+                <i class="material-icons material-icons-outlined mdc-icon-button__icon">thumb_up</i>
+            </button>
+            <section id="question_count">0</section>
+            <button aria-label="비추천"
+                    aria-pressed="false"
+                    class="mdc-icon-button"
+                    id="question_recommend_down">
+                <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">thumb_down</i>
+                <i class="material-icons material-icons-outlined mdc-icon-button__icon">thumb_down</i>
+            </button>
+        </div>
+        <div id="question_contents_box">
+            <article id="question_contents">내용</article>
+            <section id="question_tag">태그</section>
+        </div>
+    </div>
+    <hr>
+    <div id="question_answer_view_box"></div>
+    <div id="question_answer_edit_box">
+        <form action="/edit/answer/add/<%= id %>" id="answer_form" method="post">
+            <h2>내 의견 입력</h2>
+            <input name="contents" type="hidden">
+            <article id="question_answer_edit"></article>
+            <button class="mdc-button mdc-button--unelevated" id="question_post_answer_button" type="submit">
+                <span class="mdc-button__ripple"></span>
+                게시
+            </button>
+        </form>
+    </div>
 </div>
 <footer></footer>
 </body>

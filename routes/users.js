@@ -71,6 +71,14 @@ module.exports = function (passport) {
             })
 
     }))
+    router.post('/username/:id', ((req, res) => {
+        mysql.query(
+            "SELECT name from user WHERE id=?",
+            [req.params.id],
+            function (error, results) {
+                res.send(results[0])
+            })
+    }))
 
     router.get('/error', ((req, res) => {
         res.render('alert.ejs', {message: "아이디 또는 비밀번호를 잘못 입력하셨습니다.", redirectPage: '/users'})

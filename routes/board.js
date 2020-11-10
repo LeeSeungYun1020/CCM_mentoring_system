@@ -4,7 +4,7 @@ const mysql = require('../lib/mysql')
 
 module.exports = function (passport) {
     // 게시판 전체 목록 전송
-    router.post('/data/list/:page/:count', function (req, res, next) {
+    router.post('/data/list/:page/:count', function (req, res) {
         let max
         let page
         if (req.params.page != null)
@@ -29,7 +29,7 @@ module.exports = function (passport) {
             })
     });
     // 게시판 팀 목록 전송
-    router.post('/data/team/:page/:count', function (req, res, next) {
+    router.post('/data/team/:page/:count', function (req, res) {
         if (req.user == undefined) {
             res.send({error: "login"})
             return
@@ -66,16 +66,46 @@ module.exports = function (passport) {
             })
     });
     // 단일 게시물 데이터 전송
-    router.post('/data/q/:id', function (req, res, next) {
+    router.post('/data/q/:id', function (req, res) {
+        let userID = 0
+        if (req.users != null) {
+            userID = req.users.id
+        }
         mysql.query(
-            "SELECT * from question where id = ?",
+            `
+            SELECT title, contents, date, modifyDate, viewRange, viewID, tag, question.point, user.id, name, teamID 
+            from question left join user 
+            on userID = user.id 
+            where question.id = ?`.trim(),
             [req.params.id],
             function (error, results, fields) {
+                if (results.length == 0)
+                    error = true
+                if (results[0].viewRange === 1) {
+                    if (results[0].teamID !== userTeam) {
+                        return res.send({error: true})
+                    }
+                    results[0].type = "team"
+                } else if (results[0].viewRange === 2) {
+                    if (results[0].viewID !== userID) {
+                        return res.send({error: true})
+                    }
+                    results[0].type = "one"
+                } else {
+                    results[0].type = "all"
+                }
                 res.send({error: error, data: results[0]})
             })
     });
+    router.post('/data/a/:id', function (req, res) {
+        mysql.query(`SELECT * from answer where questionID = ?`,
+            [req.params.id],
+            function (error, results, fields) {
+                res.send({error: error, data: results})
+            })
+    });
     // 전체 질문 갯수
-    router.post('/data/count/:range', function (req, res, next) {
+    router.post('/data/count/:range', function (req, res) {
         mysql.query(
             "SELECT COUNT(*) from question where viewRange = ?",
             [req.params.range],
@@ -84,13 +114,20 @@ module.exports = function (passport) {
             })
     });
     // 게시판 전체 목록 표시
-    router.get('/', function (req, res, next) {
+    router.get('/', function (req, res) {
         res.render("board.ejs")
     });
+    // 라이브러리 파일 요청
+    router.get('/*.html', (req, res) => {
+        res.render(req.params[0] + '.html')
+    })
+
+    router.get('/javascripts/*.js', (req, res) => {
+        res.redirect(`/javascripts/${req.params[0]}.js`)
+    })
     // 게시물 데이터 표시
-    router.get('/:id', function (req, res, next) {
-        // TODO("게시물 데이터 출력")
-        res.render("question.html")
+    router.get('/:id', function (req, res) {
+        res.render("question.html", {id: req.params.id})
     });
     return router
 }
