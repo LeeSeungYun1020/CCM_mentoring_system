@@ -59,3 +59,13 @@ footer {
 .mdc-drawer {
     color: black;
 }
+
+#main_login_card {
+    position: absolute;
+    min-width: 300px;
+    min-height: 500px;
+    top: 60px;
+    right: 3px;
+    /*color: red;*/
+    background:red;
+}

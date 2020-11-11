@@ -26,6 +26,8 @@
     <link href="stylesheets/main.css" rel="stylesheet">
     <script src="javascripts/main.js"></script>
 
+    import {MDCChipSet} from '@material/chips';
+
     <script>
         $(document).ready(() => {
             const quill = new Quill('#editor-container', {
@@ -54,17 +56,88 @@
             };
         })
 
-        input.addEventListener('keydown', function (event) {
-            if (event.key === 'Enter' || event.keyCode === 13) {
-                const chipEl = document.createElement('div');
-                // ... perform operations to properly populate/decorate chip element ...
-                chipSetEl.appendChild(chipEl);
-                chipSet.addChip(chipEl);
+        // $("#tag").keypress(function (event) {
+        //     if (event.key === "Enter"|| event.keyCode === 13 || event.key === ' ') {
+        //
+        //         console.log("Search: " + this.value)
+        //         $(this).val("")
+        //         $("#main_search_box_header").hide()
+        //     }
+        // })
+        //
+        // document.querySelector('#tag').addEventListener('keydown', function (event) {
+        //     console.log(event.key)
+        //     const chipSetEl = document.querySelector('.mdc-chip-set');
+        //     const chipSet = new mdc.chips.MDCChipSet(chipSetEl);
+        //
+        //     if (event.key === 'Enter' || event.keyCode === 13 || event.key === ' ') {
+        //         $('#tag').html("<p>test</p>")
+        //         // ... perform operations to properly populate/decorate chip element ...
+        //         chipSetEl.appendChild(chipEl);
+        //         chipSet.addChip(chipEl);
+        //     }
+        // });
+
+        const input = document.querySelector(".chip-input");
+        const chips = document.querySelector(".chips");
+
+        document.querySelector(".form-field")
+            .addEventListener('click',() => {
+                input.style.display = 'block';
+                input.focus();
+            });
+
+        input.addEventListener('blur',()=>{
+            input.style.display = 'none';
+        });
+
+        input.addEventListener('keypress', function(event){
+            if (event.key === "Enter"|| event.keyCode === 13 || event.key === ' ')
+            {
+
+
+
+                chips.appendChild(function ()
+                {
+                    const _chip = document.createElement('div');
+
+                    _chip.classList.add('chip');
+                    _chip.addEventListener('click', chipClickHandler);
+
+                    _chip.append(
+                        (function ()
+                        {
+                            const _chip_text = document.createElement('span');
+                            _chip_text.classList.add('chip--text');
+                            _chip_text.innerHTML = input.value;
+
+                            return _chip_text;
+                        })(),
+                        (function ()
+                        {
+                            const _chip_button = document.createElement('span');
+                            _chip_button.classList.add('chip--button');
+                            _chip_button.innerHTML = 'x';
+
+                            return _chip_button;
+                        })()
+                    );
+
+                    return _chip;
+                }());
+                input.value = '';
             }
         });
+
+        function chipClickHandler(event){
+            chips.removeChild(event.currentTarget);
+        }
+
     </script>
 
     <style>
+
+
         body {
             background-color: #EFF0F1;
         }
@@ -139,6 +212,64 @@
         .ps-relative {
             position: relative !important;
         }
+
+        /*.chips {*/
+        /*    position: relative;*/
+        /*    bottom: 43.5px;*/
+        /*}*/
+
+        .form-field{
+            width: 400px;
+            height: auto;
+            min-height: 34px;
+            border: 2px solid #737679;
+            padding: 8px;
+            margin: 8px;
+            cursor: text;
+            border-radius: 3px;
+
+            box-shadow: 0 2px 6px rgba(25,25,25,0.2);
+        }
+
+        .form-field .chips .chip {
+            display: inline-block;
+            width: auto;
+
+            background-color: #0077b5;
+            color: #fff;
+            border-radius: 3px;
+            margin: 2px;
+            overflow: hidden;
+        }
+        .form-field .chips .chip{
+            float: left;
+        }
+
+        .form-field .chips .chip .chip--button {
+            padding: 8px;
+            cursor: pointer;
+            background-color: #004471;
+            display: inline-block;
+        }
+        .form-field .chips .chip .chip--text {
+            padding: 8px;
+            cursor: no;
+            display: inline-block;
+            pointer-events: none
+        }
+
+        .form-field > input{
+            padding: 15px;
+            display: block;
+            box-sizing: border-box;
+            width: 100%;
+            height: 34px;
+            border: none;
+            margin: 5px 0 0;
+            display: inline-block;
+            background-color: transparent;
+        }
+
     </style>
 
     <!--    <link href="stylesheets/question.css" rel="stylesheet">-->
@@ -148,6 +279,7 @@
 <body>
 <header></header>
 <aside class="navigation"></aside>
+
 <div class="main_contents">
     <form>
         <div class="container">
@@ -180,40 +312,44 @@
                         <label class="label_style" for="tag">Tag
                             <p class="explain_form">최대 5개의 질문에 대한 태그를 추가하시오.</p>
                         </label>
-
-                        <div class="ps-relative">
-
-                            <input class="input_set" id="tag" name="tag" placeholder="e.g. (sql ajax iphone)"
-                                   type="text">
-                            <div class="mdc-chip-set mdc-chip-set--input" role="grid">
-                                <div class="mdc-chip" role="row">
-                                    <div class="mdc-chip__ripple"></div>
-                                    <span role="gridcell">
-                                        <span class="mdc-chip__primary-action" role="button" tabindex="0">
-                                                <span class="mdc-chip__text">Chip One</span>
-                                            </span>
-                                        </span>
-                                    <span role="gridcell">
-                                            <i class="material-icons mdc-chip__icon mdc-chip__icon--trailing"
-                                               role="button" tabindex="-1">cancel</i>
-                                        </span>
-
-                                </div>
-                                <div class="mdc-chip" role="row">
-                                    <div class="mdc-chip__ripple"></div>
-                                    <span role="gridcell">
-                                        <span class="mdc-chip__primary-action" role="button" tabindex="0">
-                                                <span class="mdc-chip__text">Chip Two</span>
-                                            </span>
-                                        </span>
-                                    <span role="gridcell">
-                                            <i class="material-icons mdc-chip__icon mdc-chip__icon--trailing"
-                                               role="button" tabindex="-1">cancel</i>
-                                        </span>
-                                </div>
+                        <div class="form-field">
+                            <div class="chips">
                             </div>
+                            <input placeholder="Enter something here" autofocus autocomplete="off" class="chip-input" />
                         </div>
-                    </div>
+<!--                        <div class="ps-relative">-->
+<!--                           -->
+<!--                            <input class="input_set" id="tag" name="tag" placeholder="e.g. (sql ajax iphone)"-->
+<!--                                   type="text">-->
+<!--                            <div class="mdc-chip-set mdc-chip-set&#45;&#45;input chips chips-placeholder"  role="grid">-->
+<!--                                <div class="mdc-chip" role="row">-->
+<!--                                    <div class="mdc-chip__ripple"></div>-->
+<!--                                    <span role="gridcell">-->
+<!--                                        <span class="mdc-chip__primary-action" id="chipEL" role="button" tabindex="0">-->
+<!--                                                <span class="mdc-chip__text"></span>-->
+<!--                                            </span>-->
+<!--                                        </span>-->
+<!--                                    <span role="gridcell">-->
+<!--                                            <i class="material-icons mdc-chip__icon mdc-chip__icon&#45;&#45;trailing"-->
+<!--                                               role="button" tabindex="-1">cancel</i>-->
+<!--                                        </span>-->
+
+<!--                                </div>-->
+<!--                                <div class="mdc-chip" role="row">-->
+<!--                                    <div class="mdc-chip__ripple"></div>-->
+<!--                                    <span role="gridcell">-->
+<!--                                        <span class="mdc-chip__primary-action" role="button" tabindex="0">-->
+<!--                                                <span class="mdc-chip__text">Chip Two</span>-->
+<!--                                            </span>-->
+<!--                                        </span>-->
+<!--                                    <span role="gridcell">-->
+<!--                                            <i class="material-icons mdc-chip__icon mdc-chip__icon&#45;&#45;trailing"-->
+<!--                                               role="button" tabindex="-1">cancel</i>-->
+<!--                                        </span>-->
+<!--                                </div>-->
+<!--                            </div>-->
+                        </div>
+
 
                     <div class="button-container form_group">
                         <input class="mdc-button mdc-button--raised question_buttons" id="question_send_button"
@@ -221,12 +357,12 @@
                                value="Save your question">
                     </div>
                         <div class="mdc-button__ripple"></div>
-                        </input>
                     </div>
                 </div>
             </div>
-        </div>
     </form>
+
+</div>
 </div>
 <footer></footer>
 </body>

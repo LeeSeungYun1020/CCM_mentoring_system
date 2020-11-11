@@ -24,6 +24,13 @@ $(document).ready(() => {
         location.href = '/'
     })
 
+    $("#login_logout_icon").click(() => {
+        if ($("#main_login_card").css("display") == "none")
+            $("#main_login_card").show()
+        else
+            $("#main_login_card").hide()
+    })
+
     // 검색창 관련 기능
     $("#main_search_icon").click(() => {
         $("#main_header").hide()
@@ -68,6 +75,8 @@ $(document).ready(() => {
         initComponents()
         // 검색창 숨김
         $('#main_search_box_header').hide()
+        // 사용자 카드 숨김
+        $("#main_login_card").hide()
     }
 
     function initComponents() {
