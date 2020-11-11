@@ -36,38 +36,38 @@
             margin-bottom: 5px;
         }
 
-        #question_question_box {
+        .question_box {
             display: inline-flex;
             margin-top: 10px;
         }
 
-        #question_recommend_box {
+        .recommend_box {
             width: inherit;
         }
 
-        #question_count {
+        .point {
             text-align: center;
             margin: auto;
         }
 
-        #question_contents {
+        .contents {
             height: auto;
             min-height: 100%;
             padding: 0 50px 50px 0;
         }
 
-        #question_contents .ql-editor {
+        .contents .ql-editor {
             font-size: 18px;
             overflow-y: visible;
         }
 
-        #question_contents_box {
+        .contents_box {
             height: 100%;
             min-height: 100%;
             overflow-y: auto;
         }
 
-        #question_tag {
+        .question_box_footer {
             padding-left: 10px;
             margin-bottom: 20px;
         }
@@ -79,6 +79,16 @@
         h3 {
             margin-top: 10px;
             margin-bottom: 5px;
+            flex: 1 auto !important;
+        }
+
+        .mdc-form-field {
+            margin: 10px;
+        }
+
+        .question_answer_header {
+            display: flex;
+            margin-bottom: 10px;
         }
 
         #question_answer_edit_box {
@@ -94,7 +104,7 @@
             margin-top: 15px;
         }
 
-        .mdc-button--unelevated {
+        .mdc-button--unelevated, .mdc-radio__native-control {
             --mdc-theme-primary: #315270;
             --mdc-theme-on-primary: #FFFFFF;
         }
@@ -115,19 +125,12 @@
 
         function setField() {
             setQuestionField()
-            setAnswerField()
+            setAnswerField("time")
             setAnswerEditField()
         }
 
         function setQuestionField() {
             const questionField = new Quill('#question_contents', {
-                modules: {
-                    toolbar: [
-                        [{header: [1, 2, false]}],
-                        ['bold', 'italic', 'underline'],
-                        ['image', 'code-block']
-                    ]
-                },
                 scrollingContainer: '#question-contents_box',
                 placeholder: '질문 내용이 표시됩니다.',
                 theme: 'bubble'
@@ -135,7 +138,10 @@
             questionField.enable(false)
             $.post(`/board/data/q/<%= id %>`, (body) => {
                 if (body.error) {
-                    alert("해당 게시물을 열람할 수 없습니다.")
+                    if (body.error === "auth")
+                        alert("해당 게시물을 열람할 수 없습니다.")
+                    else
+                        alert("존재하지 않는 게시물입니다.")
                     location.href = '/board'
                 } else {
                     const data = body.data
@@ -143,7 +149,7 @@
                     $("#question_subtitle").text(
                         `${data.name}, 작성: ${convertTime(data.date)}, 수정: ${convertTime(data.modifyDate)}`
                     )
-                    $("#question_count").text(data.point)
+                    $("#question_point").text(data.point)
                     $("#question_tag").html(`<p>${data.tag}</p>`)
                     questionField.setContents(JSON.parse(data.contents).ops)
                 }
@@ -152,26 +158,117 @@
 
         }
 
-        function setAnswerField() {
-            $.post(`/board/data/a/<%= id %>`, (body) => {
-                console.log(body)
-                if (body.error) {
-                    alert("해당 게시물을 열람할 수 없습니다.")
-                    location.href = '/board'
-                } else if (body.data.length === 0) {
-                    $("#question_answer_view_box").html(`
+        function setAnswerField(sort) {
+            getAnswerHTML(sort).then(value => {
+                $("#question_answer_view_box").html(value.html)
+                addAnswerFieldAddOn(value.list)
+                sortAvailable()
+                if (sort === "vote")
+                    $("#question_answer_sort_recommend").prop("checked", true)
+            }).catch(error => {
+                alert("해당 게시물을 열람할 수 없습니다.")
+                location.href = '/board'
+            })
+        }
+
+        function getAnswerHTML(sort) {
+            return new Promise(function (resolve, reject) {
+                $.post(`/board/data/a/<%= id %>`, (body) => {
+                    if (body.error) {
+                        return reject(body.error)
+                    } else if (body.data.length === 0) {
+                        return resolve({
+                            html: `
                         <h3>아직 답변이 없습니다.</h3>
                         <p>지금 바로 답변해보세요.</p>
-                    `.trim())
-                } else {
-                    for (const answer of body.data) {
-                        $("#question_answer_view_box").html(`
-                        <h3>답변이 존재합니다.</h3>
-                        <p>곧 답변 조회 기능이 활성화됩니다. 잠시만 기다려 주세요.</p>
-                    `.trim())
+                    `.trim(), list: body.data
+                        })
+                    } else {
+                        let content = `
+<div class="question_answer_header">
+<h3>${body.data.length}개의 답변이 있습니다.</h3>
+<div class="mdc-form-field">
+  <div class="mdc-radio">
+    <input class="mdc-radio__native-control" type="radio" id="question_answer_sort_time" name="radios" checked>
+    <div class="mdc-radio__background">
+      <div class="mdc-radio__outer-circle"></div>
+      <div class="mdc-radio__inner-circle"></div>
+    </div>
+    <div class="mdc-radio__ripple"></div>
+  </div>
+  <label for="question_answer_sort_time">시간순</label>
+</div>
+<div class="mdc-form-field">
+  <div class="mdc-radio">
+  <input class="mdc-radio__native-control" type="radio" id="question_answer_sort_recommend" name="radios">
+    <div class="mdc-radio__background">
+      <div class="mdc-radio__outer-circle"></div>
+      <div class="mdc-radio__inner-circle"></div>
+    </div>
+    <div class="mdc-radio__ripple"></div>
+  </div>
+  <label for="question_answer_sort_recommend">추천순</label>
+</div>
+</div>`.trim()
+                        if (sort === "vote") {
+                            body.data.sort((a, b) => b.point - a.point)
+                        }
+                        for (const answer of body.data) {
+                            content += `
+<div class="question_box">
+<div id="question_recommend_box_answer${answer.id}" class="recommend_box">
+    <button aria-label="추천"
+            aria-pressed="false"
+            class="mdc-icon-button"
+            id="question_recommend_up_answer${answer.id}">
+        <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">thumb_up</i>
+        <i class="material-icons material-icons-outlined mdc-icon-button__icon">thumb_up</i>
+    </button>
+    <section id="question_point_answer${answer.id}" class="point">${answer.point}</section>
+    <button aria-label="비추천"
+            aria-pressed="false"
+            class="mdc-icon-button"
+            id="question_recommend_down">
+        <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">thumb_down</i>
+        <i class="material-icons material-icons-outlined mdc-icon-button__icon">thumb_down</i>
+    </button>
+</div>
+<div id="question_answers_box${answer.id}" class="contents_box">
+    <article id="question_answers${answer.id}" class="contents">내용</article>
+    <section id="question_answers${answer.id}_subtitle" class="question_box_footer"></section>
+</div>
+</div>
+<hr>
+                        `.trim()
+                        }
+                        resolve({html: content, list: body.data})
                     }
-                }
-                //
+                })
+            })
+        }
+
+        function addAnswerFieldAddOn(list) {
+            for (const answer of list) {
+                let tem = new Quill(`#question_answers${answer.id}`, {
+                    scrollingContainer: `#question-answers_box${answer.id}`,
+                    placeholder: '답변 내용이 표시됩니다.',
+                    theme: 'bubble'
+                })
+                tem.setContents(JSON.parse(answer.contents).ops)
+                tem.enable(false)
+                $.post(`/users/username/${answer.userID}`, (user) => {
+                    $(`#question_answers${answer.id}_subtitle`).text(
+                        `${user.name}, 작성: ${convertTime(answer.date)}, 수정: ${convertTime(answer.modifyDate)}`)
+                })
+            }
+        }
+
+        function sortAvailable() {
+            $("#question_answer_sort_recommend").click(() => {
+                setAnswerField("vote")
+            })
+            $("#question_answer_sort_time").click(() => {
+                setAnswerField("time")
             })
         }
 
@@ -192,8 +289,6 @@
                     return false
                 const contents = document.querySelector('input[name=contents]');
                 contents.value = JSON.stringify(editField.getContents());
-
-                console.log("Submitted", $(form).serialize(), $(form).serializeArray());
                 return true
             })
         }
@@ -231,8 +326,8 @@
     <h1 id="question_title">제목<%= id %></h1>
     <p id="question_subtitle">작성자, 작성 시간, 수정 시간</p>
     <hr>
-    <div id="question_question_box">
-        <div id="question_recommend_box">
+    <div class="question_box" id="question_question_box">
+        <div class="recommend_box" id="question_recommend_box">
             <button aria-label="추천"
                     aria-pressed="false"
                     class="mdc-icon-button"
@@ -240,7 +335,7 @@
                 <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">thumb_up</i>
                 <i class="material-icons material-icons-outlined mdc-icon-button__icon">thumb_up</i>
             </button>
-            <section id="question_count">0</section>
+            <section class="point" id="question_point">0</section>
             <button aria-label="비추천"
                     aria-pressed="false"
                     class="mdc-icon-button"
@@ -249,9 +344,9 @@
                 <i class="material-icons material-icons-outlined mdc-icon-button__icon">thumb_down</i>
             </button>
         </div>
-        <div id="question_contents_box">
-            <article id="question_contents">내용</article>
-            <section id="question_tag">태그</section>
+        <div class="contents_box" id="question_contents_box">
+            <article class="contents" id="question_contents">내용</article>
+            <section class="question_box_footer" id="question_tag">태그</section>
         </div>
     </div>
     <hr>

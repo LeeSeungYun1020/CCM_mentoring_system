@@ -79,16 +79,16 @@ module.exports = function (passport) {
             where question.id = ?`.trim(),
             [req.params.id],
             function (error, results, fields) {
-                if (results.length == 0)
-                    error = true
-                if (results[0].viewRange === 1) {
+                if (results.length == 0) {
+                    error = "not"
+                } else if (results[0].viewRange === 1) {
                     if (results[0].teamID !== userTeam) {
-                        return res.send({error: true})
+                        return res.send({error: "auth"})
                     }
                     results[0].type = "team"
                 } else if (results[0].viewRange === 2) {
                     if (results[0].viewID !== userID) {
-                        return res.send({error: true})
+                        return res.send({error: "auth"})
                     }
                     results[0].type = "one"
                 } else {

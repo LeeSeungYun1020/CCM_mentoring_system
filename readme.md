@@ -72,9 +72,10 @@ npm install
 ### 3. 데이터베이스 설정
 호환성 확보를 위해 Retain MySQL 5.x Compatibility 설정  
 root password: lsy1020
-```sql
+```mysql
 create database mentoring;
 create database session;
+
 use mentoring;
 create table team (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -90,7 +91,8 @@ create table user (
     phone VARCHAR(16),
     type INT NOT NULL DEFAULT 0,
     teamID INT,
-    point INT NOT NULL DEFAULT 0,
+    questionPoint INT NOT NULL DEFAULT 0,
+    answerPoint INT NOT NULL DEFAULT 0,
     FOREIGN KEY (teamID) REFERENCES Team(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
@@ -98,7 +100,7 @@ create table question(
     id INT PRIMARY KEY AUTO_INCREMENT,
     title NVARCHAR(32) NOT NULL ,
     userID VARCHAR(16) NOT NULL ,
-    contents NVARCHAR(2048) NOT NULL ,
+    contents MEDIUMTEXT NOT NULL ,
     date datetime DEFAULT current_timestamp,
     modifyDate datetime DEFAULT current_timestamp ON UPDATE current_timestamp,
     viewRange INT NOT NULL DEFAULT 0,
@@ -110,9 +112,8 @@ create table question(
 
 create table answer(
     id INT PRIMARY KEY AUTO_INCREMENT,
-    title NVARCHAR(32) NOT NULL ,
     userID VARCHAR(16) NOT NULL ,
-    contents NVARCHAR(2048) NOT NULL ,
+    contents MEDIUMTEXT NOT NULL ,
     date datetime DEFAULT current_timestamp,
     modifyDate datetime DEFAULT current_timestamp ON UPDATE current_timestamp,
     point INT NOT NULL DEFAULT 0,
