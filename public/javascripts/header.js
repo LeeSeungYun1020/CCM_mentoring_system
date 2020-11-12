@@ -12,11 +12,18 @@ $(document).ready(() => {
         location.href = '/'
     })
 
+    // 사용자 정보 관련 기능
     $("#login_logout_icon").click(() => {
         if ($("#main_login_card").css("display") == "none")
             $("#main_login_card").show()
         else
             $("#main_login_card").hide()
+    })
+    $("#main_logout_button").click(() => {
+        location.href = "/users/logout"
+    })
+    $("#main_user_info_button").click(() => {
+        location.href = "/users/info"
     })
 
     // 검색창 관련 기능
@@ -35,11 +42,6 @@ $(document).ready(() => {
         if (event.key === "Enter") {
             location.href = '/search/' + this.value
         }
-    })
-
-    // 사용자 및 알림 다이얼로그
-    dialog.listen('MDCDialog:opened', () => {
-        console.log("dialog open")
     })
 
     function initHeader() {

@@ -24,6 +24,11 @@ module.exports = function (passport) {
             failureFlash: "아이디와 비밀번호를 다시 확인하십시오."
         }))
 
+    router.get('/logout', function (req, res) {
+        req.logout();
+        res.redirect('/');
+    })
+
     router.route('/signin')
         .get((req, res) => {
             res.redirect('/users')
