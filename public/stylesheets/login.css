@@ -1,7 +1,7 @@
 #login_contents_box {
     min-height: 500px;
     text-align: center;
-    background-image: url("../images/test_background.jpg");
+    background-image: url("/images/login_background_picture.jpg");
     background-position: center;
     background-size: cover;
 }

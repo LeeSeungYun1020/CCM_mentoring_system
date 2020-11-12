@@ -23,7 +23,7 @@
                     role="button" tabindex="0">login
             </button>
             <button class="material-icons mdc-icon-button" id="login_logout_icon"
-                    role="button" tabindex="0">account_circle
+                    role="button" tabindex="0">face
             </button>
         </div>
 
@@ -80,7 +80,26 @@
         </button>
     </div>
 </header>
-<div id="main_login_card"></div>
+<div class="box-form mdc-elevation--z8" id="main_login_card">
+<!--            <div class="mdc-card__media mdc-card__media&#45;&#45;square demo-card__media user_picture" style="background-image: url(&quot;https://material-components.github.io/material-components-web-catalog/static/media/photos/3x2/2.jpg&quot;);"></div>-->
+            <div class="info_header">
+                <img src = "https://material-components.github.io/material-components-web-catalog/static/media/photos/3x2/2.jpg">
+                <div id="info_simple_box">
+                    <p class="info_font1_style" id="info_simple_name"></p>
+                    <p class="info_font2_style" id="info_simple_id"></p>
+                </div>
+            </div>
+                <button class="mdc-button mdc-button--raised button_style ">
+                    <i class="material-icons mdc-button__icon" aria-hidden="true"
+                    >directions_run</i>
+                    <span class="mdc-button__ripple"></span>Logout
+                </button>
+            <button class="mdc-button button_style">
+            <i class="material-icons mdc-button__icon" aria-hidden="true"
+            >add_circle_outline</i>
+            <span class="mdc-button__ripple"></span>프로필 정보</button>
+</div>
+
 </body>
 
 </html>
