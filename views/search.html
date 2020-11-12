@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!--    title -->
+    <title>검색 - <%= value %></title>
+    <!--    jquery -->
+    <script src="/node_modules/jquery/dist/jquery.min.js" type="text/javascript"></script>
+    <!--    material icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--    material components -->
+    <link href="/node_modules/material-components-web/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="/node_modules/material-components-web/dist/material-components-web.min.js"></script>
+    <!--    header and footer -->
+    <link href="/stylesheets/main.css" rel="stylesheet">
+    <script src="/javascripts/main.js"></script>
+    <style>
+        .main_contents {
+            position: relative;
+            display: block;
+            width: 70%;
+            left: 15%;
+        }
+
+        #search_top {
+            margin-top: 16px;
+        }
+
+        .result-box {
+            padding: 16px;
+            margin: 16px;
+
+        }
+
+        a:link, a:visited {
+            text-decoration: none;
+            color: black;
+        }
+
+        a:hover {
+            color: #315270;
+        }
+
+        .last-box {
+            height: 100px;
+        }
+
+        .search-chip-box {
+            position: relative;
+            right: 8px;
+        }
+    </style>
+    <script>
+        $(document).ready(() => {
+            $(window).resize(moveFooter())
+            $.post(`/search/title`, {value: '<%= value %>'}, (res) => {
+                $("#search_title").html(makeHTML(res.body))
+                moveFooter()
+            })
+            $.post(`/search/tag`, {value: '<%= value %>'}, (res) => {
+                $("#search_tag").html(makeHTML(res.body))
+                moveFooter()
+            })
+            $.post(`/search/contents`, {value: '<%= value %>'}, (res) => {
+                $("#search_contents").html(makeHTML(res.body))
+                moveFooter()
+            })
+        })
+
+        function moveFooter() {
+            if ($(window).height() < $(document).height()) {
+                $("footer").css("position", "static")
+            } else {
+                $("footer").css("position", "fixed")
+            }
+        }
+
+        function makeHTML(list) {
+            let html = ""
+            for (const data of list) {
+                html += `
+<div class="result-box mdc-elevation--z4">
+<a href="/board/${data.id}">
+<h2>${data.title}</h2>
+<p>${data.userID}, 작성: ${convertTime(data.date)}, 수정: ${convertTime(data.modifyDate)}</p>
+<div class='mdc-chip-set mdc-chip-set--filter search-chip-box'>
+                `.trim()
+                const tagList = data.tag.split(" ")
+                for (let i = 0; i < tagList.length; i++) {
+                    html += `
+<div class="mdc-chip mdc-ripple-upgraded" id="question_question_chip${i}" role="row">
+    <span class="mdc-chip__text" id="question_question_chip${i}_text">${tagList[i]}</span>
+</div>
+                    `.trim()
+                }
+                html += "</div></a></div>"
+            }
+            return html
+        }
+
+        function convertTime(stringTime) {
+            const date = new Date()
+            date.setTime(Date.parse(stringTime))
+            const delay = Date.now() - date.getTime()
+            if (delay < 1000 * 60) // 1분 이하
+                return `${Math.round(delay / 1000)} 초 전`
+            if (delay < 1000 * 60 * 60) // 1시간 이하
+                return `${Math.round(delay / 1000 / 60)} 분 전`
+            if (delay < 1000 * 60 * 60 * 24) // 1일 이하
+                return `${Math.round(delay / 1000 / 60 / 60)} 시간 전`
+            if (delay < 1000 * 60 * 60 * 24 * 365) // 1년 이하
+                return `${Math.round(delay / 1000 / 60 / 60 / 24)} 일 전`
+            else
+                return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDay()}`
+        }
+    </script>
+</head>
+<body>
+<header></header>
+<aside class="navigation"></aside>
+<div class="main_contents">
+    <h1 id="search_top">"<%= value %>"에 대한 검색 결과</h1>
+    <div id="search_title"></div>
+    <div id="search_tag"></div>
+    <div id="search_contents"></div>
+    <div class="last-box"></div>
+</div>
+<footer></footer>
+</body>
+</html>

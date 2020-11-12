@@ -139,7 +139,16 @@ module.exports = function (passport) {
                 if (error) {
                     return res.send({error: true})
                 } else {
-                    return res.send({error: false})
+                    mysql.query(
+                        "SELECT userID from answer WHERE id = ?",
+                        [req.params.id],
+                        function (error, result) {
+                            if (error) {
+                                return res.send({error: true})
+                            } else {
+                                return res.send({error: false, userID: result[0].userID})
+                            }
+                        })
                 }
             })
     })
@@ -169,7 +178,16 @@ module.exports = function (passport) {
                 if (error) {
                     return res.send({error: true})
                 } else {
-                    return res.send({error: false})
+                    mysql.query(
+                        "SELECT userID from answer WHERE id = ?",
+                        [req.params.id],
+                        function (error, result) {
+                            if (error) {
+                                return res.send({error: true})
+                            } else {
+                                return res.send({error: false, userID: result[0].userID})
+                            }
+                        })
                 }
             })
     })

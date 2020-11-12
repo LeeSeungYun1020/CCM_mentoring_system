@@ -99,10 +99,11 @@ module.exports = function (passport) {
             "UPDATE user SET questionPoint = questionPoint + 1 WHERE id = ?",
             [req.params.target],
             function (error, results) {
-                if (error != null) {
-                    return res.send({error: true})
+                console.log(req.params.target)
+                if (error == null) {
+                    return res.send({error: false})
                 }
-                res.send({error: false})
+                res.send({error: true})
             })
     })
 
@@ -111,33 +112,33 @@ module.exports = function (passport) {
             "UPDATE user SET answerPoint = answerPoint + 1 WHERE id = ?",
             [req.params.target],
             function (error, results) {
-                if (error != null) {
-                    return res.send({error: true})
+                if (error == null) {
+                    return res.send({error: false})
                 }
-                res.send({error: false})
+                res.send({error: true})
             })
     })
     router.post("/recommend/q/minus/:target", (req, res) => {
         mysql.query(
-            "UPDATE user SET questionPoint = questionPoint + 1 WHERE id = ?",
+            "UPDATE user SET questionPoint = questionPoint - 1 WHERE id = ?",
             [req.params.target],
             function (error, results) {
-                if (error != null) {
-                    return res.send({error: true})
+                if (error == null) {
+                    return res.send({error: false})
                 }
-                res.send({error: false})
+                res.send({error: true})
             })
     })
 
     router.post("/recommend/a/minus/:target", (req, res) => {
         mysql.query(
-            "UPDATE user SET answerPoint = answerPoint + 1 WHERE id = ?",
+            "UPDATE user SET answerPoint = answerPoint - 1 WHERE id = ?",
             [req.params.target],
             function (error, results) {
-                if (error != null) {
-                    return res.send({error: true})
+                if (error == null) {
+                    return res.send({error: false})
                 }
-                res.send({error: false})
+                res.send({error: true})
             })
     })
     router.get('/error', ((req, res) => {

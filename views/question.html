@@ -434,6 +434,7 @@
                     if ((id == 'question_recommend_down' && isOn) || id == 'question_recommend_up' && !isOn) {
                         $.post(`/board/recommend/q/minus/<%= id %>`, (res) => {
                             if (!res.error) {
+                                $.post(`/users/recommend/q/minus/<%= userID %>`)
                                 const text = $(`#question_point`).text()
                                 $(`#question_point`).text(parseInt(text, 10) - 1)
                             }
@@ -441,6 +442,7 @@
                     } else if ((id == 'question_recommend_down' && !isOn) || id == 'question_recommend_up' && isOn) {
                         $.post(`/board/recommend/q/add/<%= id %>`, (res) => {
                             if (!res.error) {
+                                $.post(`/users/recommend/q/add/<%= userID %>`)
                                 const text = $(`#question_point`).text()
                                 $(`#question_point`).text(parseInt(text, 10) + 1)
                             }
@@ -467,6 +469,9 @@
         function addAnswerPoint(target) {
             $.post(`/board/recommend/a/add/${target}`, (res) => {
                 if (!res.error) {
+                    $.post(`/users/recommend/a/add/${res.userID}`, (res) => {
+                        console.log(res.error)
+                    })
                     const text = $(`#question_point_answer${target}`).text()
                     $(`#question_point_answer${target}`).text(parseInt(text, 10) + 1)
                 }
@@ -475,8 +480,11 @@
         }
 
         function minusAnswerPoint(target) {
-            $.post(`/board/recommend/a/minus/${target}`, (error) => {
-                if (!error) {
+            $.post(`/board/recommend/a/minus/${target}`, (res) => {
+                if (!res.error) {
+                    $.post(`/users/recommend/a/minus/${res.userID}`, (res) => {
+
+                    })
                     const text = $(`#question_point_answer${target}`).text()
                     $(`#question_point_answer${target}`).text(parseInt(text, 10) - 1)
                 }
