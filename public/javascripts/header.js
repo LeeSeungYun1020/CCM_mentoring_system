@@ -38,6 +38,11 @@ $(document).ready(() => {
             location.href = '/search/' + this.value
         }
     })
+    const imgAr = ["user1.jpg", "user2.jpg","user3.jpg","user4.jpg","user5.jpg","user6.jpg",
+        "user7.jpg","user8.jpg","user9.jpg","user10.jpg","user11.jpg","user12.jpg"];
+    let num = Math.floor( Math.random() * imgAr.length );
+    let img = imgAr[ num ];
+    $("#user_random_picture").attr("src", '/images/'+img)
 
     // 사용자 및 알림 다이얼로그
     dialog.listen('MDCDialog:opened', () => {
@@ -95,6 +100,18 @@ $(document).ready(() => {
         }
     }
 })
+
+const random_images_array = ["user1.jpg", "user2.jpg","user3.jpg","user4.jpg","user5.jpg","user6.jpg",
+    "user7.jpg","user8.jpg","user9.jpg","user10.jpg","user11.jpg","user12.jpg"];
+
+function getRandomImage(imgAr, path) {
+    path = path || 'images/'; // default path here
+    let num = Math.floor( Math.random() * imgAr.length );
+    let img = imgAr[ num ];
+    const imgStr = '<img src="' + path + img + '" alt = "">';
+    document.write(imgStr);
+    document.close();
+}
 
 function updateUserData() {
     $.post('/users/', (data) => {
