@@ -11,7 +11,7 @@
     <!--    material components -->
     <link href="/node_modules/material-components-web/dist/material-components-web.min.css" rel="stylesheet">
     <script src="/node_modules/material-components-web/dist/material-components-web.min.js"></script>
-
+    <!--    highlight -->
     <link href="/node_modules/@highlightjs/cdn-assets/styles/default.min.css" rel="stylesheet">
     <script src="/node_modules/@highlightjs/cdn-assets/highlight.min.js"></script>
     <script charset="UTF-8"
@@ -30,14 +30,11 @@
             src="/node_modules/@highlightjs/cdn-assets/languages/sql.min.js"></script>
     <script charset="UTF-8"
             src="/node_modules/@highlightjs/cdn-assets/languages/kotlin.min.js"></script>
-
     <script>hljs.initHighlightingOnLoad();</script>
-    <!-- Core build with no theme, formatting, non-essential modules -->
+    <!-- Quill -->
     <link href="/node_modules/quill/dist/quill.core.css" rel="stylesheet">
     <script src="/node_modules/quill/dist/quill.core.js"></script>
-    <!-- Main Quill library -->
     <script src="/node_modules/quill/dist/quill.js"></script>
-    <!-- Theme included stylesheets -->
     <link href="/node_modules/quill/dist/quill.snow.css" rel="stylesheet">
     <link href="/node_modules/quill/dist/quill.bubble.css" rel="stylesheet">
     <!--    header and footer -->
@@ -336,7 +333,7 @@
 <div id="question_answer_update_box${answer.id}" class="contents_box">
 <form action="/edit/answer/update/${answer.id}" id="answer_update_form${answer.id}" method="post">
     <input name="questionID" type="hidden" value="<%= id %>">
-    <input name="contents_answer${answer.id}]" type="hidden">
+    <input name="contents_answer${answer.id}" type="hidden">
     <article id="question_answers${answer.id}_update" class="contents">내용</article>
     <div class="fill-box">
         <section class="question_box_footer fill-left">
@@ -395,7 +392,6 @@
                     }
                     const contents = document.querySelector(`input[name=contents_answer${answer.id}]`);
                     contents.value = JSON.stringify(uQuill.getContents());
-                    console.log(event)
                     return true
                 })
             }
