@@ -93,6 +93,7 @@ create table user (
     teamID INT,
     questionPoint INT NOT NULL DEFAULT 0,
     answerPoint INT NOT NULL DEFAULT 0,
+    image int default 0 not null,
     FOREIGN KEY (teamID) REFERENCES Team(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
@@ -105,7 +106,7 @@ create table question(
     modifyDate datetime DEFAULT current_timestamp ON UPDATE current_timestamp,
     viewRange INT NOT NULL DEFAULT 0,
     viewID INT,
-    tag NVARCHAR(64),
+    tag NVARCHAR(128),
     point INT NOT NULL DEFAULT 0,
     FOREIGN KEY (userID) REFERENCES user(id) ON UPDATE CASCADE ON DELETE CASCADE
 );

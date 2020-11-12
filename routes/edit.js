@@ -17,7 +17,7 @@ module.exports = function (passport) {
             }
             console.log(data)
             if (data.viewId == '')
-                data.viewId = null
+                data.viewId = 0
             if (data.questionID == '') {
                 mysql.query(
                     `INSERT INTO question (title, userID, contents, viewRange, viewID, tag) 

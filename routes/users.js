@@ -30,9 +30,10 @@ module.exports = function (passport) {
         })
         .post((req, res, next) => {
             const data = req.body
+            const ran = Math.floor(Math.random() * 11) + 1
             mysql.query(
-                "INSERT INTO user (id, pw, name, email, phone, type) VALUES (?, ?, ?, ?, ?, ?)",
-                [data.username, data.password, data.name, data.email, data.phone, data.type],
+                "INSERT INTO user (id, pw, name, email, phone, type, image) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                [data.username, data.password, data.name, data.email, data.phone, data.type, ran],
                 function (error, results) {
                     if (error) {
                         res.redirect('/users')
@@ -74,6 +75,14 @@ module.exports = function (passport) {
     router.post('/username/:id', ((req, res) => {
         mysql.query(
             "SELECT name from user WHERE id=?",
+            [req.params.id],
+            function (error, results) {
+                res.send(results[0])
+            })
+    }))
+    router.post('/image/:id', ((req, res) => {
+        mysql.query(
+            "SELECT image from user WHERE id=?",
             [req.params.id],
             function (error, results) {
                 res.send(results[0])
