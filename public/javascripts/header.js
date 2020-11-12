@@ -1,15 +1,3 @@
-// const LoginStatus = {
-//     LOGIN: {value: "로그인"},
-//     SIGNIN: {value: "회원가입"}
-// }
-//
-// const MainContents = {
-//     HOME: {value: "홈", link: "index.html"},
-//     LOGIN: {value: "로그인", link: "login.html"},
-//     QUESTION: {value: "질문", link: "question.html"}
-// }
-// let contents = MainContents.HOME
-// let loginStatus = LoginStatus.LOGIN
 let user
 let dialog
 
@@ -45,9 +33,9 @@ $(document).ready(() => {
     })
     $("#main_search_box_input").keypress(function (event) {
         if (event.key === "Enter") {
-            console.log("Search: " + this.value)
-            $(this).val("")
-            $("#main_search_box_header").hide()
+            //$(this).val("")
+            //$("#main_search_box_header").hide()
+            location.href = '/search/' + this.value
         }
     })
 

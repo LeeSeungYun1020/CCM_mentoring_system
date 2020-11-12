@@ -68,8 +68,8 @@ module.exports = function (passport) {
     // 단일 게시물 데이터 전송
     router.post('/data/q/:id', function (req, res) {
         let userID = 0
-        if (req.users != null) {
-            userID = req.users.id
+        if (req.user != null) {
+            userID = req.user.id
         }
         mysql.query(
             `
@@ -127,7 +127,11 @@ module.exports = function (passport) {
     })
     // 게시물 데이터 표시
     router.get('/:id', function (req, res) {
-        res.render("question.html", {id: req.params.id})
+        let userID = null
+        if (req.user != null) {
+            userID = req.user.id
+        }
+        res.render("question.html", {id: req.params.id, userID: userID})
     });
     return router
 }

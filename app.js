@@ -47,13 +47,15 @@ const indexRouter = require('./routes/index')
 const usersRouter = require('./routes/users')(passport)
 const boardRouter = require('./routes/board')(passport)
 const editRouter = require('./routes/edit')(passport)
+const searchRouter = require('./routes/search')(passport)
 
 app.use('/', indexRouter)
 app.use('/users', usersRouter)
 app.use('/board', boardRouter)
 app.use('/edit', editRouter)
+app.use('/search', searchRouter)
 app.get('/*.html', (req, res) => {
-  res.render(req.params[0] + '.html')
+    res.render(req.params[0] + '.html')
 })
 
 // catch 404 and forward to error handler

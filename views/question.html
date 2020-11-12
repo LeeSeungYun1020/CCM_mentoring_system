@@ -11,6 +11,27 @@
     <!--    material components -->
     <link href="/node_modules/material-components-web/dist/material-components-web.min.css" rel="stylesheet">
     <script src="/node_modules/material-components-web/dist/material-components-web.min.js"></script>
+
+    <link href="/node_modules/@highlightjs/cdn-assets/styles/default.min.css" rel="stylesheet">
+    <script src="/node_modules/@highlightjs/cdn-assets/highlight.min.js"></script>
+    <script charset="UTF-8"
+            src="/node_modules/@highlightjs/cdn-assets/languages/c.min.js"></script>
+    <script charset="UTF-8"
+            src="/node_modules/@highlightjs/cdn-assets/languages/java.min.js"></script>
+    <script charset="UTF-8"
+            src="/node_modules/@highlightjs/cdn-assets/languages/python.min.js"></script>
+    <script charset="UTF-8"
+            src="/node_modules/@highlightjs/cdn-assets/languages/javascript.min.js"></script>
+    <script charset="UTF-8"
+            src="/node_modules/@highlightjs/cdn-assets/languages/css.min.js"></script>
+    <script charset="UTF-8"
+            src="/node_modules/@highlightjs/cdn-assets/languages/htmlbars.min.js"></script>
+    <script charset="UTF-8"
+            src="/node_modules/@highlightjs/cdn-assets/languages/sql.min.js"></script>
+    <script charset="UTF-8"
+            src="/node_modules/@highlightjs/cdn-assets/languages/kotlin.min.js"></script>
+
+    <script>hljs.initHighlightingOnLoad();</script>
     <!-- Core build with no theme, formatting, non-essential modules -->
     <link href="/node_modules/quill/dist/quill.core.css" rel="stylesheet">
     <script src="/node_modules/quill/dist/quill.core.js"></script>
@@ -37,12 +58,13 @@
         }
 
         .question_box {
+            width: 100%;
             display: inline-flex;
             margin-top: 10px;
         }
 
-        .recommend_box {
-            width: inherit;
+        .contents_box {
+            flex: 1 auto !important;
         }
 
         .point {
@@ -69,7 +91,7 @@
 
         .question_box_footer {
             padding-left: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         h2 {
@@ -79,7 +101,24 @@
         h3 {
             margin-top: 10px;
             margin-bottom: 5px;
+        }
+
+        .fill-box {
+            display: flex;
+        }
+
+        .fill-left {
             flex: 1 auto !important;
+        }
+
+        .ud-button {
+            padding: 2px;
+            margin: 4px 4px 20px;
+        }
+
+        .udq-button {
+            padding: 2px;
+            margin: 4px 4px 5px;
         }
 
         .mdc-form-field {
@@ -100,6 +139,10 @@
             height: 180px;
         }
 
+        #question_post_answer_text {
+            margin-top: 15px;
+        }
+
         #question_post_answer_button {
             margin-top: 15px;
         }
@@ -110,6 +153,12 @@
         }
     </style>
     <script>
+        let isAnswer = false
+        let answerQuill = {}
+        let updateQuill = {}
+        let isUpdate = false
+        let updateID = 0
+
         $(document).ready(() => {
             setField()
             initQuestion()
@@ -120,6 +169,10 @@
                 new mdc.iconButton.MDCIconButtonToggle(value)
             })
             moveFooter()
+            if (`<%= userID %>`.length == 0) {
+                $("#question_post_answer_text").text("로그인하셔야 답변을 게시할 수 있습니다.")
+                $("#question_post_answer_button").prop("disabled", true)
+            }
             $(window).resize(moveFooter())
         }
 
@@ -131,6 +184,9 @@
 
         function setQuestionField() {
             const questionField = new Quill('#question_contents', {
+                modules: {
+                    syntax: true
+                },
                 scrollingContainer: '#question-contents_box',
                 placeholder: '질문 내용이 표시됩니다.',
                 theme: 'bubble'
@@ -150,10 +206,34 @@
                         `${data.name}, 작성: ${convertTime(data.date)}, 수정: ${convertTime(data.modifyDate)}`
                     )
                     $("#question_point").text(data.point)
-                    $("#question_tag").html(`<p>${data.tag}</p>`)
-                    questionField.setContents(JSON.parse(data.contents).ops)
+                    let tagHTML = "<div class='mdc-chip-set mdc-chip-set--filter'>"
+                    const tagList = data.tag.split(" ")
+                    for (let i = 0; i < tagList.length; i++) {
+                        tagHTML += `
+<div class="mdc-chip mdc-ripple-upgraded" id="question_question_chip${i}" role="row">
+    <span class="mdc-chip__text" id="question_question_chip${i}_text">${tagList[i]}</span>
+</div>
+                    `.trim()
+                    }
+                    tagHTML += "</div>"
+                    $("#question_tag").html(tagHTML)
+                    for (let i = 0; i < tagList.length; i++) {
+                        $(`#question_question_chip${i}`).click(function () {
+                            location.href = '/search/' + $(`#question_question_chip${i}_text`).text().toLowerCase()
+                        })
+                    }
+                    if (data.id != `<%= userID %>`) {
+                        console.log(data.id)
+                        console.log(`<%= userID %>`)
+                        $("#question_question_update").prop("disabled", "true")
+                        $("#question_question_delete").prop("disabled", "true")
+                    }
+                    try {
+                        questionField.setContents(JSON.parse(data.contents).ops)
+                    } catch (e) {
+                        console.log(e)
+                    }
                 }
-                //
             })
 
         }
@@ -163,9 +243,13 @@
                 $("#question_answer_view_box").html(value.html)
                 addAnswerFieldAddOn(value.list)
                 sortAvailable()
+                initButton(value.list)
+                initAnswerButton(value.list)
+                moveFooter()
                 if (sort === "vote")
                     $("#question_answer_sort_recommend").prop("checked", true)
             }).catch(error => {
+                console.log(error)
                 alert("해당 게시물을 열람할 수 없습니다.")
                 location.href = '/board'
             })
@@ -184,9 +268,10 @@
                     `.trim(), list: body.data
                         })
                     } else {
+                        isAnswer = true
                         let content = `
 <div class="question_answer_header">
-<h3>${body.data.length}개의 답변이 있습니다.</h3>
+<h3 class="fill-left">${body.data.length}개의 답변이 있습니다.</h3>
 <div class="mdc-form-field">
   <div class="mdc-radio">
     <input class="mdc-radio__native-control" type="radio" id="question_answer_sort_time" name="radios" checked>
@@ -235,8 +320,38 @@
 </div>
 <div id="question_answers_box${answer.id}" class="contents_box">
     <article id="question_answers${answer.id}" class="contents">내용</article>
-    <section id="question_answers${answer.id}_subtitle" class="question_box_footer"></section>
+    <div class="fill-box">
+        <section id="question_answers${answer.id}_subtitle" class="question_box_footer fill-left"></section>
+        <button class="mdc-button mdc-button--unelevated ud-button" id="question_answers${answer.id}_update_button" type="button">
+            <span class="mdc-button__ripple"></span>
+            수정
+        </button>
+        <button class="mdc-button mdc-button--unelevated ud-button" id="question_answers${answer.id}_delete_button" type="button">
+            <span class="mdc-button__ripple"></span>
+            삭제
+        </button>
+    </div>
 </div>
+</div>
+<div id="question_answer_update_box${answer.id}" class="contents_box">
+<form action="/edit/answer/update/${answer.id}" id="answer_update_form${answer.id}" method="post">
+    <input name="questionID" type="hidden" value="<%= id %>">
+    <input name="contents_answer${answer.id}]" type="hidden">
+    <article id="question_answers${answer.id}_update" class="contents">내용</article>
+    <div class="fill-box">
+        <section class="question_box_footer fill-left">
+        수정 버튼을 누르면 수정 사항이 반영됩니다.
+        </section>
+        <button class="mdc-button mdc-button--unelevated ud-button" id="question_answers${answer.id}_update_send" type="submit">
+            <span class="mdc-button__ripple"></span>
+            수정
+        </button>
+        <button class="mdc-button mdc-button--unelevated ud-button" id="question_answers${answer.id}_update_cancel" type="button">
+            <span class="mdc-button__ripple"></span>
+            취소
+        </button>
+    </div>
+</form>
 </div>
 <hr>
                         `.trim()
@@ -250,15 +365,38 @@
         function addAnswerFieldAddOn(list) {
             for (const answer of list) {
                 let tem = new Quill(`#question_answers${answer.id}`, {
-                    scrollingContainer: `#question-answers_box${answer.id}`,
+                    modules: {
+                        syntax: true,
+                    },
                     placeholder: '답변 내용이 표시됩니다.',
                     theme: 'bubble'
                 })
-                tem.setContents(JSON.parse(answer.contents).ops)
                 tem.enable(false)
+                try {
+                    tem.setContents(JSON.parse(answer.contents).ops)
+                } catch (e) {
+                    console.log(e)
+                }
+                answerQuill[`q${answer.id}`] = tem
                 $.post(`/users/username/${answer.userID}`, (user) => {
                     $(`#question_answers${answer.id}_subtitle`).text(
                         `${user.name}, 작성: ${convertTime(answer.date)}, 수정: ${convertTime(answer.modifyDate)}`)
+                })
+                $(`#question_answer_update_box${answer.id}`).hide()
+                $(`#answer_update_form${answer.id}`).submit((event) => {
+                    const uQuill = updateQuill[`q${answer.id}`]
+                    if (uQuill == null) {
+                        alert("잘못된 접근입니다.")
+                        return false
+                    }
+                    if (uQuill.getLength() <= 1) {
+                        alert("내용을 입력해주세요.")
+                        return false
+                    }
+                    const contents = document.querySelector(`input[name=contents_answer${answer.id}]`);
+                    contents.value = JSON.stringify(uQuill.getContents());
+                    console.log(event)
+                    return true
                 })
             }
         }
@@ -275,6 +413,7 @@
         function setAnswerEditField() {
             const editField = new Quill('#question_answer_edit', {
                 modules: {
+                    syntax: true,
                     toolbar: [
                         ['bold', 'italic', 'underline'],
                         ['link', 'blockquote', 'code-block', 'image'],
@@ -285,8 +424,10 @@
                 theme: 'snow'
             })
             $("#answer_form").submit((event) => {
-                if (editField.getLength() <= 0)
+                if (editField.getLength() <= 1) {
+                    alert("내용을 입력해주세요.")
                     return false
+                }
                 const contents = document.querySelector('input[name=contents]');
                 contents.value = JSON.stringify(editField.getContents());
                 return true
@@ -316,6 +457,94 @@
             else
                 return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDay()}`
         }
+
+        function initButton(list) {
+            console.log(list)
+            $("#question_question_update").click(() => {
+                if (isAnswer) {
+                    alert("답변이 등록된 경우 게시물을 수정할 수 없습니다.\n답변을 추가하여 문제를 해결해보세요.")
+                    return
+                }
+                location.href = '/edit/<%= id %>'
+            })
+            $("#question_question_delete").click(() => {
+                if (isAnswer) {
+                    alert("답변이 등록된 경우 게시물을 삭제할 수 없습니다.")
+                    return
+                }
+                $.post('/edit/question/delete/<%= id %>', (body) => {
+                    console.log(body)
+                    if (body.isSuccess === true) {
+                        alert("게시물이 삭제되었습니다.")
+                        location.href = '/board'
+                    } else {
+                        alert("게시물 삭제에 실패하였습니다.")
+                    }
+                })
+            })
+        }
+
+        function initAnswerButton(list) {
+            for (const answer of list) {
+                if (`<%= userID %>` != answer.userID) {
+                    $(`#question_answers${answer.id}_update_button`).prop("disabled", "true")
+                    $(`#question_answers${answer.id}_delete_button`).prop("disabled", "true")
+                }
+                $(`#question_answers${answer.id}_update_button`).click(() => {
+                    console.log("클릭됨" + isUpdate + "u/id" + updateID)
+                    if (isUpdate) {
+                        if (updateID !== answer.id) {
+                            alert("이미 수정 중인 글이 있습니다.")
+                            return
+                        } else return
+                    }
+                    const quill = answerQuill[`q${answer.id}`]
+                    if (quill != null) {
+                        isUpdate = true
+                        updateID = answer.id
+                        $(`#question_answers${answer.id}_update_button`).prop("disabled", true)
+                        $(`#question_answer_update_box${answer.id}`).show()
+                        if (updateQuill[`q${answer.id}`] == null) {
+                            let editField = new Quill(`#question_answers${answer.id}_update`, {
+                                modules: {
+                                    syntax: true,
+                                    toolbar: [
+                                        ['bold', 'italic', 'underline'],
+                                        ['link', 'blockquote', 'code-block', 'image'],
+                                        [{list: 'ordered'}, {list: 'bullet'}]
+                                    ]
+                                },
+                                placeholder: '답변 내용이 표시됩니다.',
+                                theme: 'snow'
+                            })
+                            updateQuill[`q${answer.id}`] = editField
+                        }
+                        const uQuill = updateQuill[`q${answer.id}`]
+                        uQuill.setContents(quill.getContents())
+                        uQuill.focus()
+                    } else {
+                        alert("수정할 수 없는 글입니다.")
+                    }
+                })
+                $(`#question_answers${answer.id}_update_cancel`).click(() => {
+                    isUpdate = false
+                    updateID = 0
+                    $(`#question_answers${answer.id}_update_button`).prop("disabled", false)
+                    $(`#question_answer_update_box${answer.id}`).hide()
+                })
+                $(`#question_answers${answer.id}_delete_button`).click(() => {
+                    $.post(`/edit/answer/delete/${answer.id}`, (body) => {
+                        if (body.isSuccess === true) {
+                            alert("답변이 삭제되었습니다.")
+                            location.href = '/board/<%= id %>'
+                        } else {
+                            alert("답변 삭제에 실패하였습니다.")
+                        }
+                    })
+                })
+            }
+        }
+
     </script>
 </head>
 <body>
@@ -346,7 +575,17 @@
         </div>
         <div class="contents_box" id="question_contents_box">
             <article class="contents" id="question_contents">내용</article>
-            <section class="question_box_footer" id="question_tag">태그</section>
+            <div class="fill-box">
+                <section class="question_box_footer fill-left" id="question_tag">태그</section>
+                <button class="mdc-button mdc-button--unelevated udq-button" id="question_question_update">
+                    <span class="mdc-button__ripple"></span>
+                    수정
+                </button>
+                <button class="mdc-button mdc-button--unelevated udq-button" id="question_question_delete">
+                    <span class="mdc-button__ripple"></span>
+                    삭제
+                </button>
+            </div>
         </div>
     </div>
     <hr>
@@ -356,10 +595,13 @@
             <h2>내 의견 입력</h2>
             <input name="contents" type="hidden">
             <article id="question_answer_edit"></article>
-            <button class="mdc-button mdc-button--unelevated" id="question_post_answer_button" type="submit">
-                <span class="mdc-button__ripple"></span>
-                게시
-            </button>
+            <div class="fill-box">
+                <p class="fill-left" id="question_post_answer_text">게시 버튼을 누르면 답변이 공개적으로 게시됩니다.</p>
+                <button class="mdc-button mdc-button--unelevated" id="question_post_answer_button" type="submit">
+                    <span class="mdc-button__ripple"></span>
+                    답변 게시
+                </button>
+            </div>
         </form>
     </div>
 </div>
