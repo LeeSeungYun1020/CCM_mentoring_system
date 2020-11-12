@@ -52,6 +52,8 @@ $(document).ready(() => {
                 $("#login_login_icon").hide()
                 $("#login_logout_icon").show()
                 $("#notification").show()
+                $("#info_simple_name").text(data.name)
+                $("#info_simple_id").text(data.id)
                 checkNotification()
             } else {
                 $("#login_login_icon").show()

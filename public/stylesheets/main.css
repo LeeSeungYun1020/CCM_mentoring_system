@@ -62,10 +62,44 @@ footer {
 
 #main_login_card {
     position: absolute;
-    min-width: 300px;
-    min-height: 500px;
-    top: 60px;
-    right: 3px;
-    /*color: red;*/
-    background:red;
+    top: 50px;
+    right: 110px;
+    background:white;
+    border-radius: 3px;
+    width: 300px;
+    padding:10px;
+    z-index: 5;
+}
+
+.button_style {
+    width: 100%;
+    margin-top: 5px;
+    --mdc-theme-primary: #315270;
+    --mdc-theme-on-primary: #FFFFFF;
+    /*border-radius: 5px;*/
+}
+
+.info_header {
+    display: inline-flex;
+}
+
+.info_header img {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+}
+
+.info_font1_style {
+    clear: both;
+    font-size: x-large;
+    font-weight: bold;
+}
+
+.info_font2_style {
+    margin-top: 2px;
+}
+
+#info_simple_box {
+    margin-left: 16px;
+    margin-top: 24px;
 }
