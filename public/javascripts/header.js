@@ -54,7 +54,7 @@ $(document).ready(() => {
                 $("#notification").show()
                 $("#info_simple_name").text(data.name)
                 $("#info_simple_id").text(data.id)
-                $("#user_random_picture").attr("src", `images/user${data.image}.jpg`)
+                $("#user_random_picture").attr("src", `/images/user${data.image}.jpg`)
                 checkNotification()
             } else {
                 $("#login_login_icon").show()

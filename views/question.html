@@ -162,9 +162,6 @@
         })
 
         function initQuestion() {
-            document.querySelectorAll('.mdc-icon-button').forEach(value => {
-                new mdc.iconButton.MDCIconButtonToggle(value)
-            })
             moveFooter()
             if (`<%= userID %>`.length == 0) {
                 $("#question_post_answer_text").text("로그인하셔야 답변을 게시할 수 있습니다.")
@@ -220,8 +217,6 @@
                         })
                     }
                     if (data.id != `<%= userID %>`) {
-                        console.log(data.id)
-                        console.log(`<%= userID %>`)
                         $("#question_question_update").prop("disabled", "true")
                         $("#question_question_delete").prop("disabled", "true")
                     }
@@ -242,11 +237,11 @@
                 sortAvailable()
                 initButton(value.list)
                 initAnswerButton(value.list)
+                initRecommend()
                 moveFooter()
                 if (sort === "vote")
                     $("#question_answer_sort_recommend").prop("checked", true)
             }).catch(error => {
-                console.log(error)
                 alert("해당 게시물을 열람할 수 없습니다.")
                 location.href = '/board'
             })
@@ -302,7 +297,7 @@
     <button aria-label="추천"
             aria-pressed="false"
             class="mdc-icon-button"
-            id="question_recommend_up_answer${answer.id}">
+            id="question_recommend_up${answer.id}">
         <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">thumb_up</i>
         <i class="material-icons material-icons-outlined mdc-icon-button__icon">thumb_up</i>
     </button>
@@ -310,7 +305,7 @@
     <button aria-label="비추천"
             aria-pressed="false"
             class="mdc-icon-button"
-            id="question_recommend_down">
+            id="question_recommend_down${answer.id}">
         <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">thumb_down</i>
         <i class="material-icons material-icons-outlined mdc-icon-button__icon">thumb_down</i>
     </button>
@@ -430,6 +425,65 @@
             })
         }
 
+        function initRecommend() {
+            document.querySelectorAll('.mdc-icon-button').forEach(value => {
+                const toggleButton = new mdc.iconButton.MDCIconButtonToggle(value)
+                toggleButton.listen('MDCIconButtonToggle:change', function (e) {
+                    const id = e.target.id
+                    const isOn = e.detail.isOn
+                    if ((id == 'question_recommend_down' && isOn) || id == 'question_recommend_up' && !isOn) {
+                        $.post(`/board/recommend/q/minus/<%= id %>`, (res) => {
+                            if (!res.error) {
+                                const text = $(`#question_point`).text()
+                                $(`#question_point`).text(parseInt(text, 10) - 1)
+                            }
+                        })
+                    } else if ((id == 'question_recommend_down' && !isOn) || id == 'question_recommend_up' && isOn) {
+                        $.post(`/board/recommend/q/add/<%= id %>`, (res) => {
+                            if (!res.error) {
+                                const text = $(`#question_point`).text()
+                                $(`#question_point`).text(parseInt(text, 10) + 1)
+                            }
+
+                        })
+                    } else if (id.includes("down")) {
+                        const target = id.replace("question_recommend_down", "")
+                        if (isOn)
+                            minusAnswerPoint(target)
+                        else
+                            addAnswerPoint(target)
+                    } else if (id.includes("up")) {
+                        const target = id.replace("question_recommend_up", "")
+                        if (isOn)
+                            addAnswerPoint(target)
+                        else
+                            minusAnswerPoint(target)
+                    }
+
+                })
+            })
+        }
+
+        function addAnswerPoint(target) {
+            $.post(`/board/recommend/a/add/${target}`, (res) => {
+                if (!res.error) {
+                    const text = $(`#question_point_answer${target}`).text()
+                    $(`#question_point_answer${target}`).text(parseInt(text, 10) + 1)
+                }
+
+            })
+        }
+
+        function minusAnswerPoint(target) {
+            $.post(`/board/recommend/a/minus/${target}`, (error) => {
+                if (!error) {
+                    const text = $(`#question_point_answer${target}`).text()
+                    $(`#question_point_answer${target}`).text(parseInt(text, 10) - 1)
+                }
+
+            })
+        }
+
         function moveFooter() {
             if ($(window).height() < $(document).height()) {
                 $("footer").css("position", "static")
@@ -455,7 +509,6 @@
         }
 
         function initButton(list) {
-            console.log(list)
             $("#question_question_update").click(() => {
                 if (isAnswer) {
                     alert("답변이 등록된 경우 게시물을 수정할 수 없습니다.\n답변을 추가하여 문제를 해결해보세요.")
@@ -469,7 +522,6 @@
                     return
                 }
                 $.post('/edit/question/delete/<%= id %>', (body) => {
-                    console.log(body)
                     if (body.isSuccess === true) {
                         alert("게시물이 삭제되었습니다.")
                         location.href = '/board'
@@ -487,7 +539,6 @@
                     $(`#question_answers${answer.id}_delete_button`).prop("disabled", "true")
                 }
                 $(`#question_answers${answer.id}_update_button`).click(() => {
-                    console.log("클릭됨" + isUpdate + "u/id" + updateID)
                     if (isUpdate) {
                         if (updateID !== answer.id) {
                             alert("이미 수정 중인 글이 있습니다.")

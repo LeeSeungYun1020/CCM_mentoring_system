@@ -94,6 +94,52 @@ module.exports = function (passport) {
             })
     }))
 
+    router.post("/recommend/q/add/:target", (req, res) => {
+        mysql.query(
+            "UPDATE user SET questionPoint = questionPoint + 1 WHERE id = ?",
+            [req.params.target],
+            function (error, results) {
+                if (error != null) {
+                    return res.send({error: true})
+                }
+                res.send({error: false})
+            })
+    })
+
+    router.post("/recommend/a/add/:target", (req, res) => {
+        mysql.query(
+            "UPDATE user SET answerPoint = answerPoint + 1 WHERE id = ?",
+            [req.params.target],
+            function (error, results) {
+                if (error != null) {
+                    return res.send({error: true})
+                }
+                res.send({error: false})
+            })
+    })
+    router.post("/recommend/q/minus/:target", (req, res) => {
+        mysql.query(
+            "UPDATE user SET questionPoint = questionPoint + 1 WHERE id = ?",
+            [req.params.target],
+            function (error, results) {
+                if (error != null) {
+                    return res.send({error: true})
+                }
+                res.send({error: false})
+            })
+    })
+
+    router.post("/recommend/a/minus/:target", (req, res) => {
+        mysql.query(
+            "UPDATE user SET answerPoint = answerPoint + 1 WHERE id = ?",
+            [req.params.target],
+            function (error, results) {
+                if (error != null) {
+                    return res.send({error: true})
+                }
+                res.send({error: false})
+            })
+    })
     router.get('/error', ((req, res) => {
         res.render('alert.ejs', {message: "아이디 또는 비밀번호를 잘못 입력하셨습니다.", redirectPage: '/users'})
     }))

@@ -113,6 +113,67 @@ module.exports = function (passport) {
                 res.send({error: error, data: results[0]["COUNT(*)"]})
             })
     });
+    router.post('/recommend/q/add/:id', function (req, res) {
+        if (req.user == null) {
+            return res.send({error: true})
+        }
+        mysql.query(
+            "UPDATE question SET point=point+1 WHERE id = ?",
+            [req.params.id],
+            function (error, result) {
+                if (error) {
+                    return res.send({error: true})
+                } else {
+                    return res.send({error: false})
+                }
+            })
+    })
+    router.post('/recommend/a/add/:id', function (req, res) {
+        if (req.user == null) {
+            return res.send({error: true})
+        }
+        mysql.query(
+            "UPDATE answer SET point=point+1 WHERE id = ?",
+            [req.params.id],
+            function (error, result) {
+                if (error) {
+                    return res.send({error: true})
+                } else {
+                    return res.send({error: false})
+                }
+            })
+    })
+    router.post('/recommend/q/minus/:id', function (req, res) {
+        if (req.user == null) {
+            return res.send({error: true})
+        }
+        mysql.query(
+            "UPDATE question SET point=point-1 WHERE id = ?",
+            [req.params.id],
+            function (error, result) {
+                if (error) {
+                    return res.send({error: true})
+                } else {
+                    return res.send({error: false})
+                }
+            })
+    })
+    router.post('/recommend/a/minus/:id', function (req, res) {
+        if (req.user == null) {
+            return res.send({error: true})
+        }
+        mysql.query(
+            "UPDATE answer SET point=point-1 WHERE id = ?",
+            [req.params.id],
+            function (error, result) {
+                if (error) {
+                    return res.send({error: true})
+                } else {
+                    return res.send({error: false})
+                }
+            })
+    })
+
     // 게시판 전체 목록 표시
     router.get('/', function (req, res) {
         res.render("board.ejs")

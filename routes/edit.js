@@ -6,32 +6,33 @@ module.exports = function (passport) {
     // 게시글 추가
     router.route('/question/add')
         .post((req, res) => {
-            const id = req.params.id
             const data = req.body
             if (req.user == null) {
-                console.log(data)
                 return res.render('alert.ejs', {
                     message: "로그인하셔야 게시물을 등록할 수 있습니다.",
                     redirectPage: `/board`
                 })
             }
             console.log(data)
-            if (data.viewId == '')
-                data.viewId = 0
+            let viewID = data.viewId
+            if (viewID == null) {
+                viewID = 0
+            }
+
             if (data.questionID == '') {
                 mysql.query(
                     `INSERT INTO question (title, userID, contents, viewRange, viewID, tag) 
                 VALUES (?, ?, ?, ?, ?, ?)`.trim(),
-                    [data.title, req.user.id, data.contents, data.viewRange, data.viewID, data.tag],
+                    [data.title, req.user.id, data.contents, data.viewRange, viewID, data.tag],
                     function (error, results) {
-                        console.log(error)
+                        console.log(results.insertId)
                         if (error) {
                             return res.render('alert.ejs', {
                                 message: "게시물을 등록할 수 없습니다.",
                                 redirectPage: `/board`
                             })
                         }
-                        return res.redirect(`/board/${id}`)
+                        return res.redirect(`/board/${results.insertId}`)
                     })
             } else {
                 mysql.query(
@@ -79,8 +80,6 @@ module.exports = function (passport) {
                     return res.redirect(`/board/${id}`)
                 })
         })
-    // 게시글 수정
-    // TODO("/question/update/:id")
     // 답변 수정
     router.route('/answer/update/:id')
         .post((req, res) => {
@@ -92,7 +91,6 @@ module.exports = function (passport) {
                     redirectPage: `/board/${data.questionID}`
                 })
             }
-            console.log(data)
             if (data[`contents_answer${id}`].length == 0) {
                 return res.render('alert.ejs', {
                     message: "입력된 데이터가 없어 수정이 취소되었습니다.",
