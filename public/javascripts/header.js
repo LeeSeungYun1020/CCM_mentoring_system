@@ -14,7 +14,7 @@ $(document).ready(() => {
 
     // 사용자 정보 관련 기능
     $("#login_logout_icon").click(() => {
-        if ($("#main_login_card").css("display") == "none")
+        if ($("#main_login_card").css("display") === "none")
             $("#main_login_card").show()
         else
             $("#main_login_card").hide()

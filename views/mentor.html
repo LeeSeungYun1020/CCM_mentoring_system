@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!--    title -->
+    <title>페이지 제목</title>
+    <!--    jquery -->
+    <script src="node_modules/jquery/dist/jquery.min.js" type="text/javascript"></script>
+    <!--    material icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--    material components -->
+    <link href="node_modules/material-components-web/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="node_modules/material-components-web/dist/material-components-web.min.js"></script>
+    <!--    header and footer -->
+    <link href="stylesheets/main.css" rel="stylesheet">
+    <script src="javascripts/main.js"></script>
+
+    <script>
+        $(document).ready(() => {
+            initHeader()
+            mysql.query(
+                "select * from user order by answerPoint desc;",
+
+            function initHeader() {
+                // 로그인 확인
+                $.post('/users/', (data) => {
+                    user = data
+                    if (user) {
+                        // $("#login_login_icon").hide()
+                        // $("#login_logout_icon").show()
+                        // $("#notification").show()
+                        $(".info_simple_name").text(data.name)
+                        $(".user_random_picture").attr("src", `images/user${data.image}.jpg`)
+                        $(".info_mentor_question_point").text('질문점수 : ' + data.questionPoint)
+                        $(".info_mentor_answer_point").text('답변점수 : ' + data.answerPoint)
+                        checkNotification()
+                    } else {
+                        $("#login_login_icon").show()
+                        $("#login_logout_icon").hide()
+                        $("#notification").hide()
+                    }
+                })
+                // 컴포넌트 초기화
+                initComponents()
+                // 검색창 숨김
+                $('#main_search_box_header').hide()
+                // 사용자 카드 숨김
+                $("#main_login_card").hide()
+            })
+        })
+    </script>
+
+    <!--    custom js and stylesheet -->
+    <!--    <link href="stylesheets/.css" rel="stylesheet">-->
+    <!--    <script src="javascripts/.js"></script>-->
+
+    <style>
+        #test {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-gap : 10px;
+            padding :1%;
+            background-color: lavender;
+            /*background-image: url("/images/coding_image2.jpg");*/
+            /*width: 100%;*/
+            /*height: 100%;*/
+            /*background-position: center;*/
+            /*background-size: cover;*/
+        }
+        #square1 {
+            display: inline-flex;
+            background-color: lavender;
+        }
+        #square2 {
+            display: inline-flex;
+        }
+        /*#square3 {*/
+        /*    background-color: yellow;*/
+        /*}*/
+        /*#square4 {*/
+        /*    background-color: yellowgreen;*/
+        /*}*/
+        img{
+            /*vertical-align:middle;*/
+            /*margin-top : 3px;*/
+            /*padding-left: 1%;*/
+            margin-left: 12%;
+            width:40%;
+            place-items: center start;
+            border-radius: 5px;
+        }
+
+        .mentor_text_style {
+            vertical-align:middle;
+            /*margin-left: 2%;*/
+            padding: 3% 3%;
+            font-size : large;
+            font-weight: bold;
+        }
+
+        .mentor_buttons {
+            --mdc-theme-primary: #315270;
+            --mdc-theme-on-primary: #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+<header></header>
+<aside class="navigation"></aside>
+<!--    여기에 내용을 추가  -->
+<!--<div class="mdc-layout-grid container mdc-elevation&#45;&#45;z8">-->
+<!--    <div class="mdc-layout-grid__cell&#45;&#45;order-1">-->
+<!--&lt;!&ndash;        <img id="user_random_picture">&ndash;&gt;-->
+<!--        &lt;!&ndash;                <script type="text/javascript">getRandomImage(random_images_array);</script>&ndash;&gt;-->
+<!--        <img style="width: 15%" src = "/images/user1.jpg">-->
+<!--        <p class="info_font1_style" id="info_simple_name"></p>-->
+<!--        <p class="info_font2_style" id="info_simple_id"></p>-->
+<!--    </div>-->
+<!--    <div class="mdc-layout-grid__cell&#45;&#45;order-3">-->
+<!--        &lt;!&ndash;        <img id="user_random_picture">&ndash;&gt;-->
+<!--        &lt;!&ndash;                <script type="text/javascript">getRandomImage(random_images_array);</script>&ndash;&gt;-->
+<!--        <img style="width: 15%" src = "/images/user1.jpg">-->
+<!--&lt;!&ndash;        <p class="info_font1_style" id="info_simple_name"></p>&ndash;&gt;-->
+<!--&lt;!&ndash;        <p class="info_font2_style" id="info_simple_id"></p>&ndash;&gt;-->
+<!--    </div>-->
+<!--</div>-->
+
+
+
+</div>
+<div id="test">
+    <div id="square1">
+        <img class="user_random_picture">
+        <div class = "mentor_text_style">
+            <p class="info_simple_name"></p><br>
+            <p class="info_mentor_question_point"></p><br>
+            <p class="info_mentor_answer_point"></p><br>
+            <button class="mdc-button mdc-button--raised mentor_buttons">
+                <div class="mdc-button__ripple"></div>
+                <i class="material-icons mdc-button__icon" aria-hidden="true">add</i>
+                <span class="mdc-button__label">멘토 추가하기</span>
+            </button>
+        </div>
+    </div>
+    <div id="square2">
+        <img class="user_random_picture">
+        <div class = "mentor_text_style">
+            <p class="info_simple_name"></p><br>
+            <p class="info_mentor_question_point"></p><br>
+            <p class="info_mentor_answer_point"></p><br>
+            <button class="mdc-button mdc-button--raised mentor_buttons">
+                <div class="mdc-button__ripple"></div>
+                <i class="material-icons mdc-button__icon" aria-hidden="true">add</i>
+                <span class="mdc-button__label">멘토 추가하기</span>
+            </button>
+        </div>
+    </div>
+    <div id="square3">
+        <img class="user_random_picture">
+        <div class = "mentor_text_style">
+            <p class="info_simple_name"></p><br>
+            <p class="info_mentor_question_point"></p><br>
+            <p class="info_mentor_answer_point"></p><br>
+            <button class="mdc-button mdc-button--raised mentor_buttons">
+                <div class="mdc-button__ripple"></div>
+                <i class="material-icons mdc-button__icon" aria-hidden="true">add</i>
+                <span class="mdc-button__label">멘토 추가하기</span>
+            </button>
+        </div>
+    </div>
+    <div id="square4">
+        <img class="user_random_picture">
+        <div class = "mentor_text_style">
+            <p class="info_simple_name"></p><br>
+            <p class="info_mentor_question_point"></p><br>
+            <p class="info_mentor_answer_point"></p><br>
+            <button class="mdc-button mdc-button--raised mentor_buttons">
+                <div class="mdc-button__ripple"></div>
+                <i class="material-icons mdc-button__icon" aria-hidden="true">add</i>
+                <span class="mdc-button__label">멘토 추가하기</span>
+            </button>
+        </div>
+    </div>
+    <div id="square5">
+        <img class="user_random_picture">
+        <div class = "mentor_text_style">
+            <p class="info_simple_name"></p><br>
+            <p class="info_mentor_question_point"></p><br>
+            <p class="info_mentor_answer_point"></p><br>
+            <button class="mdc-button mdc-button--raised mentor_buttons">
+                <div class="mdc-button__ripple"></div>
+                <i class="material-icons mdc-button__icon" aria-hidden="true">add</i>
+                <span class="mdc-button__label">멘토 추가하기</span>
+            </button>
+        </div>
+    </div>
+    <div id="square6">
+        <img class="user_random_picture">
+        <div class = "mentor_text_style">
+            <p class="info_simple_name"></p><br>
+            <p class="info_mentor_question_point"></p><br>
+            <p class="info_mentor_answer_point"></p><br>
+            <button class="mdc-button mdc-button--raised mentor_buttons">
+                <div class="mdc-button__ripple"></div>
+                <i class="material-icons mdc-button__icon" aria-hidden="true">add</i>
+                <span class="mdc-button__label">멘토 추가하기</span>
+            </button>
+        </div>
+    </div>
+    <div id="square7">
+        <img class="user_random_picture">
+        <div class = "mentor_text_style">
+            <p class="info_simple_name"></p><br>
+            <p class="info_mentor_question_point"></p><br>
+            <p class="info_mentor_answer_point"></p><br>
+            <button class="mdc-button mdc-button--raised mentor_buttons">
+                <div class="mdc-button__ripple"></div>
+                <i class="material-icons mdc-button__icon" aria-hidden="true">add</i>
+                <span class="mdc-button__label">멘토 추가하기</span>
+            </button>
+        </div>
+    </div>
+    <div id="square8">
+        <img class="user_random_picture">
+        <div class = "mentor_text_style">
+            <p class="info_simple_name"></p><br>
+            <p class="info_mentor_question_point"></p><br>
+            <p class="info_mentor_answer_point"></p><br>
+            <button class="mdc-button mdc-button--raised mentor_buttons">
+                <div class="mdc-button__ripple"></div>
+                <i class="material-icons mdc-button__icon" aria-hidden="true">add</i>
+                <span class="mdc-button__label">멘토 추가하기</span>
+            </button>
+        </div>
+    </div>
+    <div id="square9">
+        <img class="user_random_picture">
+        <div class = "mentor_text_style">
+            <p class="info_simple_name"></p><br>
+            <p class="info_mentor_question_point"></p><br>
+            <p class="info_mentor_answer_point"></p><br>
+            <button class="mdc-button mdc-button--raised mentor_buttons">
+                <div class="mdc-button__ripple"></div>
+                <i class="material-icons mdc-button__icon" aria-hidden="true">add</i>
+                <span class="mdc-button__label">멘토 추가하기</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="main_contents"></div>
+<footer></footer>
+</body>
+</html>
