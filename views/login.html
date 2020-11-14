@@ -46,7 +46,8 @@
                         </span>
                         <span class="mdc-notched-outline__trailing"></span>
                     </span>
-                    <input aria-labelledby="login_input_id_label" class="mdc-text-field__input" id="login_input_id_text"
+                    <input aria-labelledby="login_input_id_label" class="mdc-text-field__input signin-pass"
+                           id="login_input_id_text"
                            autocomplete="username" maxlength="10" minlength="3" name="username" required type="text">
                 </label>
             </div>
@@ -59,11 +60,15 @@
                     </span>
                     <span class="mdc-notched-outline__trailing"></span>
                     </span>
-                    <input aria-labelledby="login_input_pw_label" class="mdc-text-field__input" id="login_input_pw_text"
+                    <input aria-labelledby="login_input_pw_label" class="mdc-text-field__input signin-pass"
+                           id="login_input_pw_text"
                            autocomplete="current-password" maxlength="32" minlength="8" name="password" required
                            type="password">
-                </label>
+                    <div class="mdc-text-field-helper-line">
+                        <div class="mdc-text-field-character-counter"></div>
+                    </div>
             </div>
+                </label>
             <div>
                 <label class="mdc-text-field mdc-text-field--outlined login_labels" id="login_input_email_label">
                     <span class="mdc-notched-outline">
@@ -73,9 +78,9 @@
                         </span>
                         <span class="mdc-notched-outline__trailing"></span>
                     </span>
-                    <input aria-labelledby="login_input_email_label" class="mdc-text-field__input"
+                    <input aria-labelledby="login_input_email_label" autocomplete="email"
                            id="login_input_email_text"
-                           maxlength="32" name="email" type="email">
+                           class="mdc-text-field__input signin-pass" maxlength="32" name="email" type="email">
                 </label>
                 <!--                회원가입 추가 정보 -->
                 <label class="mdc-text-field mdc-text-field--outlined login_labels" id="login_input_name_label">

@@ -6,7 +6,35 @@ let loginStatus = LoginStatus.LOGIN
 
 $(document).ready(() => {
     initLogin()
+    initButtons()
 
+    $(window).resize(() => {
+        $("#login_contents_box").height($(window).height() - 60)
+    })
+
+})
+
+function initLogin() {
+    document.querySelectorAll('.mdc-text-field').forEach(value => {
+        new mdc.textField.MDCTextField(value)
+    })
+    document.querySelectorAll('.mdc-button').forEach(value => {
+        new mdc.ripple.MDCRipple(value)
+    })
+
+    if (loginStatus === LoginStatus.LOGIN) {
+        setTypeLogin()
+        $('#login_type_login_button').trigger("click")
+    } else if (loginStatus === LoginStatus.SIGNIN) {
+        setTypeSignin()
+        $('#login_type_signin_button').trigger("click")
+    }
+
+    $("#login_contents_box").height($(window).height() - 60)
+    $("#login_input_type_text").val(0)
+}
+
+function initButtons() {
     $('#login_type_login_button').click(() => {
         if (loginStatus !== LoginStatus.LOGIN) {
             loginStatus = LoginStatus.LOGIN
@@ -43,39 +71,25 @@ $(document).ready(() => {
                 }
 
             })
+        } else {
+            alert("입력 정보를 다시 확인해주세요.")
         }
     })
+
+    $(".signin-pass").keydown((event) => {
+        if (event.key === "Enter" && loginStatus === LoginStatus.SIGNIN) {
+            event.preventDefault()
+            $('#login_next_button').trigger("click")
+        }
+
+    })
+
     $('#login_find_id_button').click(() => {
         alert("아이디는 학번입니다.")
     })
     $('#login_find_pw_button').click(() => {
         location.href = '/users/pw'
     })
-
-    $(window).resize(() => {
-        $("#login_contents_box").height($(window).height() - 60)
-    })
-
-})
-
-function initLogin() {
-    document.querySelectorAll('.mdc-text-field').forEach(value => {
-        new mdc.textField.MDCTextField(value)
-    })
-    document.querySelectorAll('.mdc-button').forEach(value => {
-        new mdc.ripple.MDCRipple(value)
-    })
-
-    if (loginStatus === LoginStatus.LOGIN) {
-        setTypeLogin()
-        $('#login_type_login_button').trigger("click")
-    } else if (loginStatus === LoginStatus.SIGNIN) {
-        setTypeSignin()
-        $('#login_type_signin_button').trigger("click")
-    }
-
-    $("#login_contents_box").height($(window).height() - 60)
-    $("#login_input_type_text").val(0)
 }
 
 function setTypeLogin() {

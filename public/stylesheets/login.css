@@ -7,8 +7,8 @@
 }
 
 .box-form {
-    width: 380px;
-    height: 480px;
+    width: 400px;
+    height: 540px;
     position: absolute;
     margin: 6% auto;
     padding: 5px;
@@ -32,9 +32,8 @@
 
 
 .login_labels {
-    display: flex;
     margin: 20px auto;
-    width: 300px;
+    width: 330px;
     --mdc-theme-primary: #315270;
 }
 

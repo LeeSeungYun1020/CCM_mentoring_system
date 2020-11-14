@@ -99,7 +99,7 @@ create table user (
 
 create table question(
     id INT PRIMARY KEY AUTO_INCREMENT,
-    title NVARCHAR(32) NOT NULL ,
+    title NVARCHAR(64) NOT NULL ,
     userID VARCHAR(16) NOT NULL ,
     contents MEDIUMTEXT NOT NULL ,
     date datetime DEFAULT current_timestamp,

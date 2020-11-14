@@ -49,6 +49,10 @@
             position: relative;
             right: 8px;
         }
+
+        hr {
+            margin-top: 16px;
+        }
     </style>
     <script>
         $(document).ready(() => {
@@ -120,8 +124,14 @@
 <aside class="navigation"></aside>
 <div class="main_contents">
     <h1 id="search_top">"<%= value %>"에 대한 검색 결과</h1>
+    <hr>
+    <h2>제목</h2>
     <div id="search_title"></div>
+    <hr>
+    <h2>태그</h2>
     <div id="search_tag"></div>
+    <hr>
+    <h2>내용</h2>
     <div id="search_contents"></div>
     <div class="last-box"></div>
 </div>
