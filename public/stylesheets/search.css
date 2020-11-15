@@ -1,0 +1,38 @@
+.main_contents {
+    position: relative;
+    display: block;
+    width: 70%;
+    left: 15%;
+}
+
+#search_top {
+    margin-top: 16px;
+}
+
+.result-box {
+    padding: 16px;
+    margin: 16px;
+
+}
+
+a:link, a:visited {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    color: #315270;
+}
+
+.last-box {
+    height: 100px;
+}
+
+.search-chip-box {
+    position: relative;
+    right: 8px;
+}
+
+hr {
+    margin-top: 16px;
+}

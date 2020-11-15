@@ -1,0 +1,106 @@
+.main_contents {
+    position: relative;
+    display: block;
+    width: 70%;
+    left: 15%;
+}
+
+h1 {
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+.question_box {
+    width: 100%;
+    display: inline-flex;
+    margin-top: 10px;
+}
+
+.contents_box {
+    flex: 1 auto !important;
+}
+
+.point {
+    text-align: center;
+    margin: auto;
+}
+
+.contents {
+    height: auto;
+    min-height: 100%;
+    padding: 0 50px 50px 0;
+}
+
+.contents .ql-editor {
+    font-size: 18px;
+    overflow-y: visible;
+}
+
+.contents_box {
+    height: 100%;
+    min-height: 100%;
+    overflow-y: auto;
+}
+
+.question_box_footer {
+    padding-left: 10px;
+    margin-bottom: 15px;
+}
+
+h2 {
+    margin-bottom: 10px;
+}
+
+h3 {
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.fill-box {
+    display: flex;
+}
+
+.fill-left {
+    flex: 1 auto !important;
+}
+
+.ud-button {
+    padding: 2px;
+    margin: 4px 4px 20px;
+}
+
+.udq-button {
+    padding: 2px;
+    margin: 4px 4px 5px;
+}
+
+.mdc-form-field {
+    margin: 10px;
+}
+
+.question_answer_header {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+#question_answer_edit_box {
+    padding-top: 20px;
+    padding-bottom: 50px;
+}
+
+#question_answer_edit {
+    height: 180px;
+}
+
+#question_post_answer_text {
+    margin-top: 15px;
+}
+
+#question_post_answer_button {
+    margin-top: 15px;
+}
+
+.mdc-button--unelevated, .mdc-radio__native-control {
+    --mdc-theme-primary: #315270;
+    --mdc-theme-on-primary: #FFFFFF;
+}

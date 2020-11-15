@@ -1,0 +1,46 @@
+.main_contents {
+    position: relative;
+    display: block;
+    width: 70%;
+    left: 15%;
+}
+
+#edit_question_title {
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+.edit-box {
+    margin-top: 16px;
+}
+
+.edit-main-box {
+    padding: 16px;
+}
+
+#edit_contents {
+    min-height: 200px;
+}
+
+.fill-box {
+    display: flex;
+}
+
+.fill-left {
+    flex: 1 auto !important;
+}
+
+.mdc-text-field, .mdc-button {
+    --mdc-theme-primary: #315270;
+    --mdc-theme-on-primary: #FFFFFF;
+}
+
+input {
+    margin-left: 10px;
+}
+
+#edit_tag_chip_box {
+    display: inline;
+    position: relative;
+    bottom: 45px;
+}
