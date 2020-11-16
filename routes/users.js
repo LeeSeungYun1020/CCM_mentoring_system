@@ -93,6 +93,14 @@ module.exports = function (passport) {
                 res.send(results[0])
             })
     }))
+    router.post('/team/:teamID', ((req, res) => {
+        mysql.query(
+            "SELECT * from team WHERE id=?",
+            [req.params.teamID],
+            function (error, results) {
+                res.send(results[0])
+            })
+    }))
 
     router.post("/recommend/q/add/:target", (req, res) => {
         mysql.query(

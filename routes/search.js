@@ -27,6 +27,15 @@ module.exports = function (passport) {
                 return res.send({error: error, body: results})
             })
     })
+
+    router.post('/team/:type', (req, res) => {
+        mysql.query(`SELECT * from team where ? LIKE ?`,
+            [req.params.type, "%" + req.body.value + "%"],
+            function (error, results) {
+                return res.send({error: error, body: results})
+            })
+    })
+
     // 라이브러리 파일 요청
     router.get('/*.html', (req, res) => {
         res.render(req.params[0] + '.html')

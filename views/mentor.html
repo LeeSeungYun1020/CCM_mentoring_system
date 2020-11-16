@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <!--    title -->
-    <title>페이지 제목</title>
+    <title>멘토 찾기</title>
     <!--    jquery -->
     <script src="node_modules/jquery/dist/jquery.min.js" type="text/javascript"></script>
     <!--    material icons -->
@@ -17,10 +17,52 @@
 
     <script>
         let rankingList
+        let sortedRankingList = []
         let max = 9
         $(document).ready(() => {
             initMentor()
+            initMentorSearch()
+            initMentorButton()
 
+            $(window).resize(() => {
+                moveContents()
+            })
+        })
+
+        function initMentor() {
+            // 로그인 확인
+            $.post('/mentor/data/user', (data) => {
+                if (data.error != null) {
+
+                } else {
+                    rankingList = data.body
+                    showRanking(rankingList, max)
+                    moveContents()
+                }
+            })
+        }
+
+        function initMentorSearch() {
+            $("#mentor_search_icon").click(() => {
+                sortedRankingList = []
+                for (const element of rankingList) {
+                    console.log(JSON.stringify(element))
+                    if (JSON.stringify(element).includes($("#mentor_search_box_input").val())) {
+                        sortedRankingList.push(element)
+                    }
+                }
+                max = 9
+                showRanking(sortedRankingList, max)
+            })
+
+            $("#mentor_search_box_input").keypress(function (event) {
+                if (event.key === "Enter") {
+                    $("#mentor_search_icon").trigger("click")
+                }
+            })
+        }
+
+        function initMentorButton() {
             $("#mentor_more_button").click(() => {
 
                 if (rankingList.length < max) {
@@ -33,21 +75,8 @@
                 moveFooter()
             })
 
-            $(window).resize(() => {
-                moveContents()
-            })
-        })
-
-        function initMentor() {
-            // 로그인 확인
-            $.post('/mentor/data', (data) => {
-                if (data.error != null) {
-
-                } else {
-                    rankingList = data.body
-                    showRanking(rankingList, max)
-                    moveContents()
-                }
+            $("#mentor_team_button").click(() => {
+                location.href = "/mentor/team"
             })
         }
 
@@ -66,8 +95,8 @@
             <p class="mentor_answer_point">답변 점수:&nbsp;</p><p class="mentor_point">${user.answerPoint}</p><br><br>
             <button class="mdc-button mdc-button--raised mentor_buttons">
                 <div class="mdc-button__ripple"></div>
-                <i class="material-icons mdc-button__icon" aria-hidden="true">add</i>
-                <span class="mdc-button__label mentor_add_text">멘토 추가</span>
+                <i class="material-icons mdc-button__icon" aria-hidden="true">more_horiz</i>
+                <span class="mdc-button__label mentor_profile_text">프로필 보기</span>
             </button>
         </div>
     </div>
@@ -87,21 +116,20 @@
 
         function moveContents() {
             const width = $(window).width()
-            console.log($(window).width())
             if (width < 850) {
-                $(".mentor_add_text").text("M")
+                $(".mentor_profile_text").text("I")
                 $(".mentor_question_point").text("질문: ")
                 $(".mentor_answer_point").text("답변: ")
                 $(".main_contents").css("width", "100%")
                 $(".main_contents").css("left", "0")
-            } else if (width < 1200) {
-                $(".mentor_add_text").text("멘토")
+            } else if (width < 1300) {
+                $(".mentor_profile_text").text("프로필")
                 $(".mentor_question_point").text("질문: ")
                 $(".mentor_answer_point").text("답변: ")
                 $(".main_contents").css("width", "80%")
                 $(".main_contents").css("left", "10%")
             } else {
-                $(".mentor_add_text").text("멘토 추가")
+                $(".mentor_profile_text").text("프로필 보기")
                 $(".mentor_question_point").text("질문 점수: ")
                 $(".mentor_answer_point").text("답변 점수: ")
                 $(".main_contents").css("width", "70%")
@@ -122,10 +150,6 @@
             background-color: lavender;
             padding: 16px;
             box-sizing: border-box;
-        }
-
-        h1 {
-            padding-top: 16px;
         }
 
         #ranking {
@@ -173,32 +197,46 @@
             width: 100%;
             margin-top: 16px;
         }
+
+        .fill-box {
+            display: flex;
+        }
+
+        .fill-left {
+            flex: 1 auto !important;
+        }
     </style>
 </head>
 <body>
 <header></header>
 <aside class="navigation"></aside>
 <div class="main_contents">
-    <h1>멘토 찾기</h1>
+    <div class="mentor_head fill-box">
+        <h1 class="fill-left">멘토 찾기</h1>
+        <button class="mdc-button mdc-button--raised mentor_buttons" id="mentor_team_button">
+            <div class="mdc-button__ripple"></div>
+            <i aria-hidden="true" class="material-icons mdc-button__icon">group</i>
+            <span class="mdc-button__label">팀 목록 보기</span>
+        </button>
+    </div>
     <div class="mdc-text-field mdc-text-field--with-trailing-icon
      mdc-text-field--filled mdc-elevation--z4" id="mentor_search_box">
         <input class="mdc-text-field__input" id="mentor_search_box_input">
         <div class="mdc-line-ripple"></div>
-        <label class="mdc-floating-label text_floating_labels_main_color" for="mentor_search_box_input">멘토 검색(태그,
-            이름)</label>
+        <label class="mdc-floating-label text_floating_labels_main_color" for="mentor_search_box_input">멘토 검색</label>
         <button class="material-icons mdc-text-field__icon mdc-text-field__icon--trailing mdc-icon-button"
                 id="mentor_search_icon" role="button" tabindex="0">search
         </button>
     </div>
     <div class="mdc-text-field-helper-line">
-        <div aria-hidden="true" class="mdc-text-field-helper-text">관심 분야를 검색해 멘토를 찾고 팀에 참여해보세요.</div>
+        <div aria-hidden="true" class="mdc-text-field-helper-text">이름 및 기타 정보로 멘토를 찾아보세요.</div>
     </div>
     <div id="ranking"></div>
     <div class="mentor_button_box">
         <button class="mdc-button" id="mentor_more_button">
             <span class="material-icons">expand_more</span>
             <span class="mdc-button__ripple"></span>
-            더보기
+            <span class="mdc-button__label">더보기</span>
         </button>
     </div>
 
