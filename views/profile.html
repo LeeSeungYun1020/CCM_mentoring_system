@@ -17,11 +17,12 @@
     <link href="/stylesheets/profile.css" rel="stylesheet">
     <script>
         $(document).ready(() => {
-            initHeader()
+            initProfileInfo()
             update()
+            moveFooter()
 
-            function initHeader() {
-                // 로그인 확인
+            function initProfileInfo() {
+
                 $.post(`/users/data/<%= id %>`, (data) => {
                     $("#user_profile_picture_info").attr("src", `/images/user${data.image}.jpg`)
                     $("#user_profile_name_info").text(data.name)
@@ -33,10 +34,27 @@
                     if (data.teamID != null) {
                         $.post(`/users/team/${data.teamID}`, (team) => {
                             console.log(team)
-                            $(".user_profile_team_info")
+                            $("#user_team_name_info").text('팀명 : '+team.name)
+                            // $("#user_team_tag_info").text(team.tag)
+                            let tagHTML = "<div class='mdc-chip-set mdc-chip-set--filter'>"
+                            const tagList = team.tag.split(" ")
+                            for (let i = 0; i < tagList.length; i++) {
+                                tagHTML += `
+<div class="mdc-chip mdc-ripple-upgraded" id="question_question_chip${i}" role="row">
+    <span class="mdc-chip__text" id="question_question_chip${i}_text">${tagList[i]}</span>
+</div>
+                    `.trim()
+                            }
+                            tagHTML += "</div>"
+                            $("#question_tag").html(tagHTML)
                         })
                     }
+                    else {
+                        $('.user_team_info').hide()
+                    }
 
+
+                    moveFooter()
                 })
             }
 
@@ -46,7 +64,6 @@
                         const err = body.error
                         const list = body.list
                         if (err) {
-                            console.log(err)
                             reject(err)
                             return
                         }
@@ -64,12 +81,12 @@
                         }
                         $('#board_data_table_question_contents').html(contents)
                         resolve(true)
+                        moveFooter()
                     })
                     $.post(`/board/data/user/answer/<%= id %>/0/3`, (body) => {
                         const err = body.error
                         const list = body.list
                         if (err) {
-                            console.log(err)
                             reject(err)
                             return
                         }
@@ -87,6 +104,7 @@
                         }
                         $('#board_data_table_answer_contents').html(contents)
                         resolve(true)
+                        moveFooter()
                     })
                 })
             }
@@ -109,6 +127,7 @@
 
             $(window).resize(() => {
                 moveContents()
+                moveFooter()
             })
 
             function moveContents() {
@@ -122,6 +141,13 @@
                 } else {
                     $(".main_contents").css("width", "70%")
                     $(".main_contents").css("left", "15%")
+                }
+            }
+            function moveFooter() {
+                if ($(window).height() < $(document).height()) {
+                    $("footer").css("position", "static")
+                } else {
+                    $("footer").css("position", "fixed")
                 }
             }
         })
@@ -145,9 +171,22 @@
                 </div>
             </div>
         </div>
+        <div class="user_team_info">
+            <h1 class="fill-left">팀 정보</h1>
+            <div class="user_team_info_box font_style mdc-elevation--z4">
+                <p id="user_team_name_info"></p>
+                <section id="question_tag">태그</section>
+                <button class="mdc-button mdc-button--raised user_team_add_button">
+                    <div class="mdc-button__ripple"></div>
+                    <i class="material-icons mdc-button__icon" aria-hidden="true">add</i>
+                    <span class="mdc-button__label">팀 추가</span>
+                </button>
+            </div>
+
+        </div>
         <div class="fill-box">
             <h1 class="fill-left">질문</h1>
-            <h1>답변</h1>
+            <h1 class="fill-left">답변</h1>
         </div>
         <div class="user_point_info point_font_style">
             <div class="user_question_info mdc-elevation--z4">

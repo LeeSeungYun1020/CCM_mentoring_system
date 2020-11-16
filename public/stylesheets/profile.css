@@ -9,6 +9,7 @@ body {
 }
 
 .main_contents {
+    padding-bottom: 15px;
     position: relative;
     display: block;
     width: 70%;
@@ -18,7 +19,7 @@ body {
 
 #user_info_title {
     margin-top: 15px;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 
 .user_info_main-box {
@@ -30,8 +31,8 @@ body {
 }
 
 #user_profile_picture_info {
-    width :15%;
-    height:15%;
+    width :160px;
+    height:160px;
     min-width: 130px;
     /*min-height: 10%;*/
 }
@@ -39,7 +40,9 @@ body {
 .user_basic_info {
     width :20%;
     height:20%;
-    margin-left: 2%;
+    margin-left: 4%;
+    padding-top: 4%;
+    padding-bottom: 4%;
 }
 
 .user_point_info {
@@ -64,7 +67,21 @@ body {
 }
 
 .user_team_info {
+    padding-top: 15px;
+    /*padding-bottom: 15px;*/
+}
 
+.user_team_info_box {
+    width: 100%;
+    min-height: 60px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+.user_team_add_button {
+    --mdc-theme-primary: #315270;
+    --mdc-theme-on-primary: #FFFFFF;
 }
 
 .font_style {
@@ -87,11 +104,13 @@ body {
     width: 100%;
 }
 
+
 .fill-box {
-    display: flex;
     padding-top: 16px;
+    display: flex;
 }
 
 .fill-left {
     flex: 1 auto !important;
+    padding-bottom: 10px;
 }

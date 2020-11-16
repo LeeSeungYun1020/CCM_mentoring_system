@@ -77,17 +77,17 @@ module.exports = function (passport) {
             })
 
     }))
-    router.post('/username/:id', ((req, res) => {
+    router.post('/data/:id', ((req, res) => {
         mysql.query(
-            "SELECT name from user WHERE id=?",
+            "SELECT * from user WHERE id=?",
             [req.params.id],
             function (error, results) {
                 res.send(results[0])
             })
     }))
-    router.post('/data/:id', ((req, res) => {
+    router.post('/username/:id', ((req, res) => {
         mysql.query(
-            "SELECT * from user WHERE id=?",
+            "SELECT name from user WHERE id=?",
             [req.params.id],
             function (error, results) {
                 res.send(results[0])
@@ -160,14 +160,6 @@ module.exports = function (passport) {
     router.get('/error', ((req, res) => {
         res.render('alert.ejs', {message: "아이디 또는 비밀번호를 잘못 입력하셨습니다.", redirectPage: '/users'})
     }))
-
-    router.get('/info/*.html', (req, res) => {
-        res.render(req.params[0] + '.html')
-    })
-
-    router.get('/info/javascripts/*.js', (req, res) => {
-        res.redirect(`/javascripts/${req.params[0]}.js`)
-    })
 
     router.get('/info/:id', ((req, res) => {
         // 사용자 정보 제공 페이지
