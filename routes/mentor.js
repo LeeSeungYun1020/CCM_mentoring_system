@@ -13,6 +13,13 @@ module.exports = function (passport) {
             })
     })
 
+    router.post('/data/user/team', (req, res) => {
+        if (req.user == null) {
+            return res.send({error: "login"})
+        }
+        res.send({error: false, data: req.user.teamID})
+    })
+
     router.post('/data/team/:page/:count', (req, res) => {
         let page
         if (req.params.page != null)
@@ -47,6 +54,61 @@ module.exports = function (passport) {
             [req.params.range],
             function (error, results, fields) {
                 res.send({error: error, data: results[0]["COUNT(*)"]})
+            })
+    })
+
+    router.post('/team/join/:id', function (req, res) {
+        if (req.user == undefined) {
+            return res.send({error: "login"})
+        }
+        mysql.query(
+            "UPDATE user SET teamID = ? WHERE id = ?",
+            [req.params.id, req.user.id],
+            function (error, results, fields) {
+                if (error)
+                    return res.send({error: "data"})
+                else if (results.affectedRows > 0)
+                    return res.send({error: false})
+                else
+                    return res.send({error: "data"})
+            })
+    })
+
+    router.post('/team/drop/:id', function (req, res) {
+        if (req.user == undefined) {
+            return res.send({error: "login"})
+        }
+        if (req.user.teamID == req.params.id) {
+            return res.send({error: "mentor"})
+        }
+        mysql.query(
+            "UPDATE FROM user SET teamID = null WHERE id = ?",
+            function (error, results) {
+                if (error)
+                    return res.send({error: "data"})
+                else if (results.affectedRows > 0)
+                    return res.send({error: false})
+                else
+                    return res.send({error: "data"})
+            })
+    })
+
+    router.post('/team/delete/:id', function (req, res) {
+        if (req.user == undefined) {
+            return res.send({error: "login"})
+        }
+        if (req.user.teamID != req.params.id) {
+            return res.send({error: "auth"})
+        }
+        mysql.query(
+            "DELETE FROM team WHERE id = ?", [req.params.id],
+            function (error, results) {
+                if (error)
+                    return res.send({error: "data"})
+                else if (results.affectedRows > 0)
+                    return res.send({error: false})
+                else
+                    return res.send({error: "data"})
             })
     })
 

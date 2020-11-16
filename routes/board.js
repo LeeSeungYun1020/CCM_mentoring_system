@@ -65,6 +65,59 @@ module.exports = function (passport) {
                 res.send({error: error, list: results})
             })
     });
+
+    // 사용자 기준 질문 반환
+    router.post('/data/user/question/:id/:page/:count', function (req, res) {
+        let max
+        let page
+        if (req.params.page != null)
+            page = parseInt(req.params.page, 10)
+        else
+            page = 0
+        if (req.params.count != null)
+            max = parseInt(req.params.count, 10)
+        else
+            max = 10
+        const questionIndex = page * max
+        mysql.query(
+            `
+            SELECT question.id, title, name, date, tag 
+            from question left join user 
+            on userID = user.id 
+            where viewRange = 0 and userID = ? 
+            order by question.id desc limit ?,? `.trim(),
+            [req.params.id, questionIndex, max],
+            function (error, results, fields) {
+                res.send({error: error, list: results})
+            })
+    });
+    // 사용자 기준 답안에 따른 질문 반환
+    router.get('/data/user/answer/:id/:page/:count', function (req, res) {
+        let max
+        let page
+        if (req.params.page != null)
+            page = parseInt(req.params.page, 10)
+        else
+            page = 0
+        if (req.params.count != null)
+            max = parseInt(req.params.count, 10)
+        else
+            max = 10
+        const questionIndex = page * max
+        mysql.query(
+            `
+            SELECT question.id, title, name, question.date, tag 
+            from answer 
+            left join question on answer.questionID = question.id 
+            left join user on user.id = question.userID  
+            where viewRange = 0 and answer.userID = ? 
+            order by question.id desc limit ?,? `.trim(),
+            [req.params.id, questionIndex, max],
+            function (error, results, fields) {
+                res.send({error: error, list: results})
+            })
+    });
+
     // 단일 게시물 데이터 전송
     router.post('/data/q/:id', function (req, res) {
         let userID = 0

@@ -19,6 +19,7 @@
     <!--    <link href="/stylesheets/.css" rel="stylesheet">-->
     <!--    <script src="/javascripts/.js"></script>-->
     <script>
+        let hasTeam = false
         let page = 0
         let count = 10
         let maxPage = 0
@@ -85,6 +86,58 @@
             })
         })
 
+        $.post(`/mentor/data/user/team`, (body) => {
+            const error = body.error
+            if (!error) {
+                hasTeam = true
+                teamID = body.data
+            }
+        })
+
+
+        function addTeam(id, name) {
+            if (hasTeam) {
+                const changeTeam = confirm("이미 가입한 팀이 있습니다.\n 팀을 탈퇴하시겠습니까?")
+                if (changeTeam) {
+                    $.post(`/mentor/team/drop/${id}`, (body) => {
+                        const error = body.error
+                        if (!error) {
+                            alert(`기존 팀에서 탈퇴되었습니다.\n원하는 팀에 다시 가입신청해보세요.`)
+                        } else if (error == "login") {
+                            alert("로그인 오류가 발생하였습니다.")
+                        } else if (error == "data") {
+                            alert("현재 팀 시스템에 접근할 수 없습니다.")
+                        } else if (error == "mentor") {
+                            const isDelete = confirm("팀의 멘토입니다.\n팀을 삭제하시겠습니까?")
+                            if (isDelete) {
+                                $.post(`/mentor/team/delete/${id}`, (body) => {
+                                    const error = body.error
+                                    if (!error) {
+                                        alert("팀이 삭제되었습니다.")
+                                    } else {
+                                        alert("팀을 삭제할 수 없습니다.")
+                                    }
+                                })
+                            }
+                        }
+                    })
+                }
+            } else {
+                const isAdd = confirm(`${name}에 가입하시겠습니까?`)
+                if (isAdd) {
+                    $.post(`/mentor/team/join/${id}`, (body) => {
+                        const error = body.error
+                        if (!error) {
+                            alert(`${name}에 가입되었습니다.`)
+                        } else if (error == "login") {
+                            alert("로그인하셔야 팀에 가입하실 수 있습니다.")
+                        } else if (error == "data") {
+                            alert("현재 팀 시스템에 접근할 수 없습니다.")
+                        }
+                    })
+                }
+            }
+        }
 
         function update(page, count) {
             return new Promise(function (resolve, reject) {
@@ -111,7 +164,7 @@
                         let contents = ""
                         for (const data of list) {
                             contents += `
-                                <tr class="mdc-data-table__row">
+                                <tr class="mdc-data-table__row" onclick="addTeam('${data.id}', '${data.name}')">
                                 <th class="mdc-data-table__cell" scope="row">${data.name}</th>
                                 <td class="mdc-data-table__cell">${data.mentorName}</td>
                                 <td class="mdc-data-table__cell">${data.tag}</td>
