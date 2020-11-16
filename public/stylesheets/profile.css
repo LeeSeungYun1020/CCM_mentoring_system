@@ -15,20 +15,11 @@ body {
     left: 15%;
 }
 
-}
 
 #user_info_title {
     margin-top: 15px;
     margin-bottom: 5px;
 }
-
-/*.item {*/
-/*    background: rgba(255,0,0,0.5);*/
-/*}*/
-
-/*.item:nth-child(odd) {*/
-/*    background: rgba(255,255,0,0.5);*/
-/*}*/
 
 .user_info_main-box {
     padding: 16px;
@@ -39,8 +30,10 @@ body {
 }
 
 #user_profile_picture_info {
-    width :20%;
-    height:20%;
+    width :15%;
+    height:15%;
+    min-width: 130px;
+    /*min-height: 10%;*/
 }
 
 .user_basic_info {
@@ -50,23 +43,28 @@ body {
 }
 
 .user_point_info {
-    padding-top: 5%;
+    padding-top: 16px;
     display: flex;
     flex-direction: row;
-    position: inherit;
-    width: 90%;
+    position: relative;
+    width: 100%;
 }
 
 .user_question_info {
-    padding-right: 3%;
-    margin-left: 15%;
+    /*padding-right: 3%;*/
+    /*margin-left: 15%;*/
     text-align: center;
+    width : 50%;
 
 }
 .user_answer_info {
-    padding-right: 3%;
-    margin-left: 15%;
+    /*padding-right: 3%;*/
+    margin-left: 16px;
     text-align: center;
+    width : 50%;
+}
+
+.user_team_info {
 
 }
 
@@ -80,6 +78,11 @@ body {
     font-size: 300%;
     font-style: italic;
     font-weight: bolder;
+}
+
+.team_table {
+    padding: 3px 3px;
+    width:100%;
 }
 
 
