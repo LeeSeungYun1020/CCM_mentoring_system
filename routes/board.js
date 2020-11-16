@@ -92,7 +92,7 @@ module.exports = function (passport) {
             })
     });
     // 사용자 기준 답안에 따른 질문 반환
-    router.get('/data/user/answer/:id/:page/:count', function (req, res) {
+    router.post('/data/user/answer/:id/:page/:count', function (req, res) {
         let max
         let page
         if (req.params.page != null)

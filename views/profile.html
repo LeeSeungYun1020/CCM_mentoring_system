@@ -14,12 +14,118 @@
     <!--    header and footer -->
     <link href="/stylesheets/main.css" rel="stylesheet">
     <script src="/javascripts/main.js"></script>
-    <script src="/javascripts/profile.js"></script>
     <link href="/stylesheets/profile.css" rel="stylesheet">
+    <script>
+        $(document).ready(() => {
+            initHeader()
+            update()
 
-    <!--    custom js and stylesheet -->
-    <!--    <link href="/stylesheets/.css" rel="stylesheet">-->
-    <!--    <script src="/javascripts/.js"></script>-->
+            function initHeader() {
+                // 로그인 확인
+                $.post(`/users/data/<%= id %>`, (data) => {
+                    $("#user_profile_picture_info").attr("src", `/images/user${data.image}.jpg`)
+                    $("#user_profile_name_info").text(data.name)
+                    $("#user_profile_id_info").text(data.id)
+                    $("#user_profile_email_info").text(data.email)
+                    $("#user_profile_phone_info").text(data.phone)
+                    $("#user_profile_questionPoint_info").text(data.questionPoint)
+                    $("#user_profile_answerPoint_info").text(data.answerPoint)
+                    if (data.teamID != null) {
+                        $.post(`/users/team/${data.teamID}`, (team) => {
+                            console.log(team)
+                            $(".user_profile_team_info")
+                        })
+                    }
+
+                })
+            }
+
+            function update() {
+                return new Promise(function (resolve, reject) {
+                    $.post(`/board/data/user/question/<%= id %>/0/3`, (body) => {
+                        const err = body.error
+                        const list = body.list
+                        if (err) {
+                            console.log(err)
+                            reject(err)
+                            return
+                        }
+
+                        let contents = ""
+                        for (const data of list) {
+                            contents += `
+                                <tr class="mdc-data-table__row" onClick = "location.href='/board/${data.id}'">
+                                <th class="mdc-data-table__cell" scope="row">${data.title}</th>
+                                <td class="mdc-data-table__cell">${data.name}</td>
+                                <td class="mdc-data-table__cell">${convertTime(data.date)}</td>
+                                </tr>
+                                `.trim()
+                            convertTime(data.date)
+                        }
+                        $('#board_data_table_question_contents').html(contents)
+                        resolve(true)
+                    })
+                    $.post(`/board/data/user/answer/<%= id %>/0/3`, (body) => {
+                        const err = body.error
+                        const list = body.list
+                        if (err) {
+                            console.log(err)
+                            reject(err)
+                            return
+                        }
+
+                        let contents = ""
+                        for (const data of list) {
+                            contents += `
+                                <tr class="mdc-data-table__row" onClick = "location.href='/board/${data.id}'">
+                                <th class="mdc-data-table__cell" scope="row">${data.title}</th>
+                                <td class="mdc-data-table__cell">${data.name}</td>
+                                <td class="mdc-data-table__cell">${convertTime(data.date)}</td>
+                                </tr>
+                                `.trim()
+                            convertTime(data.date)
+                        }
+                        $('#board_data_table_answer_contents').html(contents)
+                        resolve(true)
+                    })
+                })
+            }
+
+            function convertTime(stringTime) {
+                const date = new Date()
+                date.setTime(Date.parse(stringTime))
+                const delay = Date.now() - date.getTime()
+                if (delay < 1000 * 60) // 1분 이하
+                    return `${Math.round(delay / 1000)} 초 전`
+                if (delay < 1000 * 60 * 60) // 1시간 이하
+                    return `${Math.round(delay / 1000 / 60)} 분 전`
+                if (delay < 1000 * 60 * 60 * 24) // 1일 이하
+                    return `${Math.round(delay / 1000 / 60 / 60)} 시간 전`
+                if (delay < 1000 * 60 * 60 * 24 * 365) // 1년 이하
+                    return `${Math.round(delay / 1000 / 60 / 60 / 24)} 일 전`
+                else
+                    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDay()}`
+            }
+
+            $(window).resize(() => {
+                moveContents()
+            })
+
+            function moveContents() {
+                const width = $(window).width()
+                if (width < 850) {
+                    $(".main_contents").css("width", "100%")
+                    $(".main_contents").css("left", "0")
+                } else if (width < 1300) {
+                    $(".main_contents").css("width", "80%")
+                    $(".main_contents").css("left", "10%")
+                } else {
+                    $(".main_contents").css("width", "70%")
+                    $(".main_contents").css("left", "15%")
+                }
+            }
+        })
+    </script>
 
 </head>
 <body>
@@ -39,10 +145,16 @@
                 </div>
             </div>
         </div>
+        <div class="fill-box">
+            <h1 class="fill-left">질문</h1>
+            <h1>답변</h1>
+        </div>
         <div class="user_point_info point_font_style">
             <div class="user_question_info mdc-elevation--z4">
-                <p>질문점수</p>
-                <p id="user_profile_questionPoint_info"></p>
+                <span class="material-icons score_icon">
+                redeem
+                </span>
+                <span id="user_profile_questionPoint_info"></span>
                 <div class="mdc-data-table">
                     <div class="mdc-data-table__table-container">
                         <table class="mdc-data-table__table team_table" aria-label="question-board">
@@ -61,8 +173,10 @@
                 </div>
             </div>
             <div class="user_answer_info mdc-elevation--z4">
-                <p>답변점수</p>
-                <p id="user_profile_answerPoint_info"></p>
+                <span class="material-icons score_icon">
+                redeem
+                </span>
+                <span id="user_profile_answerPoint_info"></span>
                 <div class="mdc-data-table">
                     <div class="mdc-data-table__table-container">
                         <table class="mdc-data-table__table team_table" aria-label="question-board">

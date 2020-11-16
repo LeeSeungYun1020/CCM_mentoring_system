@@ -43,7 +43,6 @@ body {
 }
 
 .user_point_info {
-    padding-top: 16px;
     display: flex;
     flex-direction: row;
     position: relative;
@@ -74,16 +73,25 @@ body {
     font-weight: bolder;
 }
 
+.score_icon {
+    font-size: 85%;
+}
+
 .point_font_style {
     font-size: 300%;
-    font-style: italic;
     font-weight: bolder;
 }
 
 .team_table {
     padding: 3px 3px;
-    width:100%;
+    width: 100%;
 }
 
+.fill-box {
+    display: flex;
+    padding-top: 16px;
+}
 
-
+.fill-left {
+    flex: 1 auto !important;
+}

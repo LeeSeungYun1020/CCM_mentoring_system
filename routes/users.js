@@ -85,6 +85,14 @@ module.exports = function (passport) {
                 res.send(results[0])
             })
     }))
+    router.post('/data/:id', ((req, res) => {
+        mysql.query(
+            "SELECT * from user WHERE id=?",
+            [req.params.id],
+            function (error, results) {
+                res.send(results[0])
+            })
+    }))
     router.post('/image/:id', ((req, res) => {
         mysql.query(
             "SELECT image from user WHERE id=?",
@@ -153,9 +161,17 @@ module.exports = function (passport) {
         res.render('alert.ejs', {message: "아이디 또는 비밀번호를 잘못 입력하셨습니다.", redirectPage: '/users'})
     }))
 
-    router.get('/info', ((req, res) => {
+    router.get('/info/*.html', (req, res) => {
+        res.render(req.params[0] + '.html')
+    })
+
+    router.get('/info/javascripts/*.js', (req, res) => {
+        res.redirect(`/javascripts/${req.params[0]}.js`)
+    })
+
+    router.get('/info/:id', ((req, res) => {
         // 사용자 정보 제공 페이지
-        res.render("profile.html")
+        res.render("profile.html", {id: req.params.id})
     }))
 
     // 라이브러리 파일 요청
