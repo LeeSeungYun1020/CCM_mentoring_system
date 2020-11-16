@@ -1,9 +1,6 @@
 $(document).ready(() => {
     initHeader()
-    let page = 0
-    let count = 10
-    let maxPage = 0
-    let type = "list"
+    update()
 
     function initHeader() {
         // 로그인 확인
@@ -25,7 +22,7 @@ $(document).ready(() => {
         })
     }
 
-    function update(page, count, type) {
+    function update() {
         return new Promise(function (resolve, reject) {
             $.post(`/board/data/list/0/3`, (body) => {
                 const err = body.error
@@ -47,7 +44,30 @@ $(document).ready(() => {
                                 `.trim()
                     convertTime(data.date)
                 }
-                $('#board_data_table_contents').html(contents)
+                $('#board_data_table_question_contents').html(contents)
+                resolve(true)
+            })
+            $.post(`/board/data/list/0/3`, (body) => {
+                const err = body.error
+                const list = body.list
+                if (err) {
+                    console.log(err)
+                    reject(err)
+                    return
+                }
+
+                let contents = ""
+                for (const data of list) {
+                    contents += `
+                                <tr class="mdc-data-table__row" onClick = "location.href='/board/${data.id}'">
+                                <th class="mdc-data-table__cell" scope="row">${data.title}</th>
+                                <td class="mdc-data-table__cell">${data.name}</td>
+                                <td class="mdc-data-table__cell">${convertTime(data.date)}</td>
+                                </tr>
+                                `.trim()
+                    convertTime(data.date)
+                }
+                $('#board_data_table_answer_contents').html(contents)
                 resolve(true)
             })
         })
