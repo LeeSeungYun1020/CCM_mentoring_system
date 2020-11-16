@@ -23,7 +23,7 @@ $(document).ready(() => {
         location.href = "/users/logout"
     })
     $("#main_user_info_button").click(() => {
-        location.href = "/users/info"
+        location.href = `/users/info`
     })
 
     // 검색창 관련 기능

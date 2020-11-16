@@ -174,6 +174,13 @@ module.exports = function (passport) {
         res.render("profile.html", {id: req.params.id})
     }))
 
+    router.get('/info', ((req, res) => {
+        if (req.user == null) {
+            res.render('alert.ejs', {message: "로그인하셔야 내 정보가 표시됩니다.", redirectPage: '/users'})
+        }
+        res.render("profile.html", {id: req.user.id})
+    }))
+
     // 라이브러리 파일 요청
     router.get('/*.html', (req, res) => {
         res.render(req.params[0] + '.html')

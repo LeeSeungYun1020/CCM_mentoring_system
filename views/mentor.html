@@ -93,7 +93,7 @@
             <p>${user.name}</p><br>
             <p class="mentor_question_point">질문 점수:&nbsp;</p><p class="mentor_point">${user.questionPoint}</p><br><br>
             <p class="mentor_answer_point">답변 점수:&nbsp;</p><p class="mentor_point">${user.answerPoint}</p><br><br>
-            <button class="mdc-button mdc-button--raised mentor_buttons">
+            <button class="mdc-button mdc-button--raised mentor_buttons" onclick="location.href = '/users/info/${user.id}'">
                 <div class="mdc-button__ripple"></div>
                 <i class="material-icons mdc-button__icon" aria-hidden="true">more_horiz</i>
                 <span class="mdc-button__label mentor_profile_text">프로필 보기</span>
