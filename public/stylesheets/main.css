@@ -103,3 +103,11 @@ footer {
     margin-left: 16px;
     margin-top: 24px;
 }
+
+.fill-box {
+    display: flex;
+}
+
+.fill-left {
+    flex: 1 auto !important;
+}

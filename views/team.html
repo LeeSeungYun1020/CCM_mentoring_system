@@ -20,6 +20,7 @@
     <!--    <script src="/javascripts/.js"></script>-->
     <script>
         let hasTeam = false
+        let teamID
         let page = 0
         let count = 10
         let maxPage = 0
@@ -45,6 +46,14 @@
                     firstPage(page === 0)
                     lastPage(page === maxPage)
                 })
+            })
+
+            $("#team_add_button").click(() => {
+                if (hasTeam) {
+                    dropTeam(teamID)
+                } else {
+                    location.href = '/mentor/team/create'
+                }
             })
 
             $(window).resize(() => {
@@ -89,46 +98,26 @@
         $.post(`/mentor/data/user/team`, (body) => {
             const error = body.error
             if (!error) {
-                hasTeam = true
+                if (body.data != null)
+                    hasTeam = true
                 teamID = body.data
             }
         })
 
 
-        function addTeam(id, name) {
+        function addTeam(id, name, mentorID) {
             if (hasTeam) {
-                const changeTeam = confirm("이미 가입한 팀이 있습니다.\n 팀을 탈퇴하시겠습니까?")
-                if (changeTeam) {
-                    $.post(`/mentor/team/drop/${id}`, (body) => {
-                        const error = body.error
-                        if (!error) {
-                            alert(`기존 팀에서 탈퇴되었습니다.\n원하는 팀에 다시 가입신청해보세요.`)
-                        } else if (error == "login") {
-                            alert("로그인 오류가 발생하였습니다.")
-                        } else if (error == "data") {
-                            alert("현재 팀 시스템에 접근할 수 없습니다.")
-                        } else if (error == "mentor") {
-                            const isDelete = confirm("팀의 멘토입니다.\n팀을 삭제하시겠습니까?")
-                            if (isDelete) {
-                                $.post(`/mentor/team/delete/${id}`, (body) => {
-                                    const error = body.error
-                                    if (!error) {
-                                        alert("팀이 삭제되었습니다.")
-                                    } else {
-                                        alert("팀을 삭제할 수 없습니다.")
-                                    }
-                                })
-                            }
-                        }
-                    })
-                }
+                dropTeam(id, mentorID)
             } else {
                 const isAdd = confirm(`${name}에 가입하시겠습니까?`)
                 if (isAdd) {
                     $.post(`/mentor/team/join/${id}`, (body) => {
                         const error = body.error
                         if (!error) {
+                            hasTeam = true
+                            teamID = id
                             alert(`${name}에 가입되었습니다.`)
+                            location.href = '/mentor/team'
                         } else if (error == "login") {
                             alert("로그인하셔야 팀에 가입하실 수 있습니다.")
                         } else if (error == "data") {
@@ -136,6 +125,38 @@
                         }
                     })
                 }
+            }
+        }
+
+        function dropTeam(id, mentorID) {
+            const changeTeam = confirm("이미 가입한 팀이 있습니다.\n 팀을 탈퇴하시겠습니까?")
+            if (changeTeam) {
+                $.post(`/mentor/team/drop/${mentorID}`, (body) => {
+                    const error = body.error
+                    if (!error) {
+                        hasTeam = false
+                        alert(`기존 팀에서 탈퇴되었습니다.\n원하는 팀에 다시 가입신청해보세요.`)
+                        location.href = '/mentor/team'
+                    } else if (error == "login") {
+                        alert("로그인 오류가 발생하였습니다.")
+                    } else if (error == "data") {
+                        alert("현재 팀 시스템에 접근할 수 없습니다.")
+                    } else if (error == "mentor") {
+                        const isDelete = confirm("팀의 멘토입니다.\n팀을 삭제하시겠습니까?")
+                        if (isDelete) {
+                            $.post(`/mentor/team/delete/${id}`, (body) => {
+                                const error = body.error
+                                if (!error) {
+                                    hasTeam = false
+                                    alert("팀이 삭제되었습니다.")
+                                    location.href = '/mentor/team'
+                                } else {
+                                    alert("팀을 삭제할 수 없습니다.")
+                                }
+                            })
+                        }
+                    }
+                })
             }
         }
 
@@ -164,7 +185,7 @@
                         let contents = ""
                         for (const data of list) {
                             contents += `
-                                <tr class="mdc-data-table__row" onclick="addTeam('${data.id}', '${data.name}')">
+                                <tr class="mdc-data-table__row" onclick="addTeam('${data.id}', '${data.name}', '${data.mentorID}')">
                                 <th class="mdc-data-table__cell" scope="row">${data.name}</th>
                                 <td class="mdc-data-table__cell">${data.mentorName}</td>
                                 <td class="mdc-data-table__cell">${data.tag}</td>
@@ -241,14 +262,29 @@
             margin-top: 16px;
             margin-bottom: 32px;
         }
+
+        .mdc-button {
+            --mdc-theme-primary: #315270;
+            --mdc-theme-on-primary: #FFFFFF;
+        }
+
+        #team_add_button {
+            position: relative;
+            top: 16px;
+        }
     </style>
 </head>
 <body>
 <header></header>
 <aside class="navigation"></aside>
 <div class="main_contents">
-    <div class="team_header">
-        <h1>팀 목록</h1>
+    <div class="team_header fill-box">
+        <h1 class="fill-left">팀 목록</h1>
+        <button class="mdc-button mdc-button--raised mentor_buttons" id="team_add_button">
+            <div class="mdc-button__ripple"></div>
+            <i aria-hidden="true" class="material-icons mdc-button__icon">group</i>
+            <span class="mdc-button__label">새 팀 생성</span>
+        </button>
     </div>
     <div class="mdc-data-table">
         <div class="mdc-data-table__table-container">

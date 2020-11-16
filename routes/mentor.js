@@ -78,12 +78,31 @@ module.exports = function (passport) {
         if (req.user == undefined) {
             return res.send({error: "login"})
         }
-        if (req.user.teamID == req.params.id) {
+        if (req.user.id == req.params.id) {
             return res.send({error: "mentor"})
         }
         mysql.query(
-            "UPDATE FROM user SET teamID = null WHERE id = ?",
+            "UPDATE user SET teamID = null WHERE id = ?",
+            [req.user.id],
             function (error, results) {
+                if (error)
+                    return res.send({error: "data"})
+                else if (results.affectedRows > 0)
+                    return res.send({error: false})
+                else
+                    return res.send({error: "data"})
+            })
+    })
+
+    router.post('/team/drop', function (req, res) {
+        if (req.user == undefined) {
+            return res.send({error: "login"})
+        }
+        mysql.query(
+            "UPDATE user SET teamID = null WHERE id = ?",
+            [req.user.id],
+            function (error, results) {
+                console.log(error)
                 if (error)
                     return res.send({error: "data"})
                 else if (results.affectedRows > 0)
@@ -112,10 +131,76 @@ module.exports = function (passport) {
             })
     })
 
+    router.post('/team/delete', function (req, res) {
+        if (req.user == undefined) {
+            return res.send({error: "login"})
+        }
+        mysql.query(
+            "DELETE FROM team WHERE id = ?", [req.user.teamID],
+            function (error, results) {
+                if (error)
+                    return res.send({error: "data"})
+                else if (results.affectedRows > 0)
+                    return res.send({error: false})
+                else
+                    return res.send({error: "data"})
+            })
+    })
+
+    router.route('/team/create')
+        .get(function (req, res) {
+            res.render("team_create.html")
+        })
+        .post((req, res) => {
+            if (req.user == null) {
+                return res.render('alert.ejs', {
+                    message: "로그인하셔야 팀을 생성할 수 있습니다.",
+                    redirectPage: `/mentor/team`
+                })
+            }
+            mysql.query(
+                "INSERT INTO team (name, mentorID, tag) VALUES (?, ?, ?)",
+                [req.body.name, req.user.id, req.body.tag],
+                function (error, results) {
+                    if (error)
+                        return res.render('alert.ejs', {
+                            message: "팀을 생성할 수 없습니다.",
+                            redirectPage: `/mentor/team`
+                        })
+                    else
+                        mysql.query(
+                            "UPDATE user SET teamID = ? WHERE id = ?",
+                            [results.insertId, req.user.id],
+                            function (error, results) {
+                                console.log(error)
+                                if (error)
+                                    return res.render('alert.ejs', {
+                                        message: "팀을 추가할 수 없습니다.",
+                                        redirectPage: `/mentor/team`
+                                    })
+                                else if (results.affectedRows > 0)
+                                    return res.redirect("/users/info")
+                                else
+                                    return res.render('alert.ejs', {
+                                        message: "팀을 추가할 수 없습니다.",
+                                        redirectPage: `/mentor/team`
+                                    })
+                            })
+                })
+        })
+
     // 팀 페이지 출력
     router.get('/team', function (req, res) {
         res.render("team.html")
     });
+
+    router.get('/team/*.html', (req, res) => {
+        res.render(req.params[0] + '.html')
+    })
+
+    router.get('/team/javascripts/*.js', (req, res) => {
+        res.redirect(`/javascripts/${req.params[0]}.js`)
+    })
 
     // 멘토 페이지 출력
     router.get('/', function (req, res) {
