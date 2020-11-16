@@ -155,7 +155,16 @@ module.exports = function (passport) {
 
     router.get('/info', ((req, res) => {
         // 사용자 정보 제공 페이지
-        res.redirect('/')
+        res.render("profile.html")
     }))
+
+    // 라이브러리 파일 요청
+    router.get('/*.html', (req, res) => {
+        res.render(req.params[0] + '.html')
+    })
+
+    router.get('/javascripts/*.js', (req, res) => {
+        res.redirect(`/javascripts/${req.params[0]}.js`)
+    })
     return router
 }

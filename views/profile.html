@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!--    title -->
+    <title>프로필 정보</title>
+    <!--    jquery -->
+    <script src="/node_modules/jquery/dist/jquery.min.js" type="text/javascript"></script>
+    <!--    material icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--    material components -->
+    <link href="/node_modules/material-components-web/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="/node_modules/material-components-web/dist/material-components-web.min.js"></script>
+    <!--    header and footer -->
+    <link href="/stylesheets/main.css" rel="stylesheet">
+    <script src="/javascripts/main.js"></script>
+    <script src="/javascripts/profile.js"></script>
+    <link href="/stylesheets/profile.css" rel="stylesheet">
+
+    <!--    custom js and stylesheet -->
+    <!--    <link href="/stylesheets/.css" rel="stylesheet">-->
+    <!--    <script src="/javascripts/.js"></script>-->
+</head>
+<body>
+<header></header>
+<aside class="navigation"></aside>
+<!--    여기에 내용을 추가  -->
+    <div class="main_contents">
+        <h1 id="user_info_title">프로필 정보 </h1>
+        <div class="user_info_main-box mdc-elevation--z4">
+            <div class="user_info">
+                <img id="user_profile_picture_info">
+                <div class="user_basic_info font_style">
+                    <p id="user_profile_name_info"></p><br>
+                    <p id="user_profile_id_info"></p><br>
+                    <p id="user_profile_email_info"></p><br>
+                    <p id="user_profile_phone_info"></p>
+                </div>
+            </div>
+        </div>
+        <div class="user_point_info point_font_style">
+            <div class="user_question_info mdc-elevation--z4">
+                <p id="user_profile_questionPoint_info"></p>
+            </div>
+            <div class="user_answer_info mdc-elevation--z4">
+                <p id="user_profile_answerPoint_info"></p>
+            </div>
+        </div>
+
+
+    </div>
+
+<footer></footer>
+</body>
+</html>
