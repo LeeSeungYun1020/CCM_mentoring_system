@@ -7,7 +7,7 @@
 
 .mdc-data-table {
     width: 100%;
-    margin-bottom: 50px;
+    margin-bottom: 16px;
 }
 
 h1 {
@@ -31,4 +31,10 @@ h1 {
     width: 100px;
     border-radius: 30px;
     margin: 3px;
+}
+
+#board_edit_button {
+    --mdc-theme-primary: #315270;
+    --mdc-theme-on-primary: #FFFFFF;
+    margin-bottom: 50px;
 }

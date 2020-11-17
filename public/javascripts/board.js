@@ -56,6 +56,12 @@ $(window).ready(() => {
             update(page, count, type)
         }
     })
+    $("#board_edit_button").click(() => {
+        if (type === "team")
+            location.href = "/edit/team"
+        else
+            location.href = "/edit"
+    })
     $("#board_first_button").click(() => {
         page = 0
         firstPage(true)

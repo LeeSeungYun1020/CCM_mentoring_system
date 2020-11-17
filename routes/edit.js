@@ -14,7 +14,7 @@ module.exports = function (passport) {
                 })
             }
             console.log(data)
-            let viewID = data.viewId
+            let viewID = data.viewID
             if (viewID == null) {
                 viewID = 0
             }
@@ -157,8 +157,14 @@ module.exports = function (passport) {
                     res.send({isSuccess: false})
             })
     })
-    router.get('/team/question/add/:viewID', (req, res) => {
-        req.session.viewID = req.params.viewID
+    router.get('/team', (req, res) => {
+        if (req.user == null) {
+            return res.render('alert.ejs', {
+                message: "로그인 하셔야 게시물을 작성하실 수 있습니다.",
+                redirectPage: `/board`
+            })
+        }
+        req.session.viewID = req.user.teamID
         req.session.viewRange = 1
         res.redirect(`/edit`)
     })

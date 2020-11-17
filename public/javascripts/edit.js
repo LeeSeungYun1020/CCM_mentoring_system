@@ -35,6 +35,10 @@ $(document).ready(() => {
             contents.value = JSON.stringify(editField.getContents())
             const tags = document.querySelector('input[name=tag]')
             tags.value = chipList.toString().replaceAll(",", " ").toUpperCase()
+            if (tags.value === "") {
+                alert("태그를 입력해주세요.")
+                return false
+            }
             return true
         })
         $("#edit_input_tag").keydown((event) => {
