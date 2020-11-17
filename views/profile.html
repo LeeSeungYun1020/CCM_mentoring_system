@@ -35,7 +35,7 @@
                     if (data.teamID != null) {
                         $.post(`/users/team/${data.teamID}`, (team) => {
                             console.log(team)
-                            $("#user_team_name_info").text('팀명 : '+team.name)
+                            $("#user_team_name_info").text(team.name)
                             // $("#user_team_tag_info").text(team.tag)
                             let tagHTML = "<div class='mdc-chip-set mdc-chip-set--filter'>"
                             const tagList = team.tag.split(" ")
@@ -175,13 +175,17 @@
         <div class="user_team_info">
             <h1 class="fill-left">팀 정보</h1>
             <div class="user_team_info_box font_style mdc-elevation--z4">
-                <p id="user_team_name_info"></p>
+                <div class="fill-box">
+                    <span class="fill-left" id="user_team_name_info"></span>
+                    <button class="mdc-button mdc-button--raised user_team_add_button"
+                            onclick="location.href = '/mentor/team'">
+                        <div class="mdc-button__ripple"></div>
+                        <i aria-hidden="true" class="material-icons mdc-button__icon">group</i>
+                        <span class="mdc-button__label">팀 가입</span>
+                    </button>
+                </div>
+
                 <section id="question_tag">태그</section>
-                <button class="mdc-button mdc-button--raised user_team_add_button">
-                    <div class="mdc-button__ripple"></div>
-                    <i class="material-icons mdc-button__icon" aria-hidden="true">add</i>
-                    <span class="mdc-button__label">팀 가입</span>
-                </button>
             </div>
 
         </div>

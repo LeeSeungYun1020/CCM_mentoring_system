@@ -74,11 +74,10 @@ body {
 .user_team_info_box {
     width: 100%;
     min-height: 60px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
+    padding: 16px;
+    box-sizing: border-box;
 }
+
 .user_team_add_button {
     --mdc-theme-primary: #315270;
     --mdc-theme-on-primary: #FFFFFF;
