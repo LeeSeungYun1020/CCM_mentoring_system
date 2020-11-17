@@ -13,9 +13,8 @@ module.exports = function (passport) {
                     redirectPage: `/board`
                 })
             }
-            console.log(data)
             let viewID = data.viewID
-            if (viewID == null) {
+            if (viewID == null || viewID == '' || viewID == undefined) {
                 viewID = 0
             }
 
@@ -25,7 +24,8 @@ module.exports = function (passport) {
                 VALUES (?, ?, ?, ?, ?, ?)`.trim(),
                     [data.title, req.user.id, data.contents, data.viewRange, viewID, data.tag],
                     function (error, results) {
-                        console.log(results.insertId)
+                        console.log(results)
+                        console.log(error)
                         if (error) {
                             return res.render('alert.ejs', {
                                 message: "게시물을 등록할 수 없습니다.",
