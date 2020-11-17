@@ -28,9 +28,17 @@ module.exports = function (passport) {
             })
     })
 
-    router.post('/team/:type', (req, res) => {
-        mysql.query(`SELECT * from team where ? LIKE ?`,
-            [req.params.type, "%" + req.body.value + "%"],
+    router.post('/team/name', (req, res) => {
+        mysql.query(`SELECT * from team where name LIKE ?`,
+            ["%" + req.body.value + "%"],
+            function (error, results) {
+                return res.send({error: error, body: results})
+            })
+    })
+
+    router.post('/team/tag', (req, res) => {
+        mysql.query(`SELECT * from team where tag LIKE ?`,
+            ["%" + req.body.value + "%"],
             function (error, results) {
                 return res.send({error: error, body: results})
             })

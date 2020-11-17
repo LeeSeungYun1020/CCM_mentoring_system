@@ -41,8 +41,8 @@
                             const tagList = team.tag.split(" ")
                             for (let i = 0; i < tagList.length; i++) {
                                 tagHTML += `
-<div class="mdc-chip mdc-ripple-upgraded" id="question_question_chip${i}" role="row">
-    <span class="mdc-chip__text" id="question_question_chip${i}_text">${tagList[i]}</span>
+<div class="mdc-chip mdc-ripple-upgraded" onclick="location.href = '/search/${tagList[i]}'" role="row">
+    <span class="mdc-chip__text">${tagList[i]}</span>
 </div>
                     `.trim()
                             }
@@ -180,7 +180,7 @@
                 <button class="mdc-button mdc-button--raised user_team_add_button">
                     <div class="mdc-button__ripple"></div>
                     <i class="material-icons mdc-button__icon" aria-hidden="true">add</i>
-                    <span class="mdc-button__label">팀 추가</span>
+                    <span class="mdc-button__label">팀 가입</span>
                 </button>
             </div>
 

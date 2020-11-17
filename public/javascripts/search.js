@@ -12,6 +12,14 @@ $(document).ready(() => {
         $("#search_contents").html(makeHTML(res.body))
         moveFooter()
     })
+    $.post(`/search/team/name`, {value: '<%= value %>'}, (res) => {
+        $("#search_team").html(makeTeamHTML(res.body))
+        moveFooter()
+    })
+    $.post(`/search/team/tag`, {value: '<%= value %>'}, (res) => {
+        $("#search_team").html(makeTeamHTML(res.body))
+        moveFooter()
+    })
 })
 
 function moveFooter() {
@@ -19,6 +27,28 @@ function moveFooter() {
         $("footer").css("position", "static")
     } else {
         $("footer").css("position", "fixed")
+    }
+}
+
+function makeTeamHTML(list) {
+    let html = $("#search_team").html()
+    for (const data of list) {
+        html += `
+<div class="result-box mdc-elevation--z4">
+<a href="/mentor/team">
+<h2>${data.name}</h2>
+<div class='mdc-chip-set mdc-chip-set--filter search-chip-box'>
+                `.trim()
+        const tagList = data.tag.split(" ")
+        for (let i = 0; i < tagList.length; i++) {
+            html += `
+<div class="mdc-chip mdc-ripple-upgraded" id="question_question_chip${i}" role="row">
+    <span class="mdc-chip__text" id="question_question_chip${i}_text">${tagList[i]}</span>
+</div>
+                    `.trim()
+        }
+        html += "</div></a></div>"
+        return html
     }
 }
 
